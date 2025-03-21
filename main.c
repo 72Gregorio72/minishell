@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:28:58 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:14:30 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
+		//printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
 		lst = lst->next;
 	}
 }

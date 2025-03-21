@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 11:56:27 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/21 15:03:30 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,18 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 		return (unset_and_export(gen, succ, node));
 	return (1);
 }
+
 // las || (echo ciao && (cat in | wc))
 void	parsing(t_gen *gen)
 {
-	t_tree *tree;
 	t_lexing	*tmp;
-	
-	tree = NULL;
-	tree = fill_tree(gen->lexed_data, ft_lstlast(gen->lexed_data), tree);
-	print_binary_tree(tree, 0);
+
+	gen->root = NULL;
+	if (ft_lstsize(gen->lexed_data) != 2)
+	{
+		gen->root = fill_tree(gen->lexed_data, ft_lstlast(gen->lexed_data), gen->root);
+		print_binary_tree(gen->root, 0);
+	}
 	tmp = gen->lexed_data;
 	while (tmp)
 	{
@@ -71,10 +74,11 @@ void	parsing(t_gen *gen)
 		{
 			if (!exec_builtin(gen, tmp)
 				&& ft_strncmp(tmp->type, "argument", 9) != 0)
-				error_exit(gen, "error: command not found", 127); // da controllare per bene
+				exec_command(gen, tmp);
 			else
 				gen->exit_status = 0;
 		}
 		tmp = tmp->next;
 	}
+	ft_treeclear(gen->root);
 }

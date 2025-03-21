@@ -26,6 +26,7 @@ SRCS		=	main.c \
 				pipex/bonus/processes_bonus.c \
 				pipex/bonus/processes_utils_bonus.c \
 				pipex/bonus/read_bonus.c \
+				exec_commands/execute.c \
 				ft_pokemon.c \
 		
 OBJS		= $(SRCS:.c=.o)

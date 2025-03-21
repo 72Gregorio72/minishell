@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 11:54:24 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:42:43 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,9 @@ void		print_binary_tree(t_tree *node, int depth);
 int			check_all_upper(char *word);
 int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
+
+// exec
+void		exec_command(t_gen *gen, t_lexing *node);
 
 // pokemon :)
 typedef struct	s_attack
