@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 11:13:12 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 09:44:19 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:14:45 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,15 @@ t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree)
 	t_lexing	*max;
 	t_tree		*left;
 	t_tree		*right;
-	t_tree		*real_tree;
 
+	if (!lexed || lexed == end)
+		return (NULL);
 	max = find_max_strength(lexed, lexed, end);
-	left = new_node(find_max_strength(lexed, lexed, max), NULL, NULL);
-	right = new_node(find_max_strength(max->next, max->next, end), NULL, NULL);
-	real_tree = new_node(max, left, right);
-	left = new_node(find_max_strength(max->next, max->next, find_max_strength(right->data, right->data, end)), NULL, NULL);
-	max = find_max_strength(right->data, right->data, end);
-	right = new_node(find_max_strength(max->next, max->next, end), NULL, NULL);
-	real_tree->right = new_node(max, left, right);
-	print_binary_tree(real_tree, 10);
+	if (!max)
+		return (NULL);
+	left = fill_tree(lexed, max, tree);
+	right = fill_tree(max->next, end, tree);
+	tree = new_node(max, left, right);
 	return (tree);
 }
+// las || (echo ciao && (cat in | wc))

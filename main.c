@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 16:06:20 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:29:23 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
@@ -65,6 +66,5 @@ int	main(int ac, char **av, char **env)
 	sigemptyset(&sa.sa_mask);
 	loop(ac, &gen, sa);
 	safe_free(&gen);
-	//leo gay
 	return (0);
 }

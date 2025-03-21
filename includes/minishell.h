@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 10:58:43 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:43:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void		delone_node(t_tree *node);
 void		ft_treeclear(t_tree *tree);
 t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last);
 t_tree		*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree);
+void		print_binary_tree(t_tree *node, int depth);
 
 // checks
 int			check_all_upper(char *word);
@@ -103,29 +104,29 @@ int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
 
 // pokemon :)
-typedef struct	s_attack
+typedef struct s_attack
 {
 	char	*name;
 	int		damage;
 	char	*type;
 }	t_attack;
 
-typedef struct	s_pokemon
+typedef struct s_pokemon
 {
-	char	*name;
-	int		health;
+	char		*name;
+	int			health;
 	t_attack	attack1;
 	t_attack	attack2;
 	t_attack	attack3;
 	t_attack	attack4;
-	int		defense;
-	int		speed;
-	char	*type;
+	int			defense;
+	int			speed;
+	char		*type;
 }	t_pokemon;
 
 t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed);
 t_attack	create_attack(char *name, int damage, char *type);
-void	ft_pokemon(void);
+void		ft_pokemon(void);
 
 #endif
 
