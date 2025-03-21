@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 11:33:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:33:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
@@ -65,6 +66,5 @@ int	main(int ac, char **av, char **env)
 	sigemptyset(&sa.sa_mask);
 	loop(ac, &gen, sa);
 	safe_free(&gen);
-	//vcastald king
 	return (0);
 }
