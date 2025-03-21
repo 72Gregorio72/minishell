@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/19 10:09:30 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:34:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void		ft_putendl_fd(char *s, int fd);
 char		*ft_itoa(int n);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));
-int			n_words(char c, char const *str);
 int			free_final(char **final, int row);
 
 t_lexing	*ft_lstnew(char *value, char *type, int strength);
