@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 11:03:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:05:25 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,7 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 
 void	parsing(t_gen *gen)
 {
-	// t_tree *tree;
 	t_lexing	*tmp;
-
-	// tree = NULL;
-	// fill_tree(gen->lexed_data, ft_lstlast(gen->lexed_data), tree);
 	tmp = gen->lexed_data;
 	while (tmp)
 	{
@@ -70,7 +66,7 @@ void	parsing(t_gen *gen)
 		{
 			if (!exec_builtin(gen, tmp)
 				&& ft_strncmp(tmp->type, "argument", 9) != 0)
-				error_exit(gen, "error: command not found", 127); // da controllare per bene
+				printf("");//error_exit(gen, "error: command not found", 127);
 			else
 				gen->exit_status = 0;
 		}
