@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 11:15:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:25:33 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ int	main(int ac, char **av, char **env)
 	sigemptyset(&sa.sa_mask);
 	loop(ac, &gen, sa);
 	safe_free(&gen);
-	//gpicchio gay
+	//leo gay
 	return (0);
 }
