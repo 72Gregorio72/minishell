@@ -6,13 +6,14 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:21:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:33:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:16:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "libft.h"
+#include "../includes/minishell.h"
 
 static char	*ft_strndup(char const *src, int len)
 {
@@ -50,6 +51,8 @@ int	n_words(char c, char const *str)
 		}
 		else if (str[i] == c)
 			in_word = 0;
+		else if (!quote_checker((char *)str, i))
+			in_word = 1;
 		i++;
 	}
 	return (count);
@@ -79,10 +82,10 @@ static char	**split(char **final, char const *str, char c, int freed)
 	start = 0;
 	while (str[i])
 	{
-		while (str[i] && str[i] == c)
+		while (str[i] && str[i] == c && !quote_checker((char *)str, i))
 			i++;
 		start = i;
-		while (str[i] && !(str[i] == c))
+		while (str[i] && (!(str[i] == c) || !quote_checker((char *)str, i)))
 			i++;
 		if (i > start)
 		{

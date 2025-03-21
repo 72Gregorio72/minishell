@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:41:46 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:33:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	parsing(t_gen *gen)
 
 	tree = NULL;
 	tree = fill_tree(gen->lexed_data, ft_lstlast(gen->lexed_data), tree);
-	print_binary_tree(tree, 0);
 	tmp = gen->lexed_data;
 	while (tmp)
 	{

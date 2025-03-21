@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:34:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:39:13 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char		*ft_itoa(int n);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));
 int			free_final(char **final, int row);
+int			quote_split(char const *str, int *i, int *start, int *quote_status);
 
 t_lexing	*ft_lstnew(char *value, char *type, int strength);
 void		ft_lstadd_front(t_lexing **lst, t_lexing *new);
