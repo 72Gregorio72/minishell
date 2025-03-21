@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 11:25:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:30:49 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ int	main(int ac, char **av, char **env)
 	sigemptyset(&sa.sa_mask);
 	loop(ac, &gen, sa);
 	safe_free(&gen);
-	//leo gay
+	//gpicchio king
 	return (0);
 }
