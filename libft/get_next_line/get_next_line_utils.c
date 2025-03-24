@@ -6,38 +6,11 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:47:43 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/14 15:56:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:50:18 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-size_t	ft_strlcat(char *dest, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	j;
-	size_t	res;
-
-	i = 0;
-	j = 0;
-	res = 0;
-	while (dest[i])
-		i++;
-	while (src[res])
-		res++;
-	if (size <= i)
-		res += size;
-	else
-		res += i;
-	while (src[j] && (i + 1) < size)
-	{
-		dest[i] = src[j];
-		i++;
-		j++;
-	}
-	dest[i] = '\0';
-	return (res);
-}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {

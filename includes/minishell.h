@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 11:50:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:31:17 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ char		**copy_matrix(char **src);
 void		layerize(t_gen *gen);
 void		error_exit(t_gen *gen, char *str, int exit_status);
 char		**ft_split_quote(char const *s, char c);
+int			find_char_pos(char *s, char *chars, int start);
 
 // ctrl
 void		ctrl_c(int new_line);
