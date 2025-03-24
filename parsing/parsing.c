@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 16:29:42 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/24 08:50:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 void	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
+
 	tmp = gen->lexed_data;
 	while (tmp)
 	{
@@ -73,5 +74,5 @@ void	parsing(t_gen *gen)
 		}
 		tmp = tmp->next;
 	}
-	ft_treeclear(tree);
+	// ft_treeclear(tree);
 }

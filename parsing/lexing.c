@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 16:08:25 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:41:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	find_env_var(t_lexing *lexed)
 	tmp = lexed;
 	while (tmp)
 	{
-		if (check_all_upper(tmp->value) && tmp->value[0] == '$')
+		if (check_all_upper(tmp->value) && ft_strchr(tmp->value, '$') != NULL)
 			tmp->env_variable = 1;
 		tmp = tmp->next;
 	}
@@ -69,6 +69,7 @@ void	tokenize(char *word, t_lexing **lexed)
 	i = 0;
 	while (word[i])
 	{
+		check_quotes(&i, lexed, word);
 		while (word[i] == ' ')
 			i++;
 		start = i;

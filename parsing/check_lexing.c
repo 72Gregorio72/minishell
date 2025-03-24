@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:19:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/19 12:09:57 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:38:00 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,6 @@ void	other_checks(int *i, t_lexing **lexed, char *word)
 	{
 		add_token(lexed, ")", "close_parenthesis", -1);
 		*i += ft_strlen(")");
-	}
-	else if (ft_strncmp(&word[*i], "\'", ft_strlen("\'")) == 0)
-	{
-		add_token(lexed, "\'", "single_quote", -1);
-		*i += ft_strlen("\'");
-	}
-	else if (ft_strncmp(&word[*i], "\"", ft_strlen("\"")) == 0)
-	{
-		add_token(lexed, "\"", "double_quote", -1);
-		*i += ft_strlen("\"");
 	}
 	else if (ft_strncmp(&word[*i], "||", ft_strlen("||")) == 0)
 	{
@@ -78,3 +68,44 @@ void	check_pipe(int *i, t_lexing **lexed, char *word)
 		*i += ft_strlen("|");
 	}
 }
+
+char	*lex_quotes(int quote_type, int *i, char *word)
+{
+	int		start;
+	char	*final;
+	char	quote_char;
+
+	start = *i;
+	(*i)++;
+	if (quote_type == 1)
+		quote_char = '\'';
+	else
+		quote_char = '\"';
+	while (word[*i] && word[*i] != quote_char)
+		(*i)++;
+	if (word[*i])
+		(*i)++;
+
+	final = ft_substr(word, start, *i - start);
+	return (final);
+}
+
+void	check_quotes(int *i, t_lexing **lexed, char *word)
+{
+	char	*tmp;
+
+	tmp = NULL;
+	if (word[*i] == '\'')
+	{
+		tmp = lex_quotes(1, i, word);
+		add_token(lexed, tmp, "command", -1);
+		free(tmp);
+	}
+	else if (word[*i] == '\"')
+	{
+		tmp = lex_quotes(2, i, word);
+		add_token(lexed, tmp, "command", -1);
+		free(tmp);
+	}
+}
+

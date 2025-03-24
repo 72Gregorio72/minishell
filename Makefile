@@ -7,6 +7,7 @@ SRCS		=	main.c \
 				srcs/signals.c \
 				srcs/check.c \
 				srcs/layerize.c \
+				parsing/split_quote.c \
 				parsing/lexing.c \
 				parsing/parsing.c \
 				parsing/check_lexing.c \

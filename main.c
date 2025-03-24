@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 16:29:23 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:24:51 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 		if (checks(line, gen))
 			continue ;
 		add_history(line);
-		gen->av = ft_split(line, ' ');
+		gen->av = ft_split_quote(line, ' ');
 		if (!gen->av)
 		{
 			safe_free(gen);

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:43:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:13:01 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void		add_token(t_lexing **lexed, char *content,
 void		other_checks(int *i, t_lexing **lexed, char *word);
 void		other_checks_1(int *i, t_lexing **lexed, char *word);
 void		check_pipe(int *i, t_lexing **lexed, char *word);
+void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 
 // utils
@@ -77,6 +78,7 @@ void		safe_free(t_gen *gen);
 char		**copy_matrix(char **src);
 void		layerize(t_gen *gen);
 void		error_exit(t_gen *gen, char *str, int exit_status);
+char		**ft_split_quote(char const *s, char c);
 
 // ctrl
 void		ctrl_c(int new_line);

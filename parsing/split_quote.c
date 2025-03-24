@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:21:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 16:22:56 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:24:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char	*ft_strndup(char const *src, int len)
 	return (dest);
 }
 
-int	n_words(char c, char const *str)
+static int	n_words(char c, char const *str)
 {
 	int	i;
 	int	count;
@@ -53,19 +53,6 @@ int	n_words(char c, char const *str)
 		i++;
 	}
 	return (count);
-}
-
-int	free_final(char **final, int row)
-{
-	int	i;
-
-	i = 0;
-	while (i <= row)
-	{
-		free(final[i]);
-		i++;
-	}
-	return (1);
 }
 
 static int	parse_next_token(char const *str, char c, int *index)
@@ -122,7 +109,7 @@ char	**ft_split_quote(char const *s, char c)
 	return (split(final, s, c, 0));
 }
 
-#include <stdio.h>
+/* #include <stdio.h>
 
 int main(void) {
     char str[] = "Hello World '     42 ' 42 'sd'";
@@ -139,4 +126,4 @@ int main(void) {
     }
     free(split); // Free the array of strings itself
     return 0;
-}
+} */

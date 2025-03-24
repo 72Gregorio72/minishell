@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:03:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/19 12:35:29 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:55:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,8 @@ int	ft_echo(t_lexing *node, t_gen *gen, int fd)
 		ft_putnbr_fd(gen->exit_status, fd);
 		printf("\n");
 	}
-	else if (succ->value && succ->env_variable)
-		print_env_var(gen->my_env, succ->value, fd, 1);
 	else if (succ->value && ft_strncmp("-n", succ->value, ft_strlen("-n")) == 0)
-	{
-		succ = succ->next;
-		if (succ->env_variable)
-			print_env_var(gen->my_env, succ->value, fd, 0);
-		else
-			ft_putstr_fd(succ->value, fd);
-	}
+		ft_putstr_fd(succ->value, fd);
 	else
 		ft_putendl_fd(succ->value, fd);
 	return (1);
