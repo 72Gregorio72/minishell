@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 08:47:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 10:25:03 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ typedef struct s_lexing
 	int		pos;
 	int		layer;
 	int		strength;
-	int		inside_single_quote;
-	int		inside_double_quote;
 	int		env_variable;
 	void	*next;
 }				t_lexing;

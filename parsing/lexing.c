@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 09:41:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:54:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,3 @@ t_lexing	*lexer(char **matrix)
 	return (lexed);
 }
 // ( < echo 1 > || << echo 2 >> ) | ( echo '3 ' && echo " 4 " )
-// quotes possono anche essere in mezzo alla parola 
-// e tutto ciò che è dentro quote è un token separato

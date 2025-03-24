@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 08:50:42 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:36:41 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,22 @@ void	parsing(t_gen *gen)
 	t_lexing	*tmp;
 
 	tmp = gen->lexed_data;
-	while (tmp)
+	gen->root = fill_tree(gen->lexed_data,
+			ft_lstlast(gen->lexed_data), gen->root);
+	if (quote_handler(gen))
 	{
-		if (tmp->value)
+		while (tmp)
 		{
-			if (!exec_builtin(gen, tmp)
-				&& ft_strncmp(tmp->type, "argument", 9) != 0)
-				printf("");//error_exit(gen, "error: command not found", 127);
-			else
-				gen->exit_status = 0;
+			if (tmp->value)
+			{
+				if (!exec_builtin(gen, tmp)
+					&& ft_strncmp(tmp->type, "argument", 9) != 0)
+					printf("");
+				else
+					gen->exit_status = 0;
+			}
+			tmp = tmp->next;
 		}
-		tmp = tmp->next;
 	}
-	// ft_treeclear(tree);
+	ft_treeclear(gen->root);
 }
