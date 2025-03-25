@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 15:03:30 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/25 10:51:53 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	parsing(t_gen *gen)
 		{
 			if (!exec_builtin(gen, tmp)
 				&& ft_strncmp(tmp->type, "argument", 9) != 0)
-				exec_command(gen, tmp);
+					exec_command(gen, tmp);
 			else
 				gen->exit_status = 0;
 		}
