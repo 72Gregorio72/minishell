@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:02:30 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/02/28 10:16:54 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:58:13 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ char	*get_path(char *cmd, char **envp)
 
 	if (!cmd || !*cmd)
 		return (NULL);
-	if (access(cmd, X_OK) == 0)
-		return (ft_strdup(cmd));
 	paths = get_paths(envp);
 	if (!paths)
 		return (NULL);

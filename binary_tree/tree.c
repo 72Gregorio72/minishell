@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 11:13:12 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 15:27:24 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:00:43 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree)
 	t_tree		*right;
 
 	if (lexed == ft_lstlast(lexed))
-		return (new_node(lexed, NULL, NULL));
+		return (new_node(lexed, NULL, NULL, NULL));
 	if (!lexed || lexed == end)
 		return (NULL);
 	max = find_max_strength(lexed, lexed, end);
@@ -59,7 +59,7 @@ t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree)
 		return (NULL);
 	left = fill_tree(lexed, max, tree);
 	right = fill_tree(max->next, end, tree);
-	tree = new_node(max, left, right);
+	tree = new_node(max, left, right, tree);
 	return (tree);
 }
 

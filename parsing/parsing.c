@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/25 10:51:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:03:10 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,20 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 void	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
+	int			flag;
 
 	gen->root = NULL;
+	flag = 0;
 	if (ft_lstsize(gen->lexed_data) != 2)
 	{
 		gen->root = fill_tree(gen->lexed_data, ft_lstlast(gen->lexed_data), gen->root);
 		print_binary_tree(gen->root, 0);
 	}
 	tmp = gen->lexed_data;
-	while (tmp)
-	{
-		if (tmp->value)
-		{
-			if (!exec_builtin(gen, tmp)
-				&& ft_strncmp(tmp->type, "argument", 9) != 0)
-					exec_command(gen, tmp);
-			else
-				gen->exit_status = 0;
-		}
-		tmp = tmp->next;
-	}
+	if (find_cmd_num(tmp) > 1)
+		exec_command(gen);
+	else
+		exec_single_command(gen, tmp);
 	ft_treeclear(gen->root);
 }
+//echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3

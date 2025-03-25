@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:42:43 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:30:56 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_tree
 {
 	struct s_tree	*left;
 	struct s_tree	*right;
+	struct s_tree	*parent;
 	t_lexing		*data;
 }				t_tree;
 
@@ -89,7 +90,7 @@ int			checks(char *line, t_gen *gen);
 void		handler(int sign, siginfo_t *info, void *context);
 
 // binary tree
-t_tree		*new_node(t_lexing *lexed_input, t_tree *left, t_tree *right);
+t_tree		*new_node(t_lexing *lexed_input, t_tree *left, t_tree *right, t_tree *parent);
 t_tree		*least_important_leaf(t_tree *tree);
 t_tree		*most_important_leaf(t_tree *tree);
 void		delone_node(t_tree *node);
@@ -104,7 +105,9 @@ int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
 
 // exec
-void		exec_command(t_gen *gen, t_lexing *node);
+void		exec_command(t_gen *gen);
+int			find_cmd_num(t_lexing *node);
+void		exec_single_command(t_gen *gen, t_lexing *node);
 
 // pokemon :)
 typedef struct	s_attack
