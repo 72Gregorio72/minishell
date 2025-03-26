@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tree_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:51:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/18 09:27:45 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:28:11 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tree	*new_node(t_lexing *lexed_input, t_tree *left, t_tree *right)
+t_tree	*new_node(t_lexing *lexed_input, t_tree *left, t_tree *right, t_tree *parent)
 {
 	t_tree	*d;
 
@@ -21,6 +21,7 @@ t_tree	*new_node(t_lexing *lexed_input, t_tree *left, t_tree *right)
 		return (NULL);
 	d->left = left;
 	d->right = right;
+	d->parent = parent;
 	d->data = lexed_input;
 	return (d);
 }

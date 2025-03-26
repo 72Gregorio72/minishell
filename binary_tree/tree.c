@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 11:13:12 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 12:14:45 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:25:13 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,18 @@
 
 t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
 {
-	t_lexing	*tmp;
+	t_lexing *tmp;
 
 	tmp = lexed;
-	if (tmp == last)
-		return (NULL);
-	if (tmp->layer <= max->layer && tmp->strength > max->strength)
-		max = tmp;
-	if (tmp->next == last)
-		return (max);
-	return (find_max_strength(tmp->next, max, last));
+	while (tmp && tmp != last)
+	{
+		if (tmp->layer <= max->layer && tmp->strength >= max->strength)
+			max = tmp;
+		tmp = tmp->next;
+	}
+	return (max);
 }
+
 
 void	print_binary_tree(t_tree *node, int depth)
 {
@@ -39,7 +40,19 @@ void	print_binary_tree(t_tree *node, int depth)
 		printf("    ");
 		i++;
 	}
-	printf("🌳 %s\n", node->data->value);
+	i = 0;
+	if (node->data->command)
+	{
+		printf("🌲");
+		while (node->data->command[i])
+		{
+			printf(" %s", node->data->command[i]);
+			i++;
+		}
+		printf("\n");
+	}
+	else
+		printf("🌲 %s\n", node->data->value);
 	print_binary_tree(node->left, depth + 1);
 }
 
@@ -49,6 +62,8 @@ t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree)
 	t_tree		*left;
 	t_tree		*right;
 
+	if (lexed == ft_lstlast(lexed))
+		return (new_node(lexed, NULL, NULL, NULL));
 	if (!lexed || lexed == end)
 		return (NULL);
 	max = find_max_strength(lexed, lexed, end);
@@ -56,7 +71,9 @@ t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree)
 		return (NULL);
 	left = fill_tree(lexed, max, tree);
 	right = fill_tree(max->next, end, tree);
-	tree = new_node(max, left, right);
+	tree = new_node(max, left, right, tree);
 	return (tree);
 }
+
 // las || (echo ciao && (cat in | wc))
+// ciao | ciao1 || ciao2 | ciao3

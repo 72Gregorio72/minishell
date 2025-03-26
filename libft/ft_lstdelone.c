@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:42 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 11:55:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:37:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	ft_lstdelone(t_lexing *lst)
 		|| !ft_strncmp(lst->type, "outfile", 8)
 		|| !ft_strncmp(lst->type, "infile", 7))
 		free(lst->type);
+	if (lst->command)
+		free_matrix(lst->command);
 	free(lst);
 }
 

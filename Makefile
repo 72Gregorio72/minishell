@@ -24,13 +24,14 @@ SRCS		=	main.c \
 				builtin/ft_cd.c \
 				builtin/ft_export.c \
 				builtin/ft_unset.c \
+				exec_commands/execute.c \
+				ft_pokemon.c \
 				pipex/bonus/pipex_bonus.c \
 				pipex/bonus/pipex_utils_bonus.c \
 				pipex/bonus/get_path_bonus.c \
 				pipex/bonus/processes_bonus.c \
 				pipex/bonus/processes_utils_bonus.c \
-				pipex/bonus/read_bonus.c \
-				ft_pokemon.c \
+				pipex/bonus/read_bonus.c 
 		
 OBJS		= $(SRCS:.c=.o)
 

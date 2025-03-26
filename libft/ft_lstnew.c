@@ -6,13 +6,31 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 11:20:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:37:58 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft.h"
+
+t_lexing	*ft_lstnew_cleaned(char *value, char *type, int strength, char **command)
+{
+	t_lexing	*d;
+
+	d = (t_lexing *)malloc(sizeof(t_lexing));
+	if (!d)
+		return (NULL);
+	d->value = value;
+	d->type = type;
+	d->pos = 0;
+	d->layer = 0;
+	d->strength = strength;
+	d->env_variable = 0;
+	d->next = NULL;
+	d->command = command;
+	return (d);
+}
 
 t_lexing	*ft_lstnew(char *value, char *type, int strength)
 {
@@ -30,6 +48,7 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->infile = 0;
 	d->outfile = 1;
 	d->next = NULL;
+	d->command = NULL;
 	return (d);
 }
 

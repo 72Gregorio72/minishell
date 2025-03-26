@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 11:20:19 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:38:18 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_lexing
 	int		strength;
 	int		env_variable;
 	void	*next;
+	char	**command;
 	int		infile;
 	int		outfile;
 }				t_lexing;
@@ -73,5 +74,10 @@ t_lexing	*ft_lstlast(t_lexing *lst);
 void		ft_lstadd_back(t_lexing **lst, t_lexing *new);
 void		ft_lstdelone(t_lexing *lst);
 void		ft_lstclear(t_lexing *lex_head);
+t_lexing	*ft_lstnew_cleaned(char *value, char *type,
+				int strength, char **command);
+void		print_list(t_lexing *lst);
+void		free_matrix(char **mat);
+char		**ft_strdup_matrix(char **matrix);
 
 #endif

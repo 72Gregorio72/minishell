@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:52:22 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/18 13:20:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/25 11:19:10 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,10 @@
 
 int	ft_cd(char *new_path)
 {
-	return (chdir(new_path));
+	int	res;
+
+	res = chdir(new_path);
+	if (res == -1)
+		return (0);
+	return (1);
 }
