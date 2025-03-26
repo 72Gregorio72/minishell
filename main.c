@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 15:03:55 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:26:48 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,10 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			exit(0);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
-		print_list(gen->lexed_data);
-		if (find_files(gen->lexed_data, gen) && layerize(gen))
+		//print_list(gen->lexed_data);
+		if (ft_strncmp(gen->av[0], "pokemon", 8) == 0)
+			ft_pokemon();
+		else if (find_files(gen->lexed_data, gen) && layerize(gen))
 		{
 			if (parsing(gen))
 				ft_lstclear(gen->cleaned_data);

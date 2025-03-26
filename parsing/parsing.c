@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:53:26 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:06:58 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,8 @@ int	parsing(t_gen *gen)
 		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
 		print_binary_tree(gen->root, 0);
 	}
-	tmp = gen->cleaned_data;/* 
-	if (find_cmd_num(tmp) > 1)
+	tmp = gen->cleaned_data;
+	/*if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp); */
