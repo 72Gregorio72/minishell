@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:12:41 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:31:23 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:50:27 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	check_parenthesis(t_lexing *lst, t_gen *gen)
 
 	tmp = lst;
 	succ = NULL;
-	while (tmp)
+	while (tmp->next)
 	{
 		if (tmp->next)
 			succ = tmp->next;
