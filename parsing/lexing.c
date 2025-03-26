@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 14:12:44 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:21:01 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@ void	find_args(t_lexing *lexed)
 				if (succ->value[0] == '-')
 					succ->type = ft_strdup("option");
 				else
-				{
 					succ->type = ft_strdup("argument");
-					break ;
-				}
 				succ = succ->next;
 			}
 		}
