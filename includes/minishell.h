@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:37:06 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:53:40 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void		ft_export(char ***envp, const char *var);
 void		ft_unset(char ***envp, const char *var);
 
 // parsing
-void		parsing(t_gen *gen);
+int			parsing(t_gen *gen);
 t_lexing	*lexer(char **matrix, t_gen *gen);
 void		add_token(t_lexing **lexed, char *content,
 				char *type, int strength);

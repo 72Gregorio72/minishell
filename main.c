@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:52:46 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:03:55 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 		print_list(gen->lexed_data);
 		if (find_files(gen->lexed_data, gen) && layerize(gen))
 		{
-			parsing(gen);
+			if (parsing(gen))
+				ft_lstclear(gen->cleaned_data);
 		}
 		free_matrix(gen->av);
 		ft_lstclear(gen->lexed_data);
-		ft_lstclear(gen->cleaned_data);
 		free(line);
 	}
 }
