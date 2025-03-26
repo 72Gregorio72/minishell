@@ -13,6 +13,7 @@ SRCS		=	main.c \
 				parsing/check_lexing.c \
 				parsing/quote_handler.c \
 				parsing/dollar.c \
+				parsing/utils_for_quotes.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \
