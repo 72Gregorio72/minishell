@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:42:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:43:37 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	main(int ac, char **av, char **env)
 	safe_free(&gen);
 	return (0);
 }
-
 
 /*
 0. Layering e sysntax error per parentesi (D )

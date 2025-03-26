@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:19:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 09:38:00 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:44:52 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ char	*lex_quotes(int quote_type, int *i, char *word)
 		(*i)++;
 	if (word[*i])
 		(*i)++;
-
 	final = ft_substr(word, start, *i - start);
 	return (final);
 }
@@ -108,4 +107,3 @@ void	check_quotes(int *i, t_lexing **lexed, char *word)
 		free(tmp);
 	}
 }
-

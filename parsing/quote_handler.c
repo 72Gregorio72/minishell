@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 09:52:00 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:44:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void	clean_quotes(t_lexing **node)
 
 	if (!node || !(*node) || !(*node)->value)
 		return ;
-
 	value = (*node)->value;
 	new_value = (char *)malloc(strlen(value) + 1);
 	if (!new_value)
@@ -146,7 +145,6 @@ QUOTE CHECKER
 - 1: single quote prima
 - 2: doubl quote prima
 - passando \0: resetta statica */
-
 
 /*
 Ordine per virgolette
