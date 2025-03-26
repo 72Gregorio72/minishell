@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 10:31:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:20:19 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ typedef struct s_lexing
 	int		strength;
 	int		env_variable;
 	void	*next;
+	int		infile;
+	int		outfile;
 }				t_lexing;
 
 int			ft_isalpha(int c);

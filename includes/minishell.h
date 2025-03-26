@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 10:02:37 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:33:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,17 @@ void		ft_unset(char ***envp, const char *var);
 
 // parsing
 void		parsing(t_gen *gen);
-t_lexing	*lexer(char **matrix);
+t_lexing	*lexer(char **matrix, t_gen *gen);
 void		add_token(t_lexing **lexed, char *content,
 				char *type, int strength);
 void		other_checks(int *i, t_lexing **lexed, char *word);
 void		other_checks_1(int *i, t_lexing **lexed, char *word);
 void		check_pipe(int *i, t_lexing **lexed, char *word);
+int			find_files(t_lexing *lexed, t_gen *gen);
+void		find_env_var(t_lexing *lexed);
+void		find_args(t_lexing *lexed);
+
+// quotes
 void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
@@ -82,7 +87,7 @@ void		clean_quotes(t_lexing **node);
 void		free_matrix(char **av);
 void		safe_free(t_gen *gen);
 char		**copy_matrix(char **src);
-void		layerize(t_gen *gen);
+int			layerize(t_gen *gen);
 void		error_exit(t_gen *gen, char *str, int exit_status);
 char		**ft_split_quote(char const *s, char c);
 int			find_char_pos(char *s, char *chars, int start);

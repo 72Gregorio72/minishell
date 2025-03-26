@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 10:25:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:20:27 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->layer = 0;
 	d->strength = strength;
 	d->env_variable = 0;
+	d->infile = 0;
+	d->outfile = 1;
 	d->next = NULL;
 	return (d);
 }

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 14:03:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:21:23 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 
 	succ = node->next;
 	if (ft_strncmp("echo", node->value, ft_strlen("echo")) == 0)
-		return (ft_echo(node, gen, 1));
+		return (ft_echo(node, gen, node->outfile));
 	else if (ft_strncmp("env", node->value, ft_strlen("env")) == 0)
 		return (ft_env(gen->my_env));
 	else if (ft_strncmp("pwd", node->value, 3) == 0)
-		return (ft_pwd(gen->my_env, 1));
+		return (ft_pwd(gen->my_env, node->outfile));
 	else if (ft_strncmp("exit", node->value, ft_strlen("exit")) == 0)
 		ft_exit(gen);
 	else if (ft_strncmp("cd", node->value, ft_strlen("cd")) == 0)
@@ -62,22 +62,16 @@ void	parsing(t_gen *gen)
 	t_lexing	*tmp;
 
 	tmp = gen->lexed_data;
-	gen->root = fill_tree(gen->lexed_data,
-			ft_lstlast(gen->lexed_data), gen->root);
 	if (quote_handler(gen))
 	{
-		while (tmp)
-		{
-			if (tmp->value)
-			{
-				if (!exec_builtin(gen, tmp)
-					&& ft_strncmp(tmp->type, "argument", 9) != 0)
-					printf("");
-				else
-					gen->exit_status = 0;
-			}
-			tmp = tmp->next;
-		}
+		// fai redirections
+		/*if (redirections)
+			clean_list
+			fill_tree(list_cleant)
+		*/
+		printf("quote done\n");
 	}
+	gen->root = fill_tree(gen->lexed_data,
+			ft_lstlast(gen->lexed_data), gen->root);
 	ft_treeclear(gen->root);
 }
