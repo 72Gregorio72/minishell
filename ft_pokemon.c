@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:44:12 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/11 18:55:32 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:02:47 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ void	print_healthbar(int health, char *name)
 	fflush(stdout);
 }
 
+void	clear_window(void)
+{
+	printf("\033[2J");
+	printf("\033[H");
+}
+
 void	ft_pokemon(void)
 {
 	t_pokemon	*pikachu;
@@ -72,6 +78,7 @@ void	ft_pokemon(void)
 	char		*line;
 	int			player_turn = 1;
 
+	
 	pikachu = ft_create_pokemon("Pikachu", 100, 50, 90);
 	attacks = (t_attack *)malloc(sizeof(t_attack) * 4);
 	if (!attacks)
@@ -105,7 +112,6 @@ void	ft_pokemon(void)
 			fflush(stdout);
 
 			line = get_next_line(0);
-			printf("\033[F\033[K\033[F\033[K\033[F\033[K\033[F\033[K\033[F\033[K"); // Pulisce la scelta delle mosse
 
 			if (ft_strncmp(line, "1", 1) == 0)
 			{
@@ -136,7 +142,7 @@ void	ft_pokemon(void)
 			pikachu->health -= bulbasaur->attack1.damage - pikachu->defense / 2;
 			player_turn = 1;
 		}
-		printf("\033[F\033[K\033[F\033[K\033[F\033[K");
+		clear_window();
 		print_healthbar(bulbasaur->health, bulbasaur->name);
 		print_healthbar(pikachu->health, pikachu->name);
 	}
