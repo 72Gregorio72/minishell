@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:13:30 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 14:31:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:49:50 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,45 @@ int	find_char_pos(char *s, char *chars, int start)
 		}
 		i++;
 	}
-	return (0);
+	return (-1);
+}
+
+int	len_var(char *str, int dollar_pos)
+{
+	int	len;
+
+	len = 0;
+	while (str[dollar_pos + len]
+		&& (ft_isalnum(str[dollar_pos + len]) || str[dollar_pos + len] == '_'))
+		len++;
+	return (len);
 }
 
 char	*expand_env_var(char **env, char *var)
 {
 	int		i;
-	int		equal_pos;
-	char	*substring;
+	int		len;
+	char	*env_value;
+	char	*var_name;
 
-	i = 0;
-	substring = NULL;
-	while (env[i])
+	i = -1;
+	while (*var != '$' && *var)
+		var++;
+	if (!*var)
+		return (ft_strdup(var));
+	len = len_var(var, 1);
+	var_name = ft_substr(var, 1, len);
+	if (!var_name)
+		return (NULL);
+	while (env[++i])
 	{
-		substring = ft_substr(var, 1, ft_strlen(var));
-		if (!substring)
-			return (NULL);
-		if (!ft_strncmp(substring, env[i], ft_strlen(substring)))
+		if (!ft_strncmp(var_name, env[i], len) && env[i][len] == '=')
 		{
-			free(substring);
-			equal_pos = find_char_pos(env[i], "=", 0);
-			substring = ft_substr(env[i], equal_pos + 1, ft_strlen(env[i]));
-			if (!substring)
+			env_value = ft_strdup(env[i] + len + 1);
+			if (!env_value)
 				return (NULL);
-			return (substring);
+			return (free(var_name), env_value);
 		}
-		free(substring);
-		i++;
 	}
-	return (substring);
+	return (free(var_name), NULL);
 }

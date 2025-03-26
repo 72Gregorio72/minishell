@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 14:31:17 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:24:57 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
 int			quote_handler(t_gen *gen);
+char		*expand_env_var(char **env, char *var);
 
 // utils
 void		free_matrix(char **av);

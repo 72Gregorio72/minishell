@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 14:59:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:52:00 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,46 +68,58 @@ int	unclosed_quotes(char *word)
 	return (1);
 }
 
-void	command_with_quotes(t_lexing **node)
+void	clean_quotes(t_lexing **node)
 {
-	int		pos;
-	char	*tmp;
+	char	*value;
+	char	*new_value;
+	int		i;
+	int		j;
 
-	pos = find_char_pos((*node)->value, "\'\"", 0);
-	tmp = NULL;
-	if (!pos)
+	if (!node || !(*node) || !(*node)->value)
+		return ;
+
+	value = (*node)->value;
+	new_value = (char *)malloc(strlen(value) + 1);
+	if (!new_value)
+		return ;
+	i = 0;
+	j = 0;
+	while (value[i])
 	{
-		pos = find_char_pos((*node)->value, "\'\"", pos + 1);
-		tmp = ft_strdup((*node)->value);
-		free((*node)->value);
-		(*node)->value = ft_substr(tmp, 1, pos - 1);
+		if (value[i] != '\'' && value[i] != '"')
+			new_value[j++] = value[i];
+		i++;
 	}
-	free(tmp);
+	new_value[j] = '\0';
+	free((*node)->value);
+	(*node)->value = new_value;
 }
 
-void	handle_quotes(t_lexing **node)
+void	handle_quotes(t_lexing **node, t_gen *gen)
 {
-	int	i;
-	int	bool_quote;
+	int		i;
+	int		bool_quote;
+	char	*tmp;
+	char	*before;
+	char	*after;
 
 	i = 0;
+	tmp = NULL;
+	before = NULL;
+	after = NULL;
 	while ((*node)->value[i])
 	{
 		bool_quote = quote_checker((*node)->value, i);
-		if (bool_quote != 0)
+		if (bool_quote != 0 && !(*node)->env_variable)
+			clean_quotes(node);
+		else if (bool_quote == 2 && (*node)->env_variable)
 		{
-			command_with_quotes(node);
-			break ;
+			handle_env_variable(node, gen);
 		}
-		// command_with_quotes(node);
-/* 		else if (quote_checker(NULL, 0) != 2
-			&& quote_checker((*node)->value, i) == 1)
-		{
-			i++;
-		} */
+		quote_checker("\0", 0);
 		i++;
 	}
-	quote_checker("\0", 0);
+	free(tmp);
 }
 
 int	quote_handler(t_gen *gen)
@@ -122,7 +134,7 @@ int	quote_handler(t_gen *gen)
 		else if (unclosed_quotes(tmp->value) == 2)
 			return (error_exit(gen, "minishell: syntax error near \"", 2), 0);
 		else
-			handle_quotes(&tmp);
+			handle_quotes(&tmp, gen);
 		tmp = tmp->next;
 	}
 	return (1);
