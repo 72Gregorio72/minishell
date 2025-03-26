@@ -3,16 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/19 12:08:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:54:28 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft.h"
+
+t_lexing	*ft_lstnew_cleaned(char *value, char *type, int strength, char **command)
+{
+	t_lexing	*d;
+
+	d = (t_lexing *)malloc(sizeof(t_lexing));
+	if (!d)
+		return (NULL);
+	d->value = value;
+	d->type = type;
+	d->pos = 0;
+	d->layer = 0;
+	d->strength = strength;
+	d->env_variable = 0;
+	d->next = NULL;
+	d->command = command;
+	return (d);
+}
 
 t_lexing	*ft_lstnew(char *value, char *type, int strength)
 {
@@ -26,10 +44,9 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->pos = 0;
 	d->layer = 0;
 	d->strength = strength;
-	d->inside_single_quote = 0;
-	d->inside_double_quote = 0;
 	d->env_variable = 0;
 	d->next = NULL;
+	d->command = NULL;
 	return (d);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:42 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/19 10:28:45 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:03:40 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	ft_lstdelone(t_lexing *lst)
 	if (ft_strncmp(lst->type, "argument", 9) == 0
 		|| ft_strncmp(lst->type, "option", 7) == 0)
 		free(lst->type);
+	if (lst->command)
+		free_matrix(lst->command);
 	free(lst);
 }
 

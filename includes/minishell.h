@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/25 15:30:56 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:43:51 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_gen
 	int			exit_status;
 	t_tree		*root;
 	t_lexing	*lexed_data;
+	t_lexing	*cleaned_data;
 }				t_gen;
 
 // built in

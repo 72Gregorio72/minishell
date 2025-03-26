@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 14:14:30 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:03:30 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,20 @@ void	print_list(t_lexing *lst)
 	while (lst)
 	{
 		//printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
+		if (lst->command)
+		{
+			int i = 0;
+			while (lst->command[i])
+			{
+				printf("%s\n", lst->command[i]);
+				i++;
+			}
+		}
+		else
+			printf("NULL\n");
 		lst = lst->next;
+
+		printf("\n");
 	}
 }
 
@@ -43,9 +56,10 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 		gen->lexed_data = lexer(gen->av);
 		layerize(gen);
 		parsing(gen);
-		print_list(gen->lexed_data);
+		//print_list(gen->lexed_data);
 		free_matrix(gen->av);
 		ft_lstclear(gen->lexed_data);
+		ft_lstclear(gen->cleaned_data);
 		free(line);
 	}
 }

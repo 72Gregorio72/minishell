@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/25 14:03:10 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:02:00 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,90 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 	return (1);
 }
 
+char	**get_command(t_lexing *node)
+{
+	char		**command;
+	t_lexing	*tmp;
+	int			i;
+
+	i = 0;
+	tmp = node;
+	if (ft_strncmp(tmp->type, "command", 8))
+		return (NULL);
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->type, "argument", 9)
+			|| !ft_strncmp(tmp->type, "option", 7)
+			|| !ft_strncmp(tmp->type, "command", 8))
+			i++;
+		tmp = tmp->next;
+	}
+	command = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!command)
+		return (NULL);
+	i = 0;
+	tmp = node;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->type, "argument", 9)
+			|| !ft_strncmp(tmp->type, "option", 7)
+			|| !ft_strncmp(tmp->type, "command", 8))
+		{
+			command[i] = ft_strdup(tmp->value);
+			i++;
+		}
+		else
+			break ;
+		tmp = tmp->next;
+	}
+	command[i] = NULL;
+	return (command);
+}
+
+char	**ft_strdup_matrix(char **matrix)
+{
+	char	**new_matrix;
+	int		i;
+
+	i = 0;
+	while (matrix[i])
+		i++;
+	new_matrix = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!new_matrix)
+		return (NULL);
+	i = 0;
+	while (matrix[i])
+	{
+		new_matrix[i] = ft_strdup(matrix[i]);
+		i++;
+	}
+	new_matrix[i] = NULL;
+	return (new_matrix);
+}
+
+t_lexing *clean_data(t_gen *gen)
+{
+	t_lexing *tmp = gen->lexed_data;
+	t_lexing *head = NULL;
+
+	while (tmp)
+	{
+		if (ft_strncmp(tmp->type, "argument", 9)
+			&& ft_strncmp(tmp->type, "option", 7)
+			&& ft_strncmp(tmp->type, "open_parenthesis", 17)
+			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
+		{
+			t_lexing *new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
+				tmp->type, tmp->strength, get_command(tmp));
+			if (!new_node)
+				return (NULL);
+			ft_lstadd_back(&head, new_node);
+		}
+		tmp = tmp->next;
+	}
+	return (head);
+}
+
 // las || (echo ciao && (cat in | wc))
 void	parsing(t_gen *gen)
 {
@@ -64,16 +148,18 @@ void	parsing(t_gen *gen)
 
 	gen->root = NULL;
 	flag = 0;
-	if (ft_lstsize(gen->lexed_data) != 2)
+	gen->cleaned_data = clean_data(gen);
+	//print_list(gen->cleaned_data);
+	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
-		gen->root = fill_tree(gen->lexed_data, ft_lstlast(gen->lexed_data), gen->root);
+		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
 		print_binary_tree(gen->root, 0);
 	}
-	tmp = gen->lexed_data;
+	tmp = gen->cleaned_data;/* 
 	if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else
-		exec_single_command(gen, tmp);
+		exec_single_command(gen, tmp); */
 	ft_treeclear(gen->root);
 }
 //echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3

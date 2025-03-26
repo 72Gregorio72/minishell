@@ -6,16 +6,16 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 11:13:12 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/25 14:00:43 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:25:13 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_lexing *find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
+t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
 {
 	t_lexing *tmp;
-	
+
 	tmp = lexed;
 	while (tmp && tmp != last)
 	{
@@ -40,7 +40,19 @@ void	print_binary_tree(t_tree *node, int depth)
 		printf("    ");
 		i++;
 	}
-	printf("🌳 %s\n", node->data->value);
+	i = 0;
+	if (node->data->command)
+	{
+		printf("🌲");
+		while (node->data->command[i])
+		{
+			printf(" %s", node->data->command[i]);
+			i++;
+		}
+		printf("\n");
+	}
+	else
+		printf("🌲 %s\n", node->data->value);
 	print_binary_tree(node->left, depth + 1);
 }
 

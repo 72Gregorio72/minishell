@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:56:15 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/19 10:00:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:46:08 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	safe_free(t_gen *gen)
 {
 	free_matrix(gen->av);
 	ft_lstclear(gen->lexed_data);
+	ft_lstclear(gen->cleaned_data);
 	free_matrix(gen->my_env);
 	rl_clear_history();
 }
