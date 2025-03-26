@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:43:37 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:17:33 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			exit(0);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
+		print_list(gen->lexed_data);
 		if (find_files(gen->lexed_data, gen) && layerize(gen))
 		{
-			print_list(gen->lexed_data);
 			parsing(gen);
 		}
 		free_matrix(gen->av);

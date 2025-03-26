@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:29:53 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:13:25 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	find_files(t_lexing *lexed, t_gen *gen)
 	t_lexing	*succ;
 
 	tmp = lexed;
+	succ = lexed;
 	while (tmp)
 	{
 		if (tmp->next)
