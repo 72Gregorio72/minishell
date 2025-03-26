@@ -33,6 +33,7 @@ SRCS		= ft_memset.c \
 			  ft_putstr_fd.c \
 			  ft_putendl_fd.c \
 			  ft_putnbr_fd.c \
+			  util.c \
 			  ft_printf/ft_printf.c \
 			  ft_printf/ft_putnbr_base.c \
 			  ft_printf/ft_putstr_fd.c \

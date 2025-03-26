@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 13:03:30 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:36:23 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,18 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 		if (checks(line, gen))
 			continue ;
 		add_history(line);
-		gen->av = ft_split(line, ' ');
+		gen->av = ft_split_quote(line, ' ');
 		if (!gen->av)
 		{
 			safe_free(gen);
 			exit(0);
 		}
-		gen->lexed_data = lexer(gen->av);
-		layerize(gen);
-		parsing(gen);
-		//print_list(gen->lexed_data);
+		gen->lexed_data = lexer(gen->av, gen);
+		print_list(gen->lexed_data);
+		if (find_files(gen->lexed_data, gen) && layerize(gen))
+		{
+			parsing(gen);
+		}
 		free_matrix(gen->av);
 		ft_lstclear(gen->lexed_data);
 		ft_lstclear(gen->cleaned_data);
@@ -64,7 +66,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//gpicchio king
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
@@ -82,3 +84,13 @@ int	main(int ac, char **av, char **env)
 	safe_free(&gen);
 	return (0);
 }
+
+/*
+0. Layering e sysntax error per parentesi (D )
+1. Espandere quotes --> blocca su sysntax error (D)
+2. Redirections (mettere le flag di input ed output file) --> blocca su file_input_not found
+3. Copia della list e clean_list (togliere parentesi, redirections, arguments e options)
+4. Costruisci tree sulla lista pulita
+5. Esegui dal tree 
+
+*/

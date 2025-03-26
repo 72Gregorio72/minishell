@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 13:02:00 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:38:52 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 
 	succ = node->next;
 	if (ft_strncmp("echo", node->value, ft_strlen("echo")) == 0)
-		return (ft_echo(node, gen, 1));
+		return (ft_echo(node, gen, node->outfile));
 	else if (ft_strncmp("env", node->value, ft_strlen("env")) == 0)
 		return (ft_env(gen->my_env));
 	else if (ft_strncmp("pwd", node->value, 3) == 0)
-		return (ft_pwd(gen->my_env, 1));
+		return (ft_pwd(gen->my_env, node->outfile));
 	else if (ft_strncmp("exit", node->value, ft_strlen("exit")) == 0)
 		ft_exit(gen);
 	else if (ft_strncmp("cd", node->value, ft_strlen("cd")) == 0)
