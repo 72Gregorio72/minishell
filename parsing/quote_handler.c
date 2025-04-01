@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 10:52:12 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:20:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void clean_quotes(t_lexing **node)
 void	handle_quotes(t_lexing **node, t_gen *gen)
 {
 	int		i;
-	// int		bool_quote;
+	int		bool_quote;
 	char	*tmp;
 
 	i = 0;
@@ -116,18 +116,21 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 	(void)gen;
 	if (!(*node)->env_variable)
 		clean_quotes(node);
-	while ((*node)->value[i])
+	else
 	{
-/* 		bool_quote = quote_checker((*node)->value, i);
-		if (bool_quote != 0 && !(*node)->env_variable)
-			clean_quotes(node, bool_quote, &i); */
-/* 		if ((*node)->env_variable)
+		while ((*node)->value[i])
 		{
-			handle_env_variable(node, gen);
-		} */
-		quote_checker("\0", 0);
-		if ((*node)->value[i] + 1)
-			i++;
+			bool_quote = quote_checker((*node)->value, i);
+/* 			if (bool_quote != 0 && !(*node)->env_variable)
+				clean_quotes(node, bool_quote, &i); */
+	/* 		if ((*node)->env_variable)
+			{
+				handle_env_variable(node, gen);
+			} */
+			quote_checker("\0", 0);
+			if ((*node)->value[i] + 1)
+				i++;
+		}
 	}
 	free(tmp);
 }
