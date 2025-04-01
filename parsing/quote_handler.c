@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 11:20:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 15:50:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,23 +113,29 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 
 	i = 0;
 	tmp = NULL;
-	(void)gen;
 	if (!(*node)->env_variable)
 		clean_quotes(node);
 	else
 	{
+		quote_checker("\0", 0);
 		while ((*node)->value[i])
 		{
 			bool_quote = quote_checker((*node)->value, i);
-/* 			if (bool_quote != 0 && !(*node)->env_variable)
-				clean_quotes(node, bool_quote, &i); */
-	/* 		if ((*node)->env_variable)
+			if ((*node)->env_variable)
 			{
-				handle_env_variable(node, gen);
-			} */
-			quote_checker("\0", 0);
-			if ((*node)->value[i] + 1)
-				i++;
+				if (bool_quote == 2)
+					handle_env_variable(node, gen);
+				else if (bool_quote)
+					printf("todo\n");
+				else
+				{
+					tmp = ft_strdup((*node)->value);
+					free((*node)->value);
+					(*node)->value = expand_env_var(gen->my_env, tmp, 1);
+				}
+				break ;
+			}
+			i++;
 		}
 	}
 	free(tmp);
