@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:19:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:44:52 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 10:33:34 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,32 @@ char	*lex_quotes(int quote_type, int *i, char *word)
 void	check_quotes(int *i, t_lexing **lexed, char *word)
 {
 	char	*tmp;
+	char	*tmp2;
+	char	*final;
+	int		start;
 
-	tmp = NULL;
-	if (word[*i] == '\'')
+	final = ft_strdup("");
+	while (word[*i] && !ft_strchr("|&<>()", word[*i]))
 	{
-		tmp = lex_quotes(1, i, word);
-		add_token(lexed, tmp, "command", -1);
+		if (word[*i] == '\'' || word[*i] == '\"')
+		{
+			if (word[*i] == '\'')
+				tmp = lex_quotes(1, i, word);
+			else
+				tmp = lex_quotes(2, i, word);
+		}
+		else
+		{
+			start = *i;
+			while (word[*i] && !ft_strchr("|&<>()'\"", word[*i]))
+				(*i)++;
+			tmp = ft_substr(word, start, *i - start);
+		}
+		tmp2 = final;
+		final = ft_strjoin(final, tmp);
+		free(tmp2);
 		free(tmp);
 	}
-	else if (word[*i] == '\"')
-	{
-		tmp = lex_quotes(2, i, word);
-		add_token(lexed, tmp, "command", -1);
-		free(tmp);
-	}
+	add_token(lexed, final, "command", -1);
+	free(final);
 }

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:53:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 09:23:34 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		//printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
-		if (lst->command)
+		printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
+/* 		if (lst->command)
 		{
 			int i = 0;
 			while (lst->command[i])
@@ -27,7 +27,7 @@ void	print_list(t_lexing *lst)
 			}
 		}
 		else
-			printf("NULL\n");
+			printf("NULL\n"); */
 		lst = lst->next;
 
 		printf("\n");
@@ -54,7 +54,6 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			exit(0);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
-		print_list(gen->lexed_data);
 		if (find_files(gen->lexed_data, gen) && layerize(gen))
 		{
 			if (parsing(gen))

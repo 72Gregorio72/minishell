@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:13:25 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 09:08:06 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	find_env_var(t_lexing *lexed)
 	tmp = lexed;
 	while (tmp)
 	{
-		if (check_all_upper(tmp->value) && ft_strchr(tmp->value, '$') != NULL)
+		if (ft_strchr(tmp->value, '$') != NULL)
 			tmp->env_variable = 1;
 		tmp = tmp->next;
 	}

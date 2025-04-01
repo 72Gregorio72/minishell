@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:44:38 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 10:52:12 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,26 +68,37 @@ int	unclosed_quotes(char *word)
 	return (1);
 }
 
-void	clean_quotes(t_lexing **node)
+void clean_quotes(t_lexing **node)
 {
 	char	*value;
 	char	*new_value;
-	int		i;
 	int		j;
+	int		i;
+	int		in_single;
+	int		in_double;
 
-	if (!node || !(*node) || !(*node)->value)
-		return ;
 	value = (*node)->value;
-	new_value = (char *)malloc(strlen(value) + 1);
+	new_value = (char *)malloc(ft_strlen(value) + 1);
 	if (!new_value)
 		return ;
-	i = 0;
 	j = 0;
+	i = 0;
+	in_single = 0;
+	in_double = 0;
 	while (value[i])
 	{
-		if (value[i] != '\'' && value[i] != '"')
-			new_value[j++] = value[i];
-		i++;
+		if (value[i] == '\'' && !in_double)
+		{
+			in_single = !in_single;
+			i++;
+		}
+		else if (value[i] == '"' && !in_single)
+		{
+			in_double = !in_double;
+			i++;
+		}
+		else
+			new_value[j++] = value[i++];
 	}
 	new_value[j] = '\0';
 	free((*node)->value);
@@ -97,26 +108,26 @@ void	clean_quotes(t_lexing **node)
 void	handle_quotes(t_lexing **node, t_gen *gen)
 {
 	int		i;
-	int		bool_quote;
+	// int		bool_quote;
 	char	*tmp;
-	char	*before;
-	char	*after;
 
 	i = 0;
 	tmp = NULL;
-	before = NULL;
-	after = NULL;
+	(void)gen;
+	if (!(*node)->env_variable)
+		clean_quotes(node);
 	while ((*node)->value[i])
 	{
-		bool_quote = quote_checker((*node)->value, i);
+/* 		bool_quote = quote_checker((*node)->value, i);
 		if (bool_quote != 0 && !(*node)->env_variable)
-			clean_quotes(node);
-		else if (bool_quote == 2 && (*node)->env_variable)
+			clean_quotes(node, bool_quote, &i); */
+/* 		if ((*node)->env_variable)
 		{
 			handle_env_variable(node, gen);
-		}
+		} */
 		quote_checker("\0", 0);
-		i++;
+		if ((*node)->value[i] + 1)
+			i++;
 	}
 	free(tmp);
 }
@@ -148,7 +159,7 @@ QUOTE CHECKER
 
 /*
 Ordine per virgolette
-- controllo se ci sono (syntax error per virgolette non chiuse)
+- controllo se ci sono (syntax error per virgolette non chiuse (D))
 - controllo se dollaro va espanso
 - tolgo virgolette
 - espando dollaro

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 09:52:49 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/01 09:46:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	handle_env_variable(t_lexing **node, t_gen *gen)
 	before = ft_substr((*node)->value, 1, dollar_pos - 1);
 	if (!before)
 		before = ft_strdup("");
-	clean_quotes(node);
+	// clean_quotes(node);
 	tmp = expand_env_var(gen->my_env, (*node)->value);
 	if (!tmp)
 		tmp = ft_strdup("");
