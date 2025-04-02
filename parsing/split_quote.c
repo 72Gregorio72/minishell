@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:21:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 10:33:54 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/24 09:24:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
-#include "libft.h"
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 static char	*ft_strndup(char const *src, int len)
 {
@@ -33,7 +32,7 @@ static char	*ft_strndup(char const *src, int len)
 	return (dest);
 }
 
-int	n_words(char c, char const *str)
+static int	n_words(char c, char const *str)
 {
 	int	i;
 	int	count;
@@ -51,24 +50,27 @@ int	n_words(char c, char const *str)
 		}
 		else if (str[i] == c)
 			in_word = 0;
-		else if (!quote_checker((char *)str, i))
-			in_word = 1;
 		i++;
 	}
 	return (count);
 }
 
-int	free_final(char **final, int row)
+static int	parse_next_token(char const *str, char c, int *index)
 {
-	int	i;
+	int		start;
+	int		in_quotes;
 
-	i = 0;
-	while (i <= row)
+	in_quotes = 0;
+	while (str[*index] && (str[*index] == c && !in_quotes))
+		(*index)++;
+	start = *index;
+	while (str[*index] && (in_quotes || str[*index] != c))
 	{
-		free(final[i]);
-		i++;
+		if (str[*index] == '\'' || str[*index] == '"')
+			in_quotes = !in_quotes;
+		(*index)++;
 	}
-	return (1);
+	return (start);
 }
 
 static char	**split(char **final, char const *str, char c, int freed)
@@ -79,14 +81,9 @@ static char	**split(char **final, char const *str, char c, int freed)
 
 	i = 0;
 	row = 0;
-	start = 0;
 	while (str[i])
 	{
-		while (str[i] && str[i] == c && !quote_checker((char *)str, i))
-			i++;
-		start = i;
-		while (str[i] && (!(str[i] == c) || !quote_checker((char *)str, i)))
-			i++;
+		start = parse_next_token(str, c, &i);
 		if (i > start)
 		{
 			final[row] = ft_strndup(str + start, i - start);
@@ -100,7 +97,7 @@ static char	**split(char **final, char const *str, char c, int freed)
 	return (final);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split_quote(char const *s, char c)
 {
 	int		num_words;
 	char	**final;
@@ -112,12 +109,12 @@ char	**ft_split(char const *s, char c)
 	return (split(final, s, c, 0));
 }
 
-/*#include <stdio.h>
+/* #include <stdio.h>
 
 int main(void) {
-    char str[] = "Hello World 42";
+    char str[] = "Hello World '     42 ' 42 'sd'";
     char c = ' ';
-    char **split = ft_split(str, c);
+    char **split = ft_split_quote(str, c);
 
     // Print the split result
     int i = 0;
@@ -129,4 +126,4 @@ int main(void) {
     }
     free(split); // Free the array of strings itself
     return 0;
-}*/
+} */

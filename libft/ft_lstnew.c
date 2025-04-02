@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:54:28 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:47:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <stdio.h>
 #include "libft.h"
 
-t_lexing	*ft_lstnew_cleaned(char *value, char *type, int strength, char **command)
+t_lexing	*ft_lstnew_cleaned(char *value, char *type,
+		int strength, char **command)
 {
 	t_lexing	*d;
 
@@ -45,6 +46,8 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->layer = 0;
 	d->strength = strength;
 	d->env_variable = 0;
+	d->infile = 0;
+	d->outfile = 1;
 	d->next = NULL;
 	d->command = NULL;
 	return (d);

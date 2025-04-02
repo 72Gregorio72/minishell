@@ -7,10 +7,14 @@ SRCS		=	main.c \
 				srcs/signals.c \
 				srcs/check.c \
 				srcs/layerize.c \
+				parsing/split_quote.c \
 				parsing/lexing.c \
 				parsing/parsing.c \
+				parsing/utils_for_lexing.c \
 				parsing/check_lexing.c \
-				parsing/quote_checker.c \
+				parsing/quote_handler.c \
+				parsing/dollar.c \
+				parsing/utils_for_quotes.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \

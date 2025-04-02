@@ -6,53 +6,11 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 10:40:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:30:27 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	find_args(t_lexing *lexed)
-{
-	t_lexing	*tmp;
-	t_lexing	*succ;
-
-	tmp = lexed;
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->type, "command", 8))
-		{
-			succ = tmp->next;
-			while (succ && succ->type && !ft_strncmp(succ->type, "command", 8))
-			{
-				if (check_not_command(succ))
-					break ;
-				if (succ->value[0] == '-')
-					succ->type = ft_strdup("option");
-				else
-				{
-					succ->type = ft_strdup("argument");
-					break ;
-				}
-				succ = succ->next;
-			}
-		}
-		tmp = tmp->next;
-	}
-}
-
-void	find_env_var(t_lexing *lexed)
-{
-	t_lexing	*tmp;
-
-	tmp = lexed;
-	while (tmp)
-	{
-		if (check_all_upper(tmp->value) && tmp->value[0] == '$')
-			tmp->env_variable = 1;
-		tmp = tmp->next;
-	}
-}
 
 void	add_token(t_lexing **lexed, char *content, char *type, int strength)
 {
@@ -69,6 +27,7 @@ void	tokenize(char *word, t_lexing **lexed)
 	i = 0;
 	while (word[i])
 	{
+		check_quotes(&i, lexed, word);
 		while (word[i] == ' ')
 			i++;
 		start = i;
@@ -88,13 +47,14 @@ void	tokenize(char *word, t_lexing **lexed)
 	}
 }
 
-t_lexing	*lexer(char **matrix)
+t_lexing	*lexer(char **matrix, t_gen *gen)
 {
 	int			i;
 	t_lexing	*lexed;
 
 	i = 0;
 	lexed = NULL;
+	(void)gen;
 	while (matrix[i])
 	{
 		tokenize(matrix[i], &lexed);
@@ -105,5 +65,3 @@ t_lexing	*lexer(char **matrix)
 	return (lexed);
 }
 // ( < echo 1 > || << echo 2 >> ) | ( echo '3 ' && echo " 4 " )
-// quotes possono anche essere in mezzo alla parola 
-// e tutto ciò che è dentro quote è un token separato

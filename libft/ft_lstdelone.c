@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:42 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 13:03:40 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:37:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,29 @@ void del(void *p)
 	free(p);
 }*/
 
+/* static int	util(char **final)
+{
+	int	i;
+
+	i = 0;
+	while (final[i])
+	{
+		free(final[i]);
+		i++;
+	}
+	free(final);
+	return (1);
+} */
+
 void	ft_lstdelone(t_lexing *lst)
 {
 	if (!lst)
 		return ;
 	free(lst->value);
 	if (ft_strncmp(lst->type, "argument", 9) == 0
-		|| ft_strncmp(lst->type, "option", 7) == 0)
+		|| ft_strncmp(lst->type, "option", 7) == 0
+		|| !ft_strncmp(lst->type, "outfile", 8)
+		|| !ft_strncmp(lst->type, "infile", 7))
 		free(lst->type);
 	if (lst->command)
 		free_matrix(lst->command);

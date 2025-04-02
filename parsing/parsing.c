@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 13:02:00 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:48:03 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 
 	succ = node->next;
 	if (ft_strncmp("echo", node->value, ft_strlen("echo")) == 0)
-		return (ft_echo(node, gen, 1));
+		return (ft_echo(node, gen, node->outfile));
 	else if (ft_strncmp("env", node->value, ft_strlen("env")) == 0)
 		return (ft_env(gen->my_env));
 	else if (ft_strncmp("pwd", node->value, 3) == 0)
-		return (ft_pwd(gen->my_env, 1));
+		return (ft_pwd(gen->my_env, node->outfile));
 	else if (ft_strncmp("exit", node->value, ft_strlen("exit")) == 0)
 		ft_exit(gen);
 	else if (ft_strncmp("cd", node->value, ft_strlen("cd")) == 0)
@@ -141,25 +141,29 @@ t_lexing *clean_data(t_gen *gen)
 }
 
 // las || (echo ciao && (cat in | wc))
-void	parsing(t_gen *gen)
+int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
 	int			flag;
 
 	gen->root = NULL;
 	flag = 0;
+	if (!quote_handler(gen))
+		return (0);
+	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
-	//print_list(gen->cleaned_data);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
 		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
 		print_binary_tree(gen->root, 0);
 	}
-	tmp = gen->cleaned_data;/* 
+	tmp = gen->cleaned_data;
+	/* 
 	if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp); */
 	ft_treeclear(gen->root);
+	return (1);
 }
 //echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3

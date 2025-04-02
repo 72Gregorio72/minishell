@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 11:27:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/18 13:48:06 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:56:23 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,11 @@ int	checks(char *line, t_gen *gen)
 	if (!line)
 		ctrl_d(gen);
 	else if (line[0] == '\0')
-		return (ctrl_c(0), 1);
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		return (1);
+	}
 	if (g_sig_received == CTRL_C)
 	{
 		g_sig_received = 0;
