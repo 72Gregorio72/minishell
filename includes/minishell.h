@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 13:00:48 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 14:33:57 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ int			check_not_command(t_lexing	*succ);
 void		exec_command(t_gen *gen);
 int			find_cmd_num(t_lexing *node);
 void		exec_single_command(t_gen *gen, t_lexing *node);
+int			exec_builtin(t_gen *gen, t_lexing *node);
 
 // pokemon :)
 typedef struct s_attack

@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 13:00:57 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:07:19 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,10 @@ char	**ft_strdup_matrix(char **matrix)
 	return (new_matrix);
 }
 
-t_lexing *clean_data(t_gen *gen)
+t_lexing	*clean_data(t_gen *gen)
 {
-	t_lexing *tmp = gen->lexed_data;
-	t_lexing *head = NULL;
+	t_lexing	*tmp = gen->lexed_data;
+	t_lexing	*head = NULL;
 
 	while (tmp)
 	{
@@ -133,7 +133,7 @@ t_lexing *clean_data(t_gen *gen)
 			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
 		{
 			t_lexing *new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
-				tmp->type, tmp->strength, get_command(tmp));
+					tmp->type, tmp->strength, get_command(tmp));
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
@@ -146,15 +146,13 @@ t_lexing *clean_data(t_gen *gen)
 // las || (echo ciao && (cat in | wc))
 int	parsing(t_gen *gen)
 {
-	exec_builtin(gen, gen->lexed_data);
-	/* t_lexing	*tmp;
+	t_lexing	*tmp;
 	int			flag;
 
 	gen->root = NULL;
 	flag = 0;
 	if (!quote_handler(gen))
 		return (0);
-	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
@@ -166,7 +164,7 @@ int	parsing(t_gen *gen)
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp);
-	ft_treeclear(gen->root); */
+	ft_treeclear(gen->root);
 	return (1);
 }
 //echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3

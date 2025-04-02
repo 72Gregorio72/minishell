@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 09:47:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:36:00 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->outfile = 1;
 	d->next = NULL;
 	d->command = NULL;
+	d->piped = 0;
 	return (d);
 }
 

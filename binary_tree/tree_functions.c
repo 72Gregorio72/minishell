@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 11:51:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 09:46:40 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:39:24 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,32 @@ t_tree	*new_node(t_lexing *lexed_input,
 
 t_tree	*least_important_leaf(t_tree *tree)
 {
-	while (tree)
-		tree = tree->right;
-	return (tree);
+	t_tree	*tmp;
+
+	tmp = tree;
+	while (tmp)
+	{
+		if (tmp->right)
+			tmp = tmp->right;
+		else
+			break ;
+	}
+	return (tmp);
 }
 
 t_tree	*most_important_leaf(t_tree *tree)
 {
-	while (tree)
-		tree = tree->left;
-	return (tree);
+	t_tree	*tmp;
+
+	tmp = tree;
+	while (tmp)
+	{
+		if (tmp->left)
+			tmp = tmp->left;
+		else
+			break ;
+	}
+	return (tmp);
 }
 
 void	delone_node(t_tree *node)
