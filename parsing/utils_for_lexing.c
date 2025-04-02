@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 09:08:06 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:23:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,14 @@ void	find_args(t_lexing *lexed)
 void	find_env_var(t_lexing *lexed)
 {
 	t_lexing	*tmp;
+	int			dollar_pos;
 
 	tmp = lexed;
 	while (tmp)
 	{
-		if (ft_strchr(tmp->value, '$') != NULL)
+		dollar_pos = find_char_pos(tmp->value, "$", 0);
+		if (ft_strchr(tmp->value, '$') != NULL
+			&& !ft_isdigit(tmp->value[dollar_pos + 1]))
 			tmp->env_variable = 1;
 		tmp = tmp->next;
 	}

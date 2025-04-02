@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:37:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:47:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <stdio.h>
 #include "libft.h"
 
-t_lexing	*ft_lstnew_cleaned(char *value, char *type, int strength, char **command)
+t_lexing	*ft_lstnew_cleaned(char *value, char *type,
+		int strength, char **command)
 {
 	t_lexing	*d;
 

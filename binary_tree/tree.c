@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 11:13:12 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:25:13 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:46:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
 {
-	t_lexing *tmp;
+	t_lexing	*tmp;
 
 	tmp = lexed;
 	while (tmp && tmp != last)
@@ -25,7 +25,6 @@ t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
 	}
 	return (max);
 }
-
 
 void	print_binary_tree(t_tree *node, int depth)
 {

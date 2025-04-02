@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 12:25:40 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:48:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void		clean_quotes(t_lexing **node);
 
 // env vars
 int			len_var(char *str, int dollar_pos);
-char		*expand_env_var(char **env, char *var, int dollar_pos);
+char		*expand_env_var(char **env, char *var);
 void		handle_env_variable(t_lexing **node, t_gen *gen);
 
 // utils
@@ -107,7 +107,8 @@ int			checks(char *line, t_gen *gen);
 void		handler(int sign, siginfo_t *info, void *context);
 
 // binary tree
-t_tree		*new_node(t_lexing *lexed_input, t_tree *left, t_tree *right, t_tree *parent);
+t_tree		*new_node(t_lexing *lexed_input, t_tree *left,
+				t_tree *right, t_tree *parent);
 t_tree		*least_important_leaf(t_tree *tree);
 t_tree		*most_important_leaf(t_tree *tree);
 void		delone_node(t_tree *node);

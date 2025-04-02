@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 11:09:29 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:48:03 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,8 @@ int	parsing(t_gen *gen)
 		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
 		print_binary_tree(gen->root, 0);
 	}
-	tmp = gen->cleaned_data;/* 
+	tmp = gen->cleaned_data;
+	/* 
 	if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else

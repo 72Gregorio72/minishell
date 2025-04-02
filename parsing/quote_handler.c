@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 15:50:56 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:47:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	unclosed_quotes(char *word)
 	return (1);
 }
 
-void clean_quotes(t_lexing **node)
+void	clean_quotes(t_lexing **node)
 {
 	char	*value;
 	char	*new_value;
@@ -131,7 +131,7 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 				{
 					tmp = ft_strdup((*node)->value);
 					free((*node)->value);
-					(*node)->value = expand_env_var(gen->my_env, tmp, 1);
+					(*node)->value = expand_env_var(gen->my_env, tmp);
 				}
 				break ;
 			}

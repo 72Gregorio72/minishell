@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:13:30 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 16:20:54 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 09:30:47 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,25 @@ int	len_var(char *str, int dollar_pos)
 	int	len;
 
 	len = 0;
+	dollar_pos++;
 	while (str[dollar_pos + len]
 		&& (ft_isalnum(str[dollar_pos + len]) || str[dollar_pos + len] == '_'))
 		len++;
 	return (len);
 }
 
-char	*expand_env_var(char **env, char *var, int dollar_pos)
+char	*expand_env_var(char **env, char *var)
 {
 	int		i;
 	int		len;
 	char	*env_value;
 	char	*var_name;
-	char	*start;
+	int		doll_pos;
 
 	i = -1;
-	start = var;
-	while (*var != '$' && *var)
-		var++;
-	if (!*var)
-		return (ft_strdup(var));
-	len = len_var(var, dollar_pos);
-	printf("%d\n", len);
-	var_name = ft_substr(start, 1, len);
+	doll_pos = find_char_pos(var, "$", 0);
+	len = len_var(var, doll_pos);
+	var_name = ft_substr(var, doll_pos + 1, len);
 	if (!var_name)
 		return (NULL);
 	while (env[++i])
