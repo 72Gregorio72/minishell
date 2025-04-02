@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 13:04:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:05:50 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int	main(int ac, char **av, char **env)
 0. Layering e sysntax error per parentesi (D )
 1. Espandere quotes --> blocca su sysntax error (D)
 2. Redirections (mettere le flag di input ed output file) --> blocca su file_input_not found
-3. Copia della list e clean_list (togliere parentesi, redirections, arguments e options)
-4. Costruisci tree sulla lista pulita
+3. Copia della list e clean_list (togliere parentesi, redirections, arguments e options) (D)
+4. Costruisci tree sulla lista pulita (D)
 5. Esegui dal tree 
 
 */
