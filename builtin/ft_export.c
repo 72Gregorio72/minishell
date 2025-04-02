@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/02 09:48:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 11:52:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,3 @@ void	ft_export(char ***env, const char *var)
 	}
 	util(i, var, env);
 }
-
-/*
-stampare sortato in ascii
-export a --> env non la stampa ma solo export si*/
