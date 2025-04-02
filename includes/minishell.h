@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 10:33:41 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:00:48 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 # include "pipex_bonus.h"
+# include <sys/stat.h>
 
 # define CTRL_C 1
 # define CTRL_BACK 2
@@ -47,6 +48,7 @@ typedef struct s_tree
 typedef struct s_gen
 {
 	char		**my_env;
+	char		**export_env;
 	char		**av;
 	int			exit_status;
 	t_tree		*root;
@@ -56,12 +58,13 @@ typedef struct s_gen
 
 // built in
 int			ft_echo(t_lexing *node, t_gen *gen, int fd);
-int			ft_env(char **env);
+int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
 void		ft_exit(t_gen *gen);
 int			ft_cd(char *new_path);
-void		ft_export(char ***envp, const char *var);
+void		ft_export(char ***envp, const char *var, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
+void		ft_unset_export(char ***envp, const char *var);
 
 // parsing
 int			parsing(t_gen *gen);
@@ -96,6 +99,8 @@ int			layerize(t_gen *gen);
 void		error_exit(t_gen *gen, char *str, int exit_status);
 char		**ft_split_quote(char const *s, char c);
 int			find_char_pos(char *s, char *chars, int start);
+int			ft_swap(char **s1, char **s2);
+void		sort_export(t_gen *gen);
 
 // ctrl
 void		ctrl_c(int new_line);

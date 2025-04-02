@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 09:48:03 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:00:57 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	unset_and_export(t_gen *gen, t_lexing *succ, t_lexing *node)
 	if (ft_strncmp("export", node->value, ft_strlen("export")) == 0)
 	{
 		if (!succ)
-			ft_env(gen->my_env);
+			ft_export(&gen->my_env, NULL, &gen->export_env);
 		else
-			ft_export(&gen->my_env, succ->value);
+			ft_export(&gen->my_env, succ->value, &gen->export_env);
 		return (1);
 	}
 	else if (ft_strncmp("unset", node->value, ft_strlen("unset")) == 0)
@@ -30,7 +30,10 @@ int	unset_and_export(t_gen *gen, t_lexing *succ, t_lexing *node)
 			rl_replace_line("", 0);
 		}
 		else
+		{
 			ft_unset(&gen->my_env, succ->value);
+			ft_unset_export(&gen->export_env, succ->value);
+		}
 		return (1);
 	}
 	return (0);
@@ -44,7 +47,7 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 	if (ft_strncmp("echo", node->value, ft_strlen("echo")) == 0)
 		return (ft_echo(node, gen, node->outfile));
 	else if (ft_strncmp("env", node->value, ft_strlen("env")) == 0)
-		return (ft_env(gen->my_env));
+		return (ft_env(gen->my_env, 0));
 	else if (ft_strncmp("pwd", node->value, 3) == 0)
 		return (ft_pwd(gen->my_env, node->outfile));
 	else if (ft_strncmp("exit", node->value, ft_strlen("exit")) == 0)
@@ -143,7 +146,8 @@ t_lexing *clean_data(t_gen *gen)
 // las || (echo ciao && (cat in | wc))
 int	parsing(t_gen *gen)
 {
-	t_lexing	*tmp;
+	exec_builtin(gen, gen->lexed_data);
+	/* t_lexing	*tmp;
 	int			flag;
 
 	gen->root = NULL;
@@ -158,12 +162,11 @@ int	parsing(t_gen *gen)
 		print_binary_tree(gen->root, 0);
 	}
 	tmp = gen->cleaned_data;
-	/* 
 	if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else
-		exec_single_command(gen, tmp); */
-	ft_treeclear(gen->root);
+		exec_single_command(gen, tmp);
+	ft_treeclear(gen->root); */
 	return (1);
 }
 //echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3
