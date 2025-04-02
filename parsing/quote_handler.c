@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 09:47:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:32:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,9 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 			if ((*node)->env_variable)
 			{
 				if (bool_quote == 2)
-					handle_env_variable(node, gen);
+					handle_env_variable(node, gen, 1);
 				else if (bool_quote)
-					printf("todo\n");
+					single_quotes(node, gen);
 				else
 				{
 					tmp = ft_strdup((*node)->value);
@@ -148,10 +148,9 @@ int	quote_handler(t_gen *gen)
 	tmp = gen->lexed_data;
 	while (tmp)
 	{
-		if (!unclosed_quotes(tmp->value))
-			return (error_exit(gen, "minishell: syntax error near \'", 2), 0);
-		else if (unclosed_quotes(tmp->value) == 2)
-			return (error_exit(gen, "minishell: syntax error near \"", 2), 0);
+		if (!unclosed_quotes(tmp->value) || unclosed_quotes(tmp->value) == 2)
+			return (error_exit(gen,
+					"minishell: syntax error near a quote", 2), 0);
 		else
 			handle_quotes(&tmp, gen);
 		tmp = tmp->next;
