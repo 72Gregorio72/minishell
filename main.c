@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 11:02:55 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 11:28:36 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,17 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//vcastald king
+//gpicchio king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
 	t_gen				gen;
 
 	(void)av;
-	ft_pokemon();
+	//ft_pokemon();
 	gen.my_env = copy_matrix(env);
+	gen.export_env = copy_matrix(env);
+	sort_export(&gen);
 	gen.exit_status = 0;
 	if (!gen.my_env)
 		exit(1);
