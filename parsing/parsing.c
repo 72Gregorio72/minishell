@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 13:00:57 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:05:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,8 @@ t_lexing *clean_data(t_gen *gen)
 // las || (echo ciao && (cat in | wc))
 int	parsing(t_gen *gen)
 {
-	exec_builtin(gen, gen->lexed_data);
-	/* t_lexing	*tmp;
+	// exec_builtin(gen, gen->lexed_data);
+	t_lexing	*tmp;
 	int			flag;
 
 	gen->root = NULL;
@@ -166,7 +166,7 @@ int	parsing(t_gen *gen)
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp);
-	ft_treeclear(gen->root); */
+	ft_treeclear(gen->root);
 	return (1);
 }
 //echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3
