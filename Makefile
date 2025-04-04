@@ -17,6 +17,7 @@ SRCS		=	main.c \
 				parsing/dollar.c \
 				parsing/utils_for_quotes.c \
 				parsing/redirections.c \
+				parsing/wildcards.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \

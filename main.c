@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 13:56:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 14:03:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		//printf("%s                          %.10s                                layer: %d         wild: %d\n", lst->value, lst->type, lst->layer, lst->wildcard);
-		printf("Command: %s   Infile:%d     Outfile: %d\n", lst->value, lst->infile, lst->outfile);	
+			printf("%s                          %.10s                                layer: %d         wild: %d\n", lst->value, lst->type, lst->layer, lst->wildcard);
+		//printf("Command: %s   Infile:%d     Outfile: %d\n", lst->value, lst->infile, lst->outfile);	
 		/* 		
 if (lst->command)
 		{
