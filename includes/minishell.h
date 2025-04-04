@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 09:39:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:30:45 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char		*expand_env_var(char **env, char *var);
 void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
 
 // redirections
-void		find_red(t_lexing *lst, t_gen *gen);
+int			find_red(t_lexing *lst, t_gen *gen);
 
 // utils
 void		free_matrix(char **av);
