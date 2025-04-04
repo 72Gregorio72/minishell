@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 13:05:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 09:41:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,15 +147,16 @@ t_lexing *clean_data(t_gen *gen)
 int	parsing(t_gen *gen)
 {
 	// exec_builtin(gen, gen->lexed_data);
-	t_lexing	*tmp;
+	//t_lexing	*tmp;
 	int			flag;
 
 	gen->root = NULL;
 	flag = 0;
 	if (!quote_handler(gen))
 		return (0);
+	find_red(gen->lexed_data, gen);
 	print_list(gen->lexed_data);
-	gen->cleaned_data = clean_data(gen);
+/* 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
 		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
@@ -165,7 +166,7 @@ int	parsing(t_gen *gen)
 	if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else
-		exec_single_command(gen, tmp);
+		exec_single_command(gen, tmp); */
 	ft_treeclear(gen->root);
 	return (1);
 }

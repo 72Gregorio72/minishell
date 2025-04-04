@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 13:05:50 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:11:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
-/* 		if (lst->command)
+		//printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
+		printf("Command: %s   Infile:%d     Outfile: %d\n", lst->value, lst->infile, lst->outfile);	
+		/* 		
+if (lst->command)
 		{
 			int i = 0;
 			while (lst->command[i])
@@ -72,7 +74,7 @@ int	main(int ac, char **av, char **env)
 	t_gen				gen;
 
 	(void)av;
-	//ft_pokemon();
+	// ft_pokemon();
 	gen.my_env = copy_matrix(env);
 	gen.export_env = copy_matrix(env);
 	sort_export(&gen);
