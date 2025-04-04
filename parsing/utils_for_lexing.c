@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 11:12:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:32:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,12 @@ void	find_args(t_lexing *lexed)
 	tmp = lexed;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->type, "command", 8))
-		{
+		if (tmp->next)
 			succ = tmp->next;
+		if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next)
+			succ->type = ft_strdup("here_doc_delimiter");
+		if (!ft_strncmp(tmp->type, "command", 8) && tmp->next)
+		{
 			while (succ && succ->type && !ft_strncmp(succ->type, "command", 8))
 			{
 				if (check_not_command(succ))

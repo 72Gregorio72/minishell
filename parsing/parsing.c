@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 10:37:55 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:12:43 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,15 +146,18 @@ t_lexing *clean_data(t_gen *gen)
 // las || (echo ciao && (cat in | wc))
 int	parsing(t_gen *gen)
 {
-	// t_lexing	*tmp;
 	int			flag;
+	// t_lexing	*tmp;
 
 	gen->root = NULL;
 	flag = 0;
-	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen))
+	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen)
+		|| !check_here_doc(gen))
 		return (0);
+	print_list(gen->lexed_data);
+	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
+		ft_pokemon();
 	// gen->cleaned_data = clean_data(gen);
-	// print_list(gen->lexed_data);
 	// tmp = gen->lexed_data;
 /* 	while (tmp)
 	{

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 10:32:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:54:13 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,12 @@ int	quote_handler(t_gen *gen)
 			return (error_exit(gen,
 					"minishell: syntax error near a quote", 2), 0);
 		else
-			handle_quotes(&tmp, gen);
+		{
+			if (!ft_strncmp(tmp->type, "here_doc_delimiter", 19))
+				clean_quotes(&tmp);
+			else
+				handle_quotes(&tmp, gen);
+		}
 		tmp = tmp->next;
 	}
 	return (1);

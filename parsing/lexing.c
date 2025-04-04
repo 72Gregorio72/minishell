@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:30:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:12:22 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,3 +65,22 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	return (lexed);
 }
 // ( < echo 1 > || << echo 2 >> ) | ( echo '3 ' && echo " 4 " )
+
+int	check_here_doc(t_gen *gen)
+{
+	t_lexing	*tmp;
+	t_lexing	*succ;
+
+	tmp = gen->lexed_data;
+	while (tmp)
+	{
+		if (tmp->next)
+			succ = tmp->next;
+		if (!ft_strncmp(tmp->type, "here_doc", 9)
+			&& (!tmp->next
+				|| ft_strncmp(succ->value, "here_doc_delimiter", 19) != 0))
+			return (error_exit(gen, "minishell : syntax error", 2), 0);
+		tmp = tmp->next;
+	}
+	return (1);
+}
