@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 14:27:53 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 14:40:53 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ int	expand_wildcard(t_lexing **node)
 		closedir(dir);
 		free(tmp);
 	}
+	// se c'e il punto confrontare 
+	//gli ultimi due caratteri di entry->d_name con cio'che si vuole
+	// se non lo trova mettere lasciare la wildcard.
 	return (1);
 }
 
