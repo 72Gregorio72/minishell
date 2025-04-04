@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 13:43:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:59:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	util_infile(t_lexing *tmp, t_gen *gen)
 {
 	t_lexing	*command;
 
-	command = find_next_node(tmp, "command");
+	command = find_prev_command(gen->lexed_data, tmp);
 	if (!command)
 		return (error_exit(gen, "minishell: syntax error", 2), 0);
 	if (!access(tmp->value, F_OK))
