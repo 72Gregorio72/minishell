@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 10:30:45 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:01:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void		print_binary_tree(t_tree *node, int depth);
 int			check_all_upper(char *word);
 int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
+int			check_files(t_gen *gen);
 
 // exec
 void		exec_command(t_gen *gen);
