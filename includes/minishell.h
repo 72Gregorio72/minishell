@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 12:10:49 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:38:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void		other_checks(int *i, t_lexing **lexed, char *word);
 void		other_checks_1(int *i, t_lexing **lexed, char *word);
 void		check_pipe(int *i, t_lexing **lexed, char *word);
 int			find_files(t_lexing *lexed, t_gen *gen);
-void		find_env_var(t_lexing *lexed);
+void		find_env_var_and_wild(t_lexing *lexed);
 void		find_args(t_lexing *lexed);
 
 // quotes

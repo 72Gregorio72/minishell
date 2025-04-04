@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 11:32:49 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:41:41 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	find_args(t_lexing *lexed)
 	}
 }
 
-void	find_env_var(t_lexing *lexed)
+void	find_env_var_and_wild(t_lexing *lexed)
 {
 	t_lexing	*tmp;
 	int			dollar_pos;
@@ -53,6 +53,9 @@ void	find_env_var(t_lexing *lexed)
 		if (ft_strchr(tmp->value, '$') != NULL
 			&& !ft_isdigit(tmp->value[dollar_pos + 1]))
 			tmp->env_variable = 1;
+		if (ft_strchr(tmp->value, '*') != NULL
+			&& (!ft_strchr(tmp->value, '\"') && !ft_strchr(tmp->value, '\'')))
+			tmp->wildcard = 1;
 		tmp = tmp->next;
 	}
 }
@@ -76,10 +79,10 @@ int	find_files(t_lexing *lexed, t_gen *gen)
 			else if (ft_strncmp("command", succ->type, 8) != 0 || !tmp->next)
 				return (error_exit(gen, "minishell: syntax error", 2), 0);
 		}
-		else if (!ft_strncmp("command", tmp->type, 8))
+		else if (!ft_strncmp("redirect_input", tmp->type, 15))
 		{
-			if (!ft_strncmp("redirect_input", succ->type, 15))
-				tmp->type = ft_strdup("infile");
+			if (!ft_strncmp("command", succ->type, 9))
+				succ->type = ft_strdup("infile");
 		}
 		tmp = tmp->next;
 	}
@@ -114,11 +117,8 @@ int	check_files(t_gen *gen)
 	{
 		if (tmp->next)
 			succ = tmp->next;
-		if (!count_nodes_before(tmp, gen->lexed_data)
-			&& !ft_strncmp(tmp->type, "redirect_input", 15))
-			return (error_exit(gen, "mininshell: syntax error", 2), 0);
-		if (succ && !ft_strncmp(succ->type, "redirect_input", 15)
-			&& check_not_command(tmp))
+		if (succ && !ft_strncmp(tmp->type, "redirect_input", 15)
+			&& check_not_command(succ))
 			return (error_exit(gen, "mininshell: syntax error", 2), 0);
 		if (succ
 			&& (!ft_strncmp(tmp->type, "redirect_output", 16)

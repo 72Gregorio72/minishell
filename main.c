@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 12:14:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:47:06 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
+		printf("%s                          %.10s                                layer: %d         wild: %d\n", lst->value, lst->type, lst->layer, lst->wildcard);
 		// printf("Command: %s   Infile:%d     Outfile: %d\n", lst->value, lst->infile, lst->outfile);	
 		/* 		
 if (lst->command)
@@ -56,11 +56,14 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			exit(0);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
-		if (check_files(gen)
-			&& layerize(gen) && find_files(gen->lexed_data, gen))
+		if (check_files(gen) && find_files(gen->lexed_data, gen))
 		{
-			if (parsing(gen))
-				ft_lstclear(gen->cleaned_data);
+			find_args(gen->lexed_data);
+			if (layerize(gen))
+			{
+				if (parsing(gen))
+					ft_lstclear(gen->cleaned_data);
+			}
 		}
 		free_matrix(gen->av);
 		ft_lstclear(gen->lexed_data);

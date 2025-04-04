@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 14:38:18 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:36:59 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_lexing
 	char	**command;
 	int		infile;
 	int		outfile;
+	int		wildcard;
 }				t_lexing;
 
 int			ft_isalpha(int c);

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 12:12:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:44:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 		tokenize(matrix[i], &lexed);
 		i++;
 	}
-	find_args(lexed);
-	find_env_var(lexed);
+	find_env_var_and_wild(lexed);
 	return (lexed);
 }
 // ( < echo 1 > || << echo 2 >> ) | ( echo '3 ' && echo " 4 " )
