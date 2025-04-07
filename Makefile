@@ -7,10 +7,14 @@ SRCS		=	main.c \
 				srcs/signals.c \
 				srcs/check.c \
 				srcs/layerize.c \
+				parsing/split_quote.c \
 				parsing/lexing.c \
 				parsing/parsing.c \
+				parsing/utils_for_lexing.c \
 				parsing/check_lexing.c \
-				parsing/quote_checker.c \
+				parsing/quote_handler.c \
+				parsing/dollar.c \
+				parsing/utils_for_quotes.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \
@@ -20,13 +24,14 @@ SRCS		=	main.c \
 				builtin/ft_cd.c \
 				builtin/ft_export.c \
 				builtin/ft_unset.c \
+				exec_commands/execute.c \
+				ft_pokemon.c \
 				pipex/bonus/pipex_bonus.c \
 				pipex/bonus/pipex_utils_bonus.c \
 				pipex/bonus/get_path_bonus.c \
 				pipex/bonus/processes_bonus.c \
 				pipex/bonus/processes_utils_bonus.c \
-				pipex/bonus/read_bonus.c \
-				ft_pokemon.c \
+				pipex/bonus/read_bonus.c 
 		
 OBJS		= $(SRCS:.c=.o)
 

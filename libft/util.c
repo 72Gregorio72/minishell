@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 09:47:43 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 14:50:18 by vcastald         ###   ########.fr       */
+/*   Created: 2025/03/21 12:09:53 by vcastald          #+#    #+#             */
+/*   Updated: 2025/03/26 12:45:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include "libft.h"
+#include "../includes/minishell.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+int	quote_split(char const *str, int *i, int *start, int *quote_status)
 {
-	unsigned int	len_s1;
-	unsigned int	len;
-	char			*dest;
-
-	len_s1 = ft_strlen(s1);
-	len = len_s1 + ft_strlen(s2) + 1;
-	dest = ft_calloc(len, 1);
-	if (!dest)
-		return (NULL);
-	ft_strlcat(dest, s1, len_s1 + 1);
-	ft_strlcat(dest, s2, len);
-	return (dest);
+	while (str[*i] && str[*i] == ' ')
+		(*i)++;
+	*start = *i;
+	*quote_status = quote_checker((char *)str, *i);
+	while (str[*i] && (str[*i] != ' ' || *quote_status != 0))
+		(*i)++;
+	return (*i > *start);
 }

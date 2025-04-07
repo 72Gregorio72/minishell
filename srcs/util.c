@@ -3,14 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/21 09:37:56 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 11:28:41 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_swap(char **s1, char **s2)
+{
+	char	*tmp;
+
+	tmp = *s1;
+	*s1 = *s2;
+	*s2 = tmp;
+	return (1);
+}
+
+void	sort_export(t_gen *gen)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (gen->export_env[i])
+	{
+		j = i + 1;
+		while (gen->export_env[j])
+		{
+			if (ft_strncmp(gen->export_env[i], gen->export_env[j],
+					ft_strlen(gen->export_env[i])) > 0)
+				ft_swap(&gen->export_env[i], &gen->export_env[j]);
+			j++;
+		}
+		i++;
+	}
+}
 
 char	**copy_matrix(char **src)
 {

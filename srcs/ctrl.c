@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ctrl.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 09:24:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/18 15:21:30 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/02 11:27:47 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	ctrl_d(t_gen *gen)
 	(void)gen;
 	printf("exit\n");
 	free_matrix(gen->my_env);
+	free_matrix(gen->export_env);
 	rl_clear_history();
 	exit(0);
 }
