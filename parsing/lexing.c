@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 16:30:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:47:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	add_token(t_lexing **lexed, char *content, char *type, int strength)
 	if (content && *content)
 		ft_lstadd_back(lexed, ft_lstnew(ft_strdup(content), type, strength));
 }
-// infinite se metto operatori dopo echo &?
+
 int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 {
 	int		i;
