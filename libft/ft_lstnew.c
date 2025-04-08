@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 12:42:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:24:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ t_lexing	*ft_lstnew_cleaned(char *value, char *type,
 	d->strength = strength;
 	d->env_variable = 0;
 	d->wildcard = 0;
+	d->infile = 0;
+	d->outfile = 1;
 	d->next = NULL;
 	d->command = command;
 	return (d);

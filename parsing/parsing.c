@@ -6,23 +6,23 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 09:08:55 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:26:05 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	unset_and_export(t_gen *gen, t_lexing *succ, t_lexing *node)
+int	unset_and_export(t_gen *gen, char *succ, char *curr)
 {
-	if (ft_strncmp("export", node->value, ft_strlen("export")) == 0)
+	if (ft_strncmp("export", curr, ft_strlen("export")) == 0)
 	{
 		if (!succ)
 			ft_export(&gen->my_env, NULL, &gen->export_env);
 		else
-			ft_export(&gen->my_env, succ->value, &gen->export_env);
+			ft_export(&gen->my_env, succ, &gen->export_env);
 		return (1);
 	}
-	else if (ft_strncmp("unset", node->value, ft_strlen("unset")) == 0)
+	else if (ft_strncmp("unset", curr, ft_strlen("unset")) == 0)
 	{
 		if (!succ)
 		{
@@ -31,8 +31,8 @@ int	unset_and_export(t_gen *gen, t_lexing *succ, t_lexing *node)
 		}
 		else
 		{
-			ft_unset(&gen->my_env, succ->value);
-			ft_unset_export(&gen->export_env, succ->value);
+			ft_unset(&gen->my_env, succ);
+			ft_unset_export(&gen->export_env, succ);
 		}
 		return (1);
 	}
@@ -41,21 +41,20 @@ int	unset_and_export(t_gen *gen, t_lexing *succ, t_lexing *node)
 
 int	exec_builtin(t_gen *gen, t_lexing *node)
 {
-	t_lexing	*succ;
-
-	succ = node->next;
-	if (ft_strncmp("echo", node->value, ft_strlen("echo")) == 0)
+	if (ft_strncmp("echo", node->command[0], ft_strlen("echo")) == 0)
 		return (ft_echo(node, gen, node->outfile));
-	else if (ft_strncmp("env", node->value, ft_strlen("env")) == 0)
+	else if (ft_strncmp("env", node->command[0], ft_strlen("env")) == 0)
 		return (ft_env(gen->my_env, 0));
-	else if (ft_strncmp("pwd", node->value, 3) == 0)
+	else if (ft_strncmp("pwd", node->command[0], 3) == 0)
 		return (ft_pwd(gen->my_env, node->outfile));
-	else if (ft_strncmp("exit", node->value, ft_strlen("exit")) == 0)
+	else if (ft_strncmp("exit", node->command[0], ft_strlen("exit")) == 0)
 		ft_exit(gen);
-	else if (ft_strncmp("cd", node->value, ft_strlen("cd")) == 0)
-		return (ft_cd(succ->value));
+	else if (ft_strncmp("cd", node->command[0], ft_strlen("cd")) == 0
+		&& node->command[1])
+		return (ft_cd(node->command[1], gen->export_env, gen));
 	else
-		return (unset_and_export(gen, succ, node));
+		return (unset_and_export(gen, node->command[1],
+				node->command[0]));
 	return (1);
 }
 
@@ -157,7 +156,8 @@ int	parsing(t_gen *gen)
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
 	print_list(gen->lexed_data);
-	// gen->cleaned_data = clean_data(gen);
+	gen->cleaned_data = clean_data(gen);
+	exec_builtin(gen, gen->cleaned_data);
 	// tmp = gen->lexed_data;
 /* 	while (tmp)
 	{

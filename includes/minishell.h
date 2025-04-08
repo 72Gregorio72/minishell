@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 10:00:03 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:19:41 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int			ft_echo(t_lexing *node, t_gen *gen, int fd);
 int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
 void		ft_exit(t_gen *gen);
-int			ft_cd(char *new_path);
+int			ft_cd(char *new_path, char **export_env, t_gen *gen);
 void		ft_export(char ***envp, const char *var, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
