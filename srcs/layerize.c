@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:12:41 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 11:39:04 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:35:11 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,10 @@ int	check_parenthesis(t_lexing *lst, t_gen *gen)
 		{
 			if (!unclosed_parenth(succ))
 				return (error_exit(gen, "minishell: syntax error", 2), 0);
-			if (check_not_command(succ)
-				|| !ft_strncmp(succ->type, "argument", 9)
-				|| !ft_strncmp(succ->type, "option", 7))
+			if ((check_not_command(succ)
+					|| !ft_strncmp(succ->type, "argument", 9)
+					|| !ft_strncmp(succ->type, "option", 7))
+				&& ft_strncmp(succ->type, "open_parenthesis", 17) != 0)
 				return (error_exit(gen, "minishell: syntax error", 2), 0);
 		}
 		tmp = tmp->next;
