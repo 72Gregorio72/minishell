@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/08 14:34:59 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:47:21 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,15 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		gen->exit_status = 127;
 		free(cmd_path);
 		free_matrix(env);
+		if (node->piped)
+		{
+			ft_treeclear(gen->root);
+			free_matrix(gen->my_env);
+			free_matrix(gen->export_env);
+			ft_lstclear(gen->lexed_data);
+			ft_lstclear(gen->cleaned_data);
+			free_matrix(gen->av);
+		}
 		return ;
 	}
 	pid = fork();
