@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:03:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 12:00:15 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:37:22 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ int	ft_echo(t_lexing *node, t_gen *gen, int fd)
 	}
 	while (node->command[i])
 	{
-		if (new_line)
+		if (new_line && !node->command[i + 1])
 			ft_putendl_fd(node->command[i], fd);
 		else
 			ft_putstr_fd(node->command[i], fd);
+		if (node->command[i + 1])
+			write(fd, " ", 1);
 		i++;
 	}
 	return (1);
