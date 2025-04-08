@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 12:19:41 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:42:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_gen
 	t_tree		*root;
 	t_lexing	*lexed_data;
 	t_lexing	*cleaned_data;
+	int			*fds;
 }				t_gen;
 
 // built in
@@ -138,6 +139,7 @@ int			check_here_doc(t_gen *gen);
 void		exec_command(t_gen *gen);
 int			find_cmd_num(t_lexing *node);
 void		exec_single_command(t_gen *gen, t_lexing *node);
+int			exec_builtin(t_gen *gen, t_lexing *node);
 
 // pokemon :)
 typedef struct s_attack

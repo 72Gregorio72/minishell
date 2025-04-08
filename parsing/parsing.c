@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 12:26:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:43:40 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,10 @@ char	**ft_strdup_matrix(char **matrix)
 	return (new_matrix);
 }
 
-t_lexing *clean_data(t_gen *gen)
+t_lexing	*clean_data(t_gen *gen)
 {
-	t_lexing *tmp = gen->lexed_data;
-	t_lexing *head = NULL;
+	t_lexing	*tmp = gen->lexed_data;
+	t_lexing	*head = NULL;
 
 	while (tmp)
 	{
@@ -132,7 +132,7 @@ t_lexing *clean_data(t_gen *gen)
 			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
 		{
 			t_lexing *new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
-				tmp->type, tmp->strength, get_command(tmp));
+					tmp->type, tmp->strength, get_command(tmp));
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
@@ -145,10 +145,12 @@ t_lexing *clean_data(t_gen *gen)
 // las || (echo ciao && (cat in | wc))
 int	parsing(t_gen *gen)
 {
+	t_lexing	*tmp;
 	int			flag;
 	// t_lexing	*tmp;
 
 	gen->root = NULL;
+	if (!quote_handler(gen))
 	flag = 0;
 	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen)
 		|| !check_here_doc(gen) || !check_wildcards(gen))
@@ -167,12 +169,14 @@ int	parsing(t_gen *gen)
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
 		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
-		print_binary_tree(gen->root, 0);
+		//print_binary_tree(gen->root, 0);
 	}
 	tmp = gen->cleaned_data;
 	if (find_cmd_num(tmp) > 1)
 		exec_command(gen);
 	else
+		exec_single_command(gen, tmp);
+	ft_treeclear(gen->root);
 		exec_single_command(gen, tmp); */
 	ft_treeclear(gen->root);
 	return (1);

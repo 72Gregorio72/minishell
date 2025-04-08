@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 09:46:02 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/11 12:24:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:49:04 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@
 # include "structures_bonus.h"
 # include "minishell.h"
 
-# define RED "\033[0;31m"
+# define RED "\033[1;31m"
 # define RESET "\033[0m"
-# define GREEN "\033[0;32m"
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define BLUE "\033[1;34m"
 
 char	*find_path_variable(char **envp);
 char	**split_paths(char *path);
