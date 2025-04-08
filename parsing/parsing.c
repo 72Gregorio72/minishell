@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 14:14:25 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:57:04 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	unset_and_export(t_gen *gen, char *succ, char *curr)
 {
-	if (ft_strncmp("export", curr, ft_strlen(curr) == 0))
+	if (!ft_strncmp("export", curr, ft_strlen(curr)))
 	{
 		if (!succ)
 			ft_export(&gen->my_env, NULL, &gen->export_env);
@@ -22,7 +22,7 @@ int	unset_and_export(t_gen *gen, char *succ, char *curr)
 			ft_export(&gen->my_env, succ, &gen->export_env);
 		return (1);
 	}
-	else if (ft_strncmp("unset", curr, ft_strlen(curr)) == 0)
+	else if (!ft_strncmp("unset", curr, ft_strlen(curr)))
 	{
 		if (!succ)
 		{
@@ -152,7 +152,8 @@ int	parsing(t_gen *gen)
 
 	gen->root = NULL;
 	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen)
-		|| !check_here_doc(gen) || !check_wildcards(gen))
+		|| !check_here_doc(gen) || !check_wildcards(gen)
+		|| !check_operators(gen))
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();

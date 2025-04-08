@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 13:42:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:53:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
 int			check_files(t_gen *gen);
 int			check_here_doc(t_gen *gen);
+int			check_operators(t_gen *gen);
 
 // exec
 void		exec_command(t_gen *gen);
