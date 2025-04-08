@@ -54,6 +54,7 @@ typedef struct s_gen
 	t_tree		*root;
 	t_lexing	*lexed_data;
 	t_lexing	*cleaned_data;
+	int			*fds;
 }				t_gen;
 
 // built in

@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/02 16:49:37 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:51:05 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,18 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	{
 		cmd_path = ft_strdup(node->value);
 	}
+	if (access(cmd_path, F_OK) == -1)
+	{
+		ft_putstr_fd(RED"Command ", 2);
+		ft_putstr_fd(YELLOW"\"", 2);
+		ft_putstr_fd(node->value, 2);
+		ft_putstr_fd("\"", 2);
+		ft_putstr_fd(RED" not found\n"RESET, 2);
+		gen->exit_status = 1;
+		free(cmd_path);
+		free_matrix(env);
+		return ;
+	}
 	pid = fork();
 	if (pid == -1)
 	{
@@ -41,6 +53,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	{
 		execve(cmd_path, node->command, env);
 		ft_putstr_fd("execve error\n", 2);
+		free_matrix(env);
 		exit(1);
 	}
 	else
@@ -50,6 +63,15 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			gen->exit_status = WEXITSTATUS(status);
 	}
 	free_matrix(env);
+	if (node->piped)
+	{
+		ft_treeclear(gen->root);
+		free_matrix(gen->my_env);
+		free_matrix(gen->export_env);
+		ft_lstclear(gen->lexed_data);
+		ft_lstclear(gen->cleaned_data);
+		free_matrix(gen->av);
+	}
 	free(cmd_path);
 }
 
@@ -69,31 +91,99 @@ int		find_cmd_num(t_lexing *node)
 	return (cmd_num);
 }
 
-void	exec_piped_commands(t_gen *gen)
+void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 {
-	
+	if (!node)
+		return ;
+	collect_piped_cmds(node->left, cmds, i);
+	if (node->data && ft_strncmp(node->data->type, "command", 8) == 0)
+		cmds[(*i)++] = node->data;
+	collect_piped_cmds(node->right, cmds, i);
+}
+
+void	exec_piped_commands(t_gen *gen, t_tree *subroot)
+{
+	t_lexing	*cmds[256];
+	int			num_cmds = 0;
+	int			i, pipe_fd[2], prev_fd = -1;
+	pid_t		pid;
+
+	collect_piped_cmds(subroot, cmds, &num_cmds);
+
+	for (i = 0; i < num_cmds; i++)
+	{
+		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)
+		{
+			ft_putstr_fd("pipe error\n", 2);
+			gen->exit_status = 1;
+			return ;
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			ft_putstr_fd("fork error\n", 2);
+			gen->exit_status = 1;
+			return ;
+		}
+		if (pid == 0)
+		{
+			if (prev_fd != -1)
+			{
+				dup2(prev_fd, STDIN_FILENO);
+				close(prev_fd);
+			}
+			if (i < num_cmds - 1)
+			{
+				close(pipe_fd[0]);
+				dup2(pipe_fd[1], STDOUT_FILENO);
+				close(pipe_fd[1]);
+			}
+			exec_single_command(gen, cmds[i]);
+			exit(gen->exit_status);
+		}
+		if (prev_fd != -1)
+			close(prev_fd);
+		if (i < num_cmds - 1)
+		{
+			close(pipe_fd[1]);
+			prev_fd = pipe_fd[0];
+		}
+	}
+	for (i = 0; i < num_cmds; i++)
+	{
+		int status;
+		wait(&status);
+		if (i == num_cmds - 1 && WIFEXITED(status))
+			gen->exit_status = WEXITSTATUS(status);
+	}
 }
 
 void	exec_tree(t_gen *gen, t_tree *root)
 {
-	t_tree	*tmp;
-
-	tmp = root;
-	if (!tmp)
+	if (!root)
 		return ;
-	if (tmp->left)
-		exec_tree(gen, tmp->left);
-	if (tmp->right)
-		exec_tree(gen, tmp->right);
-	if (tmp->data->piped && !ft_strncmp(tmp->data->type, "command", 4))
+	if (ft_strncmp(root->data->type, "pipe", 4) == 0)
 	{
-		exec_piped_commands(gen);
+		exec_piped_commands(gen, root);
 	}
-	else
+	else if (ft_strncmp(root->data->type, "command", 8) == 0)
 	{
-		exec_single_command(gen, tmp->data);
+		exec_single_command(gen, root->data);
+	}
+	else if (ft_strncmp(root->data->type, "or_operator", 12) == 0)
+	{
+		exec_tree(gen, root->left);
+		if (gen->exit_status != 0)
+			exec_tree(gen, root->right);
+	}
+	else if (ft_strncmp(root->data->type, "and_operator", 13) == 0)
+	{
+		exec_tree(gen, root->left);
+		if (gen->exit_status == 0)
+			exec_tree(gen, root->right);
 	}
 }
+//((echo 1 && echo 2) && (echo 3 || echo 4)) || (echo 5 && echo 6)
 
 void	flag_piped(t_tree *node)
 {
@@ -131,5 +221,6 @@ void	exec_command(t_gen *gen)
 	init_piped(gen->root);
 	flag_piped(gen->root);
 	exec_tree(gen, gen->root);
+	ft_treeclear(gen->root);
 	gen->root = NULL;
 }

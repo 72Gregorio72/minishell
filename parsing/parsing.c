@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 16:07:19 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:16:40 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,17 +147,15 @@ t_lexing	*clean_data(t_gen *gen)
 int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
-	int			flag;
 
 	gen->root = NULL;
-	flag = 0;
 	if (!quote_handler(gen))
 		return (0);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
 		gen->root = fill_tree(gen->cleaned_data, ft_lstlast(gen->cleaned_data), gen->root);
-		print_binary_tree(gen->root, 0);
+		//print_binary_tree(gen->root, 0);
 	}
 	tmp = gen->cleaned_data;
 	if (find_cmd_num(tmp) > 1)

@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 11:13:12 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 16:26:00 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 12:11:38 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
 	tmp = lexed;
 	while (tmp && tmp != last)
 	{
-		if (tmp->layer <= max->layer && tmp->strength > max->strength)
+		if (tmp->layer <= max->layer && tmp->strength >= max->strength)
 			max = tmp;
 		tmp = tmp->next;
 	}

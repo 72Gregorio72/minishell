@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:09:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 15:36:00 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 10:31:41 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_lexing	*ft_lstnew_cleaned(char *value, char *type,
 	d->env_variable = 0;
 	d->next = NULL;
 	d->command = command;
+	d->piped = 0;
 	return (d);
 }
 
