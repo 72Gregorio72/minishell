@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 09:40:34 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 10:00:21 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			safe_free(gen);
 			exit(0);
 		}
-		gen->exit_status = 0; /*occhio*/
 		gen->lexed_data = lexer(gen->av, gen);
-		if (!gen->exit_status)
+		if (gen->lexed_data != NULL)
 		{
 			if (check_files(gen) && find_files(gen->lexed_data, gen))
 			{

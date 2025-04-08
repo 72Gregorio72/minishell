@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 09:34:42 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 10:00:03 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int			parsing(t_gen *gen);
 t_lexing	*lexer(char **matrix, t_gen *gen);
 void		add_token(t_lexing **lexed, char *content,
 				char *type, int strength);
-void		other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen);
+int			other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen);
 void		other_checks_1(int *i, t_lexing **lexed, char *word);
 void		check_pipe(int *i, t_lexing **lexed, char *word);
 int			find_files(t_lexing *lexed, t_gen *gen);
