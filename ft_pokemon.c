@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:44:12 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/26 16:40:02 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:29:17 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,30 @@ void	add_attacks(t_pokemon *pokemon, t_attack *attacks)
 	pokemon->attack4 = attacks[3];
 }
 
-void	print_healthbar(int health, char *name)
+void	print_healthbar(char *name, int health, int align_top)
 {
-	int i;
+	int	i;
+	int	bar_length;
+	
+	bar_length = 20;
+	if (align_top)
+		printf("%-12s\n", name);
+	else
+		printf("\n%-12s\n", name);
+	printf("HP: [");
 
-	printf("\r%s: [", name);
 	i = 0;
-	while (i < health / 10)
+	while (i < (health * bar_length) / 100)
 	{
 		printf("█");
 		i++;
 	}
-	while (i < 10)
+	while (i < bar_length)
 	{
 		printf(".");
 		i++;
 	}
-	printf("] %d%%  \n", health);
-	fflush(stdout);
+	printf("] %3d%%\n", health);
 }
 
 void	clear_window(void)
@@ -89,7 +95,6 @@ void	player_attack(t_pokemon *pikachu, t_pokemon *bulbasaur, int *player_turn)
 	printf("2. %s\n", pikachu->attack2.name);
 	printf("3. %s\n", pikachu->attack3.name);
 	printf("4. %s\n", pikachu->attack4.name);
-	fflush(stdout);
 
 	line = get_next_line(0);
 
@@ -172,6 +177,70 @@ void	ft_wait(long seconds)
 		seconds--;
 }
 
+void	print_ascii_art(const char *filepath)
+{
+	int		fd = open(filepath, O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Impossibile aprire il file dell'art ASCII");
+		return;
+	}
+
+	char	buffer[1024];
+	int		line_num = 0;
+	ssize_t	bytes_read;
+	size_t	i = 0;
+	char	c;
+
+	// Lettura carattere per carattere per contare le righe e stampare solo quelle desiderate
+	while ((bytes_read = read(fd, &c, 1)) > 0)
+	{
+		if (c == '\n')
+		{
+			buffer[i] = '\0';
+
+			// Stampa solo se NON è la prima riga (0) o l'ultima (gestita più sotto)
+			if (line_num > 0)
+				printf("%s\n", buffer);
+
+			i = 0;
+			line_num++;
+		}
+		else if (i < sizeof(buffer) - 1)
+		{
+			buffer[i++] = c;
+		}
+	}
+
+	// Se il file non termina con '\n', gestisce l’ultima riga
+	if (i > 0 && line_num > 0)
+	{
+		buffer[i] = '\0';
+		// Non stampare l’ultima riga (tipicamente il "*/")
+		// Quindi qui NON facciamo printf
+	}
+
+	if (bytes_read == -1)
+		perror("Errore durante la lettura del file");
+
+	close(fd);
+}
+
+void	display_battle(t_pokemon *player, t_pokemon *enemy)
+{
+	clear_window();
+
+	printf("        Opponent\n");
+	print_healthbar(enemy->name, enemy->health, 1);
+	printf("\n");
+	print_ascii_art("bulbasaur.c");
+	printf("   %s (nemico)\n\n", enemy->name);
+	printf("\n\n");
+	print_ascii_art("pikachu.c");
+	printf("   %s (tuo)\n", player->name);
+	print_healthbar(player->name, player->health, 0);
+}
+
 void	ft_pokemon()
 {
 	t_pokemon	*pikachu;
@@ -182,19 +251,16 @@ void	ft_pokemon()
 	player_turn = 1;
 	initialize_pokemon(&pikachu, &bulbasaur, &attacks);
 	printf("\nA wild %s appears!\n\n", bulbasaur->name);
-	print_healthbar(bulbasaur->health, bulbasaur->name);
-	print_healthbar(pikachu->health, pikachu->name);
+	display_battle(pikachu, bulbasaur);
 
 	while (pikachu->health > 0 && bulbasaur->health > 0)
 	{
+		display_battle(pikachu, bulbasaur);
 		if (player_turn)
 			player_attack(pikachu, bulbasaur, &player_turn);
 		else
 			cpu_attack(pikachu, bulbasaur, &player_turn);
-		clear_window();
-		print_healthbar(bulbasaur->health, bulbasaur->name);
-		print_healthbar(pikachu->health, pikachu->name);
-		ft_wait(500000000);
+		ft_wait(800000000);
 	}
 	if (pikachu->health <= 0)
 		printf("\n%s fainted!\n", pikachu->name);
