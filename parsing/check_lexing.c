@@ -6,13 +6,13 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:19:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 12:31:29 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 09:34:40 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	other_checks(int *i, t_lexing **lexed, char *word)
+void	other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen)
 {
 	if (ft_strncmp(&word[*i], "(", ft_strlen("(")) == 0)
 	{
@@ -22,6 +22,8 @@ void	other_checks(int *i, t_lexing **lexed, char *word)
 	else if (ft_strncmp(&word[*i], ")", ft_strlen(")")) == 0)
 	{
 		add_token(lexed, ")", "close_parenthesis", -1);
+		if (word[(*i) + 1])
+			error_exit(gen, "minishell: syntax error", 2);
 		*i += ft_strlen(")");
 	}
 	else if (ft_strncmp(&word[*i], "||", ft_strlen("||")) == 0)

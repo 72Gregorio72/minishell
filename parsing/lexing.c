@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 13:44:44 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 09:34:34 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	add_token(t_lexing **lexed, char *content, char *type, int strength)
 		ft_lstadd_back(lexed, ft_lstnew(ft_strdup(content), type, strength));
 }
 
-void	tokenize(char *word, t_lexing **lexed)
+void	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 {
 	int		i;
 	int		start;
@@ -41,7 +41,7 @@ void	tokenize(char *word, t_lexing **lexed)
 		}
 		if (!word[i])
 			break ;
-		other_checks(&i, lexed, word);
+		other_checks(&i, lexed, word, gen);
 		other_checks_1(&i, lexed, word);
 		check_pipe(&i, lexed, word);
 	}
@@ -57,7 +57,7 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	(void)gen;
 	while (matrix[i])
 	{
-		tokenize(matrix[i], &lexed);
+		tokenize(matrix[i], &lexed, gen);
 		i++;
 	}
 	find_env_var_and_wild(lexed);
@@ -77,7 +77,7 @@ int	check_here_doc(t_gen *gen)
 			succ = tmp->next;
 		if (!ft_strncmp(tmp->type, "here_doc", 9)
 			&& (!tmp->next
-				|| ft_strncmp(succ->value, "here_doc_delimiter", 19) != 0))
+				|| ft_strncmp(succ->type, "here_doc_delimiter", 19) != 0))
 			return (error_exit(gen, "minishell : syntax error", 2), 0);
 		tmp = tmp->next;
 	}
