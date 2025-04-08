@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/08 12:51:05 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:17:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_builtin(char *command)
+{
+	if (!ft_strncmp(command, "cd", ft_strlen(command)))
+		return (1);
+	else if (!ft_strncmp(command, "echo", ft_strlen(command)))
+		return (1);
+	else if (!ft_strncmp(command, "env", ft_strlen(command)))
+		return (1);
+	else if (!ft_strncmp(command, "exit", ft_strlen(command)))
+		return (1);
+	else if (!ft_strncmp(command, "export", ft_strlen(command)))
+		return (1);
+	else if (!ft_strncmp(command, "unset", ft_strlen(command)))
+		return (1);
+	else if (!ft_strncmp(command, "pwd", ft_strlen(command)))
+		return (1);
+	return (0);
+}
 
 void	exec_single_command(t_gen *gen, t_lexing *node)
 {
@@ -19,8 +38,14 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	*cmd_path;
 	char	**env;
 
-	if (exec_builtin(gen, node))
+	if (is_builtin(node->command[0]))
+	{
+		if (exec_builtin(gen, node))
+			gen->exit_status = 0;
+		else
+			gen->exit_status = 127;
 		return ;
+	}
 	env = copy_matrix(gen->my_env);
 	if (!node || !node->value)
 		return ;
@@ -36,7 +61,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		ft_putstr_fd(node->value, 2);
 		ft_putstr_fd("\"", 2);
 		ft_putstr_fd(RED" not found\n"RESET, 2);
-		gen->exit_status = 1;
+		gen->exit_status = 127;
 		free(cmd_path);
 		free_matrix(env);
 		return ;

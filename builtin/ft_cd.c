@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:52:22 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 12:46:50 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:58:27 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*construct_new_val(char *origin, int equal_pos, char *path)
 	before = ft_substr(origin, 0, equal_pos + 1);
 	if (!before)
 		return (NULL);
-	printf("%s\n", before);
 	free(origin);
 	origin = ft_strjoin(before, path);
 	if (!origin)
