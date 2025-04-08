@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 16:00:49 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:41:36 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
-/* 		if (lst->command)
+			printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
+		//printf("Command: %s   Infile:%d     Outfile: %d\n", lst->value, lst->infile, lst->outfile);	
+		/* 		
+if (lst->command)
 		{
 			int i = 0;
 			while (lst->command[i])
@@ -54,10 +56,17 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			exit(0);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
-		if (find_files(gen->lexed_data, gen) && layerize(gen))
+		if (gen->lexed_data != NULL)
 		{
-			if (parsing(gen))
-				ft_lstclear(gen->cleaned_data);
+			if (check_files(gen) && find_files(gen->lexed_data, gen))
+			{
+				find_args(gen->lexed_data);
+				if (layerize(gen))
+				{
+					if (parsing(gen))
+						ft_lstclear(gen->cleaned_data);
+				}
+			}
 		}
 		free_matrix(gen->av);
 		ft_lstclear(gen->lexed_data);
@@ -65,16 +74,16 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//gpicchio king
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
 	t_gen				gen;
 
 	(void)av;
-	//ft_pokemon();
 	gen.my_env = copy_matrix(env);
 	gen.export_env = copy_matrix(env);
+	gen.cleaned_data = NULL;
 	sort_export(&gen);
 	gen.exit_status = 0;
 	if (!gen.my_env)
@@ -91,8 +100,8 @@ int	main(int ac, char **av, char **env)
 0. Layering e sysntax error per parentesi (D )
 1. Espandere quotes --> blocca su sysntax error (D)
 2. Redirections (mettere le flag di input ed output file) --> blocca su file_input_not found
-3. Copia della list e clean_list (togliere parentesi, redirections, arguments e options)
-4. Costruisci tree sulla lista pulita
+3. Copia della list e clean_list (togliere parentesi, redirections, arguments e options) (D)
+4. Costruisci tree sulla lista pulita (D)
 5. Esegui dal tree 
 
 */

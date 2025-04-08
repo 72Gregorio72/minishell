@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 10:32:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 11:18:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,17 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 					single_quotes(node, gen);
 				else
 				{
-					tmp = ft_strdup((*node)->value);
-					free((*node)->value);
-					(*node)->value = expand_env_var(gen->my_env, tmp);
+					if (!ft_strncmp((*node)->value, "$?", 2))
+					{
+						free((*node)->value);
+						(*node)->value = ft_itoa(gen->exit_status);
+					}
+					else
+					{
+						tmp = ft_strdup((*node)->value);
+						free((*node)->value);
+						(*node)->value = expand_env_var(gen->my_env, tmp);
+					}
 				}
 				break ;
 			}
@@ -152,7 +160,12 @@ int	quote_handler(t_gen *gen)
 			return (error_exit(gen,
 					"minishell: syntax error near a quote", 2), 0);
 		else
-			handle_quotes(&tmp, gen);
+		{
+			if (!ft_strncmp(tmp->type, "here_doc_delimiter", 19))
+				clean_quotes(&tmp);
+			else
+				handle_quotes(&tmp, gen);
+		}
 		tmp = tmp->next;
 	}
 	return (1);

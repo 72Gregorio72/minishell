@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 14:33:57 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:42:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int			ft_echo(t_lexing *node, t_gen *gen, int fd);
 int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
 void		ft_exit(t_gen *gen);
-int			ft_cd(char *new_path);
+int			ft_cd(char *new_path, char **export_env, t_gen *gen);
 void		ft_export(char ***envp, const char *var, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
@@ -72,11 +72,11 @@ int			parsing(t_gen *gen);
 t_lexing	*lexer(char **matrix, t_gen *gen);
 void		add_token(t_lexing **lexed, char *content,
 				char *type, int strength);
-void		other_checks(int *i, t_lexing **lexed, char *word);
+int			other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen);
 void		other_checks_1(int *i, t_lexing **lexed, char *word);
 void		check_pipe(int *i, t_lexing **lexed, char *word);
 int			find_files(t_lexing *lexed, t_gen *gen);
-void		find_env_var(t_lexing *lexed);
+void		find_env_var_and_wild(t_lexing *lexed);
 void		find_args(t_lexing *lexed);
 
 // quotes
@@ -91,6 +91,10 @@ void		single_quotes(t_lexing **node, t_gen *gen);
 int			len_var(char *str, int dollar_pos);
 char		*expand_env_var(char **env, char *var);
 void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
+
+// redirections and wildcards
+int			find_red(t_lexing *lst, t_gen *gen);
+int			check_wildcards(t_gen *gen);
 
 // utils
 void		free_matrix(char **av);
@@ -128,6 +132,8 @@ void		print_binary_tree(t_tree *node, int depth);
 int			check_all_upper(char *word);
 int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
+int			check_files(t_gen *gen);
+int			check_here_doc(t_gen *gen);
 
 // exec
 void		exec_command(t_gen *gen);

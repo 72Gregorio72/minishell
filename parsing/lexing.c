@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:30:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:19:28 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	add_token(t_lexing **lexed, char *content, char *type, int strength)
 		ft_lstadd_back(lexed, ft_lstnew(ft_strdup(content), type, strength));
 }
 
-void	tokenize(char *word, t_lexing **lexed)
+int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 {
 	int		i;
 	int		start;
@@ -41,10 +41,12 @@ void	tokenize(char *word, t_lexing **lexed)
 		}
 		if (!word[i])
 			break ;
-		other_checks(&i, lexed, word);
+		if (!other_checks(&i, lexed, word, gen))
+			return (0);
 		other_checks_1(&i, lexed, word);
 		check_pipe(&i, lexed, word);
 	}
+	return (1);
 }
 
 t_lexing	*lexer(char **matrix, t_gen *gen)
@@ -57,11 +59,30 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	(void)gen;
 	while (matrix[i])
 	{
-		tokenize(matrix[i], &lexed);
+		if (!tokenize(matrix[i], &lexed, gen))
+			return (NULL);
 		i++;
 	}
-	find_args(lexed);
-	find_env_var(lexed);
+	find_env_var_and_wild(lexed);
 	return (lexed);
 }
 // ( < echo 1 > || << echo 2 >> ) | ( echo '3 ' && echo " 4 " )
+
+int	check_here_doc(t_gen *gen)
+{
+	t_lexing	*tmp;
+	t_lexing	*succ;
+
+	tmp = gen->lexed_data;
+	while (tmp)
+	{
+		if (tmp->next)
+			succ = tmp->next;
+		if (!ft_strncmp(tmp->type, "here_doc", 9)
+			&& (!tmp->next
+				|| ft_strncmp(succ->type, "here_doc_delimiter", 19) != 0))
+			return (error_exit(gen, "minishell : syntax error", 2), 0);
+		tmp = tmp->next;
+	}
+	return (1);
+}

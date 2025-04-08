@@ -6,13 +6,13 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:19:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/01 12:31:29 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:14:05 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	other_checks(int *i, t_lexing **lexed, char *word)
+int	other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen)
 {
 	if (ft_strncmp(&word[*i], "(", ft_strlen("(")) == 0)
 	{
@@ -22,6 +22,9 @@ void	other_checks(int *i, t_lexing **lexed, char *word)
 	else if (ft_strncmp(&word[*i], ")", ft_strlen(")")) == 0)
 	{
 		add_token(lexed, ")", "close_parenthesis", -1);
+		if (word[(*i) + 1])
+			return (error_exit(gen, "minishell: syntax error", 2),
+				ft_lstclear(*lexed), 0);
 		*i += ft_strlen(")");
 	}
 	else if (ft_strncmp(&word[*i], "||", ft_strlen("||")) == 0)
@@ -29,6 +32,7 @@ void	other_checks(int *i, t_lexing **lexed, char *word)
 		add_token(lexed, "||", "or_operator", 3);
 		*i += ft_strlen("||");
 	}
+	return (1);
 }
 
 void	other_checks_1(int *i, t_lexing **lexed, char *word)

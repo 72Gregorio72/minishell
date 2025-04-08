@@ -1,6 +1,7 @@
 NAME		= minishell
 
 SRCS		=	main.c \
+				ft_pokemon.c \
 				srcs/free.c \
 				srcs/util.c \
 				srcs/ctrl.c \
@@ -15,6 +16,8 @@ SRCS		=	main.c \
 				parsing/quote_handler.c \
 				parsing/dollar.c \
 				parsing/utils_for_quotes.c \
+				parsing/redirections.c \
+				parsing/wildcards.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \
@@ -25,7 +28,6 @@ SRCS		=	main.c \
 				builtin/ft_export.c \
 				builtin/ft_unset.c \
 				exec_commands/execute.c \
-				ft_pokemon.c \
 				pipex/bonus/pipex_bonus.c \
 				pipex/bonus/pipex_utils_bonus.c \
 				pipex/bonus/get_path_bonus.c \
