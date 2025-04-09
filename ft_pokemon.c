@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pokemon.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:44:12 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/26 16:40:02 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:50:53 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,21 @@ void	clear_window(void)
 	printf("\033[H");
 }
 
-int pseudo_random()
+int	pseudo_random()
 {
-    int fd = open("/dev/urandom", O_RDONLY);
-    if (fd == -1)
-        return 1;
-    unsigned char num;
-    read(fd, &num, 1);
-    close(fd);
-    return (num % 4) + 1;
+	int fd = open("/dev/urandom", O_RDONLY);
+	if (fd == -1)
+		return 1;
+	unsigned char num;
+	read(fd, &num, 1);
+	close(fd);
+	return (num % 4) + 1;
 }
 
 void	player_attack(t_pokemon *pikachu, t_pokemon *bulbasaur, int *player_turn)
 {
-	char *line;
+	char	*line;
+
 	printf("\nWhat will %s do?\n", pikachu->name);
 	printf("1. %s\n", pikachu->attack1.name);
 	printf("2. %s\n", pikachu->attack2.name);
