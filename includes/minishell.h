@@ -173,6 +173,7 @@ typedef struct s_pokemon
 	int			defense;
 	int			speed;
 	char		*type;
+	char		*ascii_path;
 }	t_pokemon;
 
 t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed);

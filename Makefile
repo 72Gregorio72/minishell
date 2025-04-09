@@ -73,6 +73,15 @@ fclean: clean
 	@echo Cleaning $(NAME)...
 	@$(RM) $(NAME_BONUS)
 
+pokemon:
+	@if [ ! -d "pokemonData" ]; then \
+		echo "Cloning pokemonData repository..."; \
+		git clone https://github.com/72Gregorio72/pokemonData.git; \
+	else \
+		echo "Updating pokemonData repository..."; \
+		cd pokemonData && git pull; \
+	fi
+
 
 re: fclean all
 

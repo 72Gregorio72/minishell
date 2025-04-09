@@ -14,7 +14,7 @@
 
 t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed)
 {
-	t_pokemon	*pokemon;
+	t_pokemon *pokemon;
 
 	pokemon = (t_pokemon *)malloc(sizeof(t_pokemon));
 	if (!pokemon)
@@ -87,67 +87,67 @@ int pseudo_random()
     return (num % 4) + 1;
 }
 
-void	player_attack(t_pokemon *pikachu, t_pokemon *bulbasaur, int *player_turn)
+void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *player_turn)
 {
 	char *line;
-	printf("\nWhat will %s do?\n", pikachu->name);
-	printf("1. %s\n", pikachu->attack1.name);
-	printf("2. %s\n", pikachu->attack2.name);
-	printf("3. %s\n", pikachu->attack3.name);
-	printf("4. %s\n", pikachu->attack4.name);
+	printf("\nWhat will %s do?\n", player_pokemon->name);
+	printf("1. %s\n", player_pokemon->attack1.name);
+	printf("2. %s\n", player_pokemon->attack2.name);
+	printf("3. %s\n", player_pokemon->attack3.name);
+	printf("4. %s\n", player_pokemon->attack4.name);
 
 	line = get_next_line(0);
 
 	if (ft_strncmp(line, "1", 1) == 0)
 	{
-		printf("\n%s used %s!\n", pikachu->name, pikachu->attack1.name);
-		bulbasaur->health -= pikachu->attack1.damage - bulbasaur->defense / 2;
+		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack1.name);
+		cpu_pokemon->health -= player_pokemon->attack1.damage - cpu_pokemon->defense / 2;
 	}
 	else if (ft_strncmp(line, "2", 1) == 0)
 	{
-		printf("\n%s used %s!\n", pikachu->name, pikachu->attack2.name);
-		bulbasaur->health -= pikachu->attack2.damage - bulbasaur->defense / 2;
+		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack2.name);
+		cpu_pokemon->health -= player_pokemon->attack2.damage - cpu_pokemon->defense / 2;
 	}
 	else if (ft_strncmp(line, "3", 1) == 0)
 	{
-		printf("\n%s used %s!\n", pikachu->name, pikachu->attack3.name);
-		bulbasaur->health -= pikachu->attack3.damage - bulbasaur->defense / 2;
+		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack3.name);
+		cpu_pokemon->health -= player_pokemon->attack3.damage - cpu_pokemon->defense / 2;
 	}
 	else if (ft_strncmp(line, "4", 1) == 0)
 	{
-		printf("\n%s used %s!\n", pikachu->name, pikachu->attack4.name);
-		bulbasaur->health -= pikachu->attack4.damage - bulbasaur->defense / 2;
+		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack4.name);
+		cpu_pokemon->health -= player_pokemon->attack4.damage - cpu_pokemon->defense / 2;
 	}
 	else
 	{
 		printf("\nInvalid attack!\n");
 		*player_turn = 1;
 		free(line);
-		return ;
+		return;
 	}
-	if (bulbasaur->health <= 0)
-		bulbasaur->health = 0;
+	if (cpu_pokemon->health <= 0)
+		cpu_pokemon->health = 0;
 	*player_turn = 0;
 	free(line);
 }
 
-void	cpu_attack(t_pokemon *pikachu, t_pokemon *bulbasaur, int *player_turn)
+void	cpu_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *player_turn)
 {
 	int attack_choice = pseudo_random();
 	t_attack attack;
 
 	if (attack_choice == 1)
-		attack = bulbasaur->attack1;
+		attack = cpu_pokemon->attack1;
 	else if (attack_choice == 2)
-		attack = bulbasaur->attack2;
+		attack = cpu_pokemon->attack2;
 	else if (attack_choice == 3)
-		attack = bulbasaur->attack3;
+		attack = cpu_pokemon->attack3;
 	else
-		attack = bulbasaur->attack4;
-	printf("\n%s used %s!\n", bulbasaur->name, attack.name);
-	pikachu->health -= attack.damage - pikachu->defense / 2;
-	if (pikachu->health <= 0)
-		pikachu->health = 0;
+		attack = cpu_pokemon->attack4;
+	printf("\n%s used %s!\n", cpu_pokemon->name, attack.name);
+	player_pokemon->health -= attack.damage - player_pokemon->defense / 2;
+	if (player_pokemon->health <= 0)
+		player_pokemon->health = 0;
 	*player_turn = 1;
 }
 
@@ -187,87 +187,128 @@ void	print_ascii_art(const char *filepath)
 	}
 
 	char	buffer[1024];
-	int		line_num = 0;
 	ssize_t	bytes_read;
-	size_t	i = 0;
-	char	c;
-
-	// Lettura carattere per carattere per contare le righe e stampare solo quelle desiderate
-	while ((bytes_read = read(fd, &c, 1)) > 0)
+	while ((bytes_read = read(fd, buffer, sizeof(buffer) - 1)) > 0)
 	{
-		if (c == '\n')
-		{
-			buffer[i] = '\0';
-
-			// Stampa solo se NON è la prima riga (0) o l'ultima (gestita più sotto)
-			if (line_num > 0)
-				printf("%s\n", buffer);
-
-			i = 0;
-			line_num++;
-		}
-		else if (i < sizeof(buffer) - 1)
-		{
-			buffer[i++] = c;
-		}
+		buffer[bytes_read] = '\0';
+		printf("%s", buffer);
 	}
-
-	// Se il file non termina con '\n', gestisce l’ultima riga
-	if (i > 0 && line_num > 0)
-	{
-		buffer[i] = '\0';
-		// Non stampare l’ultima riga (tipicamente il "*/")
-		// Quindi qui NON facciamo printf
-	}
-
 	if (bytes_read == -1)
 		perror("Errore durante la lettura del file");
-
 	close(fd);
 }
 
 void	display_battle(t_pokemon *player, t_pokemon *enemy)
 {
 	clear_window();
-
 	printf("        Opponent\n");
 	print_healthbar(enemy->name, enemy->health, 1);
 	printf("\n");
-	print_ascii_art("bulbasaur.c");
+	print_ascii_art(enemy->ascii_path);
 	printf("   %s (nemico)\n\n", enemy->name);
 	printf("\n\n");
-	print_ascii_art("pikachu.c");
+	print_ascii_art(player->ascii_path);
 	printf("   %s (tuo)\n", player->name);
 	print_healthbar(player->name, player->health, 0);
 }
 
+char *choose_pokemon(char *prompt, t_pokemon *pokemon)
+{
+	char *input = NULL;
+	int	file;
+	char base_path[] = "pokemonData/pokemonImages/";
+	char filepath[256];
+
+	while (1)
+	{
+		ft_putendl_fd(prompt, 1);
+		input = get_next_line(0);  // 0 è stdin
+
+		if (!input)
+		{
+			ft_putendl_fd("Error reading input.", 1);
+			continue;
+		}
+
+		// Rimuovi newline se presente
+		size_t len = strlen(input);
+		if (len > 0 && input[len - 1] == '\n')
+			input[len - 1] = '\0';
+
+		// Costruisci manualmente il path
+		ft_strlcpy(filepath, base_path, sizeof(filepath));
+		ft_strlcat(filepath, input, sizeof(filepath));
+
+		file = open(filepath, O_RDONLY);
+		if (file != -1)
+		{
+			close(file);
+			break;
+		}
+		else
+		{
+			ft_putendl_fd("Pokemon not found. Please try again.", 1);
+			free(input);
+		}
+	}
+	pokemon->ascii_path = ft_strdup(filepath);
+	pokemon->name = ft_strdup(input);
+	free(input);
+	return ft_strdup(filepath);
+}
+
 void	ft_pokemon()
 {
-	t_pokemon	*pikachu;
-	t_pokemon	*bulbasaur;
+	t_pokemon	*player_pokemon;
+	t_pokemon	*cpu_pokemon;
 	t_attack	*attacks;
 	int			player_turn;
 
-	player_turn = 1;
-	initialize_pokemon(&pikachu, &bulbasaur, &attacks);
-	printf("\nA wild %s appears!\n\n", bulbasaur->name);
-	display_battle(pikachu, bulbasaur);
+	char player_choice[50];
+	char enemy_choice[50];
+	
 
-	while (pikachu->health > 0 && bulbasaur->health > 0)
+	player_turn = 1;
+	attacks = (t_attack *)malloc(sizeof(t_attack) * 4);
+	attacks[0] = create_attack("Thunderbolt", 90, "Electric");
+	attacks[1] = create_attack("Quick Attack", 40, "Normal");
+	attacks[2] = create_attack("Iron Tail", 100, "Steel");
+	attacks[3] = create_attack("Volt Tackle", 120, "Electric");
+	player_pokemon = ft_create_pokemon(player_choice, 100, 50, 90);
+	add_attacks(player_pokemon, attacks);
+
+	attacks[0] = create_attack("Vine Whip", 45, "Grass");
+	attacks[1] = create_attack("Tackle", 40, "Normal");
+	attacks[2] = create_attack("Razor Leaf", 55, "Grass");
+	attacks[3] = create_attack("Seed Bomb", 80, "Grass");
+	cpu_pokemon = ft_create_pokemon(enemy_choice, 100, 50, 45);
+	add_attacks(cpu_pokemon, attacks);
+	char *player_path = choose_pokemon("Choose your Pokemon: ", player_pokemon);
+	char *enemy_path = choose_pokemon("Choose opponent's Pokemon: ", cpu_pokemon);
+	printf("\nA wild %s appears!\n\n", cpu_pokemon->name);
+	display_battle(player_pokemon, cpu_pokemon);
+
+	while (player_pokemon->health > 0 && cpu_pokemon->health > 0)
 	{
-		display_battle(pikachu, bulbasaur);
+		display_battle(player_pokemon, cpu_pokemon);
 		if (player_turn)
-			player_attack(pikachu, bulbasaur, &player_turn);
+			player_attack(player_pokemon, cpu_pokemon, &player_turn);
 		else
-			cpu_attack(pikachu, bulbasaur, &player_turn);
+			cpu_attack(player_pokemon, cpu_pokemon, &player_turn);
 		ft_wait(800000000);
 	}
-	if (pikachu->health <= 0)
-		printf("\n%s fainted!\n", pikachu->name);
-	if (bulbasaur->health <= 0)
-		printf("\n%s fainted!\n", bulbasaur->name);
-	free(pikachu);
-	free(bulbasaur);
+	if (player_pokemon->health <= 0)
+		printf("\n%s fainted!\n", player_pokemon->name);
+	if (cpu_pokemon->health <= 0)
+		printf("\n%s fainted!\n", cpu_pokemon->name);
+	free(player_pokemon->ascii_path);
+	free(cpu_pokemon->ascii_path);
+	free(player_pokemon->name);
+	free(cpu_pokemon->name);
+	free(player_pokemon);
+	free(cpu_pokemon);
 	free(attacks);
+	free(player_path);
+    free(enemy_path);
 	get_next_line(-42);
 }
