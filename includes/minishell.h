@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 15:53:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:15:33 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,15 @@ typedef struct s_tree
 
 typedef struct s_gen
 {
-	char		**my_env;
-	char		**export_env;
-	char		**av;
-	int			exit_status;
-	t_tree		*root;
-	t_lexing	*lexed_data;
-	t_lexing	*cleaned_data;
-	int			*fds;
+	char				**my_env;
+	char				**export_env;
+	char				**av;
+	int					exit_status;
+	t_tree				*root;
+	t_lexing			*lexed_data;
+	t_lexing			*cleaned_data;
+	int					*fds;
+	struct sigaction	sa;
 }				t_gen;
 
 // built in

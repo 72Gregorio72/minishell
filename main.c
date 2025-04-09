@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:30:41 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:22:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,17 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	char				*line;
 
 	(void)ac;
-	if (!set_signals(sa))
+	if (sigaction(SIGINT, &sa, NULL) == -1)
 		return (perror("Sigaction error"));
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
 		line = readline("minishell$ ");
 		if (checks(line, gen))
 			continue ;
 		add_history(line);
+		if (sigaction(SIGQUIT, &sa, NULL) == -1)
+			return (perror("Sigaction error"));
 		gen->av = ft_split_quote(line, ' ');
 		if (!gen->av)
 		{
@@ -91,6 +94,7 @@ int	main(int ac, char **av, char **env)
 	sa.sa_sigaction = handler;
 	sa.sa_flags = SA_RESTART | SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
+	gen.sa = sa;
 	loop(ac, &gen, sa);
 	safe_free(&gen);
 	return (0);
