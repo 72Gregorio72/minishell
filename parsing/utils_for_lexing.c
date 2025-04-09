@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:14:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:45:15 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ void	find_env_var_and_wild(t_lexing *lexed)
 	while (tmp)
 	{
 		dollar_pos = find_char_pos(tmp->value, "$", 0);
-		if (ft_strchr(tmp->value, '$') != NULL
-			&& !ft_isdigit(tmp->value[dollar_pos + 1]))
-			tmp->env_variable = 1;
+		if (ft_strchr(tmp->value, '$') != NULL)
+		{
+			if (!(ft_strlen(tmp->value) == 1 && tmp->value[0] == '$'))
+				tmp->env_variable = 1;
+		}
 		if (ft_strchr(tmp->value, '*') != NULL
 			&& (!ft_strchr(tmp->value, '\"') && !ft_strchr(tmp->value, '\'')))
 			tmp->wildcard = 1;
@@ -118,6 +120,8 @@ int	check_operators(t_gen *gen)
 		return (error_exit(gen, "minishell: syntax error near '&&'", 2), 0);
 	else if (!ft_strncmp("or_operator", last->type, 12))
 		return (error_exit(gen, "minishell: syntax error near '||'", 2), 0);
+	else if (!ft_strncmp("pipe", last->type, 12))
+		return (error_exit(gen, "minishell: syntax error near '|'", 2), 0);
 	return (1);
 }
 
