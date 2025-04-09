@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:56:15 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:31:46 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:54:47 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	safe_free(t_gen *gen)
 	free_matrix(gen->av);
 	ft_lstclear(gen->lexed_data, 0);
 	ft_lstclear(gen->cleaned_data, 1);
+	ft_treeclear(gen->root);
 	free_matrix(gen->my_env);
 	free_matrix(gen->export_env);
 	rl_clear_history();

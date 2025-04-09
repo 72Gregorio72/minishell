@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 11:18:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:50:12 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,14 @@ void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
 	p = find_char_pos((*node)->value, "$", 0);
 	before = construct_before((*node)->value, p, clean);
 	tmp = expand_env_var(gen->my_env, (*node)->value);
-	if (clean)
-		clean_quotes(node);
 	if (!tmp)
 		tmp = ft_strdup("");
 	e = len_var((*node)->value, p);
 	after = ft_substr((*node)->value, p + e + 1, ft_strlen((*node)->value));
 	free((*node)->value);
 	(*node)->value = construct_env_var(before, after, tmp);
+	if (clean)
+		clean_quotes(node);
 	if (!(*node)->value)
 		return (util_free(before, tmp, after));
 	util_free(before, tmp, after);

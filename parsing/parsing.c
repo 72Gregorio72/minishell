@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:26:06 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:59:45 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	unset_and_export(t_gen *gen, char *succ, char *curr)
 {
-	if (!ft_strncmp("export", curr, ft_strlen(curr)))
+	if (ft_strncmp("export", curr, ft_strlen("export")) == 0
+		&& ft_strlen(curr) == ft_strlen("export"))
 	{
 		if (!succ)
 			ft_export(&gen->my_env, NULL, &gen->export_env);
@@ -22,7 +23,8 @@ int	unset_and_export(t_gen *gen, char *succ, char *curr)
 			ft_export(&gen->my_env, succ, &gen->export_env);
 		return (1);
 	}
-	else if (!ft_strncmp("unset", curr, ft_strlen(curr)))
+	else if (ft_strncmp("unset", curr, ft_strlen("unset")) == 0
+		&& ft_strlen(curr) == ft_strlen("unset"))
 	{
 		if (!succ)
 		{
@@ -41,23 +43,24 @@ int	unset_and_export(t_gen *gen, char *succ, char *curr)
 
 int	exec_builtin(t_gen *gen, t_lexing *node)
 {
-	if (ft_strncmp("echo", node->command[0], ft_strlen(node->command[0])) == 0)
+	if (ft_strncmp("echo", node->command[0], ft_strlen("echo")) == 0
+		&& ft_strlen(node->command[0]) == ft_strlen("echo"))
 		return (ft_echo(node, gen, node->outfile));
-	else if (ft_strncmp("env", node->command[0],
-			ft_strlen(node->command[0])) == 0)
+	else if (ft_strncmp("env", node->command[0], ft_strlen("env")) == 0
+		&& ft_strlen(node->command[0]) == ft_strlen("env"))
 		return (ft_env(gen->my_env, 0));
-	else if (ft_strncmp("pwd", node->command[0], 3) == 0)
+	else if (ft_strncmp("pwd", node->command[0], ft_strlen("pwd")) == 0
+		&& ft_strlen(node->command[0]) == ft_strlen("pwd"))
 		return (ft_pwd(gen->my_env, node->outfile));
-	else if (ft_strncmp("exit", node->command[0],
-			ft_strlen(node->command[0])) == 0)
+	else if (ft_strncmp("exit", node->command[0], ft_strlen("exit")) == 0
+		&& ft_strlen(node->command[0]) == ft_strlen("exit"))
 		ft_exit(gen);
-	else if (ft_strncmp("cd", node->command[0],
-			ft_strlen(node->command[0])) == 0
+	else if (ft_strncmp("cd", node->command[0], ft_strlen("cd")) == 0
+		&& ft_strlen(node->command[0]) == ft_strlen("cd")
 		&& node->command[1])
 		return (ft_cd(node->command[1], gen->export_env, gen));
 	else
-		return (unset_and_export(gen, node->command[1],
-				node->command[0]));
+		return (unset_and_export(gen, node->command[1], node->command[0]));
 	return (1);
 }
 
@@ -149,6 +152,7 @@ t_lexing	*clean_data(t_gen *gen)
 int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
+	t_lexing	*tmp2;
 
 	gen->root = NULL;
 	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen)
@@ -157,7 +161,7 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	print_list(gen->lexed_data);
+	//print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
@@ -166,7 +170,8 @@ int	parsing(t_gen *gen)
 		//print_binary_tree(gen->root, 0);
 	}
 	tmp = gen->cleaned_data;
-	if (find_cmd_num(tmp) > 1) // conta male con redirections
+	tmp2 = gen->lexed_data;
+	if (find_cmd_num(tmp2) > 1) // conta male con redirections
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp);
