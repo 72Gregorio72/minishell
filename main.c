@@ -6,33 +6,32 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 12:22:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:28:24 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_list(t_lexing *lst)
+void	util_free(t_gen *gen, char *line)
 {
-	while (lst)
+	free_matrix(gen->av);
+	ft_lstclear(gen->lexed_data, 0);
+	free(line);
+}
+
+void	init(t_gen *gen)
+{
+	if (gen->lexed_data != NULL)
 	{
-		//	printf("%s                          %.10s                                layer: %d         env: %d\n", lst->value, lst->type, lst->layer, lst->env_variable);
-		printf("%s: %s   Infile:%d     Outfile: %d\n", lst->type, lst->value, lst->infile, lst->outfile);	
-		/* 		
-if (lst->command)
+		if (check_files(gen) && find_files(gen->lexed_data, gen))
 		{
-			int i = 0;
-			while (lst->command[i])
+			find_args(gen->lexed_data);
+			if (layerize(gen))
 			{
-				printf("%s\n", lst->command[i]);
-				i++;
+				if (parsing(gen))
+					ft_lstclear(gen->cleaned_data, 1);
 			}
 		}
-		else
-			printf("NULL\n"); */
-		lst = lst->next;
-
-		printf("\n");
 	}
 }
 
@@ -59,21 +58,8 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			exit(0);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
-		if (gen->lexed_data != NULL)
-		{
-			if (check_files(gen) && find_files(gen->lexed_data, gen))
-			{
-				find_args(gen->lexed_data);
-				if (layerize(gen))
-				{
-					if (parsing(gen))
-						ft_lstclear(gen->cleaned_data, 1);
-				}
-			}
-		}
-		free_matrix(gen->av);
-		ft_lstclear(gen->lexed_data, 0);
-		free(line);
+		init(gen);
+		util_free(gen, line);
 	}
 }
 
