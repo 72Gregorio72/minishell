@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/02 13:00:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:46:39 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	ft_unset_export(char ***env, const char *var)
 
 	if (!var)
 		return ;
-	i = 0;
-	while ((*env)[i] != NULL)
+	i = -1;
+	while ((*env)[++i] != NULL)
 	{
 		equal_pos = find_char_pos((*env)[i], "=", 0);
 		var_pos = find_char_pos((char *)var, "=", 0);
@@ -42,7 +42,6 @@ void	ft_unset_export(char ***env, const char *var)
 			}
 			return ;
 		}
-		i++;
 	}
 }
 
