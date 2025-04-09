@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 16:09:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:26:06 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ t_lexing	*clean_data(t_gen *gen)
 			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
 		{
 			t_lexing *new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
-					tmp->type, tmp->strength, get_command(tmp));
+					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
@@ -157,7 +157,7 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	// print_list(gen->lexed_data);
+	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{
@@ -166,7 +166,7 @@ int	parsing(t_gen *gen)
 		//print_binary_tree(gen->root, 0);
 	}
 	tmp = gen->cleaned_data;
-	if (find_cmd_num(tmp) > 1)
+	if (find_cmd_num(tmp) > 1) // conta male con redirections
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp);

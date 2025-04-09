@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 11:19:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 14:14:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:31:29 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen)
 		add_token(lexed, ")", "close_parenthesis", -1);
 		if (word[(*i) + 1])
 			return (error_exit(gen, "minishell: syntax error", 2),
-				ft_lstclear(*lexed), 0);
+				ft_lstclear(*lexed, 0), 0);
 		*i += ft_strlen(")");
 	}
 	else if (ft_strncmp(&word[*i], "||", ft_strlen("||")) == 0)

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 16:47:44 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:31:39 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 		}
 		if (word[i] == '&')
 			return (error_exit(gen, "minishell: syntax error near '&'", 2),
-				ft_lstclear(*lexed), 0);
+				ft_lstclear(*lexed, 0), 0);
 		if (word[i] == '~')
 			return (error_exit(gen, "minishell: syntax error near '~'", 2),
-				ft_lstclear(*lexed), 0);
+				ft_lstclear(*lexed, 0), 0);
 		if (!word[i])
 			break ;
 		if (!other_checks(&i, lexed, word, gen))

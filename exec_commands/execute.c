@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/08 14:45:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:31:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_treeclear(gen->root);
 			free_matrix(gen->my_env);
 			free_matrix(gen->export_env);
-			ft_lstclear(gen->lexed_data);
-			ft_lstclear(gen->cleaned_data);
+			ft_lstclear(gen->lexed_data, 0);
+			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
 		}
 		return ;
@@ -78,8 +78,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_treeclear(gen->root);
 			free_matrix(gen->my_env);
 			free_matrix(gen->export_env);
-			ft_lstclear(gen->lexed_data);
-			ft_lstclear(gen->cleaned_data);
+			ft_lstclear(gen->lexed_data, 0);
+			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
 		}
 		return ;
@@ -111,8 +111,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		ft_treeclear(gen->root);
 		free_matrix(gen->my_env);
 		free_matrix(gen->export_env);
-		ft_lstclear(gen->lexed_data);
-		ft_lstclear(gen->cleaned_data);
+		ft_lstclear(gen->lexed_data, 0);
+		ft_lstclear(gen->cleaned_data, 1);
 		free_matrix(gen->av);
 	}
 	free(cmd_path);
