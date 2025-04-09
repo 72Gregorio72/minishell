@@ -90,11 +90,9 @@ int	find_red(t_lexing *lst, t_gen *gen)
 {
 	t_lexing	*tmp;
 	t_lexing	*redirect;
-	t_lexing	*command;
 
 	tmp = lst;
 	redirect = NULL;
-	command = NULL;
 	while (tmp && ft_strncmp(tmp->type, "and_operator", 13) != 0)
 	{
 		if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)

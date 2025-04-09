@@ -123,11 +123,11 @@ int		find_cmd_num(t_lexing *node)
 	int			cmd_num;
 	t_lexing	*tmp;
 
-	cmd_num = 1;
+	cmd_num = 0;
 	tmp = node;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->type, "command", 8))
+		if (!ft_strncmp(tmp->type, "command", 8))
 			cmd_num++;
 		tmp = tmp->next;
 	}
