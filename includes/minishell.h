@@ -165,6 +165,7 @@ typedef struct s_attack
 typedef struct s_pokemon
 {
 	char		*name;
+	int			id;
 	int			health;
 	t_attack	attack1;
 	t_attack	attack2;

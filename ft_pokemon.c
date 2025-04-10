@@ -96,6 +96,9 @@ void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *playe
 	printf("3. %s\n", player_pokemon->attack3.name);
 	printf("4. %s\n", player_pokemon->attack4.name);
 
+	printf("\nYour Pokemon: %d\n", player_pokemon->id);
+	printf("Opponent Pokemon: %d\n", cpu_pokemon->id);
+
 	line = get_next_line(0);
 
 	if (ft_strncmp(line, "1", 1) == 0)
@@ -222,20 +225,16 @@ char *choose_pokemon(char *prompt, t_pokemon *pokemon)
 	while (1)
 	{
 		ft_putendl_fd(prompt, 1);
-		input = get_next_line(0);  // 0 è stdin
+		input = get_next_line(0);
 
 		if (!input)
 		{
 			ft_putendl_fd("Error reading input.", 1);
 			continue;
 		}
-
-		// Rimuovi newline se presente
 		size_t len = strlen(input);
 		if (len > 0 && input[len - 1] == '\n')
 			input[len - 1] = '\0';
-
-		// Costruisci manualmente il path
 		ft_strlcpy(filepath, base_path, sizeof(filepath));
 		ft_strlcat(filepath, input, sizeof(filepath));
 
@@ -257,6 +256,68 @@ char *choose_pokemon(char *prompt, t_pokemon *pokemon)
 	return ft_strdup(filepath);
 }
 
+char **split_pokemon(char *str, char sep)
+{
+    char **res;
+    int i = 0;
+    int start = 0;
+    int j = 0;
+    int count = 1;
+
+    // Conta i separatori
+    while (str[i])
+        if (str[i++] == sep)
+            count++;
+    
+    res = malloc(sizeof(char *) * (count + 1));
+    if (!res)
+        return NULL;
+
+    i = 0;
+    while (str[i])
+    {
+        if (str[i] == sep || str[i+1] == '\0')
+        {
+            int len = i - start + (str[i+1] == '\0' ? 1 : 0);
+            res[j] = malloc(len + 1);
+            strncpy(res[j], &str[start], len);
+            res[j][len] = '\0';
+            j++;
+            start = i + 1;
+        }
+        i++;
+    }
+    res[j] = NULL;
+    return res;
+}
+
+void get_pokemon_data(t_pokemon *pokemon)
+{
+    int fd = open("pokemonData/pokemonData/pokemon.csv", O_RDONLY);
+    if (fd == -1)
+    {
+        perror("Impossibile aprire il file");
+        return;
+    }
+    char *line;
+    while ((line = get_next_line(fd)))
+    {
+        char **fields = split_pokemon(line, ',');
+        if (fields && fields[1] && !ft_strncmp(fields[1], pokemon->name, ft_strlen(pokemon->name)))
+        {
+            pokemon->id = ft_atoi(fields[0]);
+            free_matrix(fields);
+            free(line);
+            close(fd);
+            return;
+        }
+        free_matrix(fields);
+        free(line);
+    }
+    printf("Pokemon con nome %s non trovato\n", pokemon->name);
+    close(fd);
+}
+
 void	ft_pokemon()
 {
 	t_pokemon	*player_pokemon;
@@ -266,6 +327,7 @@ void	ft_pokemon()
 
 	char player_choice[50];
 	char enemy_choice[50];
+	
 	
 
 	player_turn = 1;
@@ -285,6 +347,10 @@ void	ft_pokemon()
 	add_attacks(cpu_pokemon, attacks);
 	char *player_path = choose_pokemon("Choose your Pokemon: ", player_pokemon);
 	char *enemy_path = choose_pokemon("Choose opponent's Pokemon: ", cpu_pokemon);
+
+	get_pokemon_data(player_pokemon);
+	get_pokemon_data(cpu_pokemon);
+
 	printf("\nA wild %s appears!\n\n", cpu_pokemon->name);
 	display_battle(player_pokemon, cpu_pokemon);
 
