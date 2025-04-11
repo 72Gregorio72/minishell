@@ -160,6 +160,7 @@ typedef struct s_attack
 	char	*name;
 	int		damage;
 	char	*type;
+	int		id;
 }	t_attack;
 
 typedef struct s_pokemon
@@ -167,11 +168,13 @@ typedef struct s_pokemon
 	char		*name;
 	int			id;
 	int			health;
+	int			max_health;
 	t_attack	attack1;
 	t_attack	attack2;
 	t_attack	attack3;
 	t_attack	attack4;
 	int			defense;
+	int			attack;
 	int			speed;
 	char		*type;
 	char		*ascii_path;

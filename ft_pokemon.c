@@ -44,20 +44,22 @@ void	add_attacks(t_pokemon *pokemon, t_attack *attacks)
 	pokemon->attack4 = attacks[3];
 }
 
-void	print_healthbar(char *name, int health, int align_top)
+void	print_healthbar(char *name, int health, int max_health, int align_top)
 {
 	int	i;
 	int	bar_length;
-	
+	int	percentage;
+
 	bar_length = 20;
+	percentage = (health * 100) / max_health;
 	if (align_top)
 		printf("%-12s\n", name);
 	else
 		printf("\n%-12s\n", name);
-	printf("HP: [");
+	printf("HP(%d/%d): [", health, max_health);
 
 	i = 0;
-	while (i < (health * bar_length) / 100)
+	while (i < (percentage * bar_length) / 100)
 	{
 		printf("█");
 		i++;
@@ -67,7 +69,7 @@ void	print_healthbar(char *name, int health, int align_top)
 		printf(".");
 		i++;
 	}
-	printf("] %3d%%\n", health);
+	printf("] %3d%%\n", percentage);
 }
 
 void	clear_window(void)
@@ -96,30 +98,26 @@ void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *playe
 	printf("3. %s\n", player_pokemon->attack3.name);
 	printf("4. %s\n", player_pokemon->attack4.name);
 
-	printf("\nYour Pokemon: %d\n", player_pokemon->id);
-	printf("Opponent Pokemon: %d\n", cpu_pokemon->id);
-
 	line = get_next_line(0);
-
 	if (ft_strncmp(line, "1", 1) == 0)
 	{
 		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack1.name);
-		cpu_pokemon->health -= player_pokemon->attack1.damage - cpu_pokemon->defense / 2;
+		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack1.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
 	}
 	else if (ft_strncmp(line, "2", 1) == 0)
 	{
 		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack2.name);
-		cpu_pokemon->health -= player_pokemon->attack2.damage - cpu_pokemon->defense / 2;
+		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack2.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
 	}
 	else if (ft_strncmp(line, "3", 1) == 0)
 	{
 		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack3.name);
-		cpu_pokemon->health -= player_pokemon->attack3.damage - cpu_pokemon->defense / 2;
+		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack3.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
 	}
 	else if (ft_strncmp(line, "4", 1) == 0)
 	{
 		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack4.name);
-		cpu_pokemon->health -= player_pokemon->attack4.damage - cpu_pokemon->defense / 2;
+		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack4.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
 	}
 	else
 	{
@@ -148,30 +146,10 @@ void	cpu_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *player_t
 	else
 		attack = cpu_pokemon->attack4;
 	printf("\n%s used %s!\n", cpu_pokemon->name, attack.name);
-	player_pokemon->health -= attack.damage - player_pokemon->defense / 2;
+	player_pokemon->health -= (((2 * 50 / 5 + 2) * attack.damage * cpu_pokemon->attack / player_pokemon->defense) / 50) + 2;
 	if (player_pokemon->health <= 0)
 		player_pokemon->health = 0;
 	*player_turn = 1;
-}
-
-void	initialize_pokemon(t_pokemon **pikachu, t_pokemon **bulbasaur, t_attack **attacks)
-{
-	*pikachu = ft_create_pokemon("Pikachu", 100, 50, 90);
-	*attacks = (t_attack *)malloc(sizeof(t_attack) * 4);
-	if (!*attacks)
-		return ;
-	(*attacks)[0] = create_attack("Thunderbolt", 90, "Electric");
-	(*attacks)[1] = create_attack("Quick Attack", 40, "Normal");
-	(*attacks)[2] = create_attack("Iron Tail", 100, "Steel");
-	(*attacks)[3] = create_attack("Volt Tackle", 120, "Electric");
-	add_attacks(*pikachu, *attacks);
-
-	*bulbasaur = ft_create_pokemon("Bulbasaur", 100, 50, 45);
-	(*attacks)[0] = create_attack("Vine Whip", 45, "Grass");
-	(*attacks)[1] = create_attack("Tackle", 40, "Normal");
-	(*attacks)[2] = create_attack("Razor Leaf", 55, "Grass");
-	(*attacks)[3] = create_attack("Seed Bomb", 80, "Grass");
-	add_attacks(*bulbasaur, *attacks);
 }
 
 void	ft_wait(long seconds)
@@ -205,14 +183,14 @@ void	display_battle(t_pokemon *player, t_pokemon *enemy)
 {
 	clear_window();
 	printf("        Opponent\n");
-	print_healthbar(enemy->name, enemy->health, 1);
+	print_healthbar(enemy->name, enemy->health, enemy->max_health, 1);
 	printf("\n");
 	print_ascii_art(enemy->ascii_path);
 	printf("   %s (nemico)\n\n", enemy->name);
 	printf("\n\n");
 	print_ascii_art(player->ascii_path);
 	printf("   %s (tuo)\n", player->name);
-	print_healthbar(player->name, player->health, 0);
+	print_healthbar(player->name, player->health, player->max_health, 0);
 }
 
 char *choose_pokemon(char *prompt, t_pokemon *pokemon)
@@ -253,104 +231,219 @@ char *choose_pokemon(char *prompt, t_pokemon *pokemon)
 	pokemon->ascii_path = ft_strdup(filepath);
 	pokemon->name = ft_strdup(input);
 	free(input);
-	return ft_strdup(filepath);
+	return (ft_strdup(filepath));
 }
 
 char **split_pokemon(char *str, char sep)
 {
-    char **res;
-    int i = 0;
-    int start = 0;
-    int j = 0;
-    int count = 1;
+	char **res;
+	int i = 0, j = 0, start = 0;
+	int count = 1;
 
-    // Conta i separatori
-    while (str[i])
-        if (str[i++] == sep)
-            count++;
-    
-    res = malloc(sizeof(char *) * (count + 1));
-    if (!res)
-        return NULL;
-
-    i = 0;
-    while (str[i])
-    {
-        if (str[i] == sep || str[i+1] == '\0')
-        {
-            int len = i - start + (str[i+1] == '\0' ? 1 : 0);
-            res[j] = malloc(len + 1);
-            strncpy(res[j], &str[start], len);
-            res[j][len] = '\0';
-            j++;
-            start = i + 1;
-        }
-        i++;
-    }
-    res[j] = NULL;
-    return res;
+	while (str[i])
+		if (str[i++] == sep)
+			count++;
+	res = malloc(sizeof(char *) * (count + 1));
+	if (!res)
+		return NULL;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == sep || str[i + 1] == '\0')
+		{
+			int len = i - start + (str[i + 1] == '\0' ? 1 : 0);
+			res[j] = malloc(len + 1);
+			if (!res[j])
+				return NULL;
+			ft_strlcpy(res[j], &str[start], len + 1);
+			j++;
+			start = i + 1;
+		}
+		i++;
+	}
+	res[j] = NULL;
+	return res;
 }
 
-void get_pokemon_data(t_pokemon *pokemon)
+void	fill_pokemon_moves(t_pokemon *pokemon)
 {
-    int fd = open("pokemonData/pokemonData/pokemon.csv", O_RDONLY);
-    if (fd == -1)
-    {
-        perror("Impossibile aprire il file");
-        return;
-    }
-    char *line;
-    while ((line = get_next_line(fd)))
-    {
-        char **fields = split_pokemon(line, ',');
-        if (fields && fields[1] && !ft_strncmp(fields[1], pokemon->name, ft_strlen(pokemon->name)))
-        {
-            pokemon->id = ft_atoi(fields[0]);
-            free_matrix(fields);
-            free(line);
-            close(fd);
-            return;
-        }
-        free_matrix(fields);
-        free(line);
-    }
-    printf("Pokemon con nome %s non trovato\n", pokemon->name);
-    close(fd);
+	int fd = open("pokemonData/pokemonMoves/moves.csv", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Impossibile aprire il file");
+		return;
+	}
+	char *line;
+	while ((line = get_next_line(fd)))
+	{
+		char **fields = split_pokemon(line, ',');
+		if (fields && fields[0])
+		{
+			if (ft_atoi(fields[0]) == pokemon->attack1.id)
+			{
+				pokemon->attack1.name = ft_strdup(fields[1]);
+				pokemon->attack1.damage = ft_atoi(fields[4]);
+				pokemon->attack1.type = ft_strdup(fields[3]);
+			}
+			else if (ft_atoi(fields[0]) == pokemon->attack2.id)
+			{
+				pokemon->attack2.name = ft_strdup(fields[1]);
+				pokemon->attack2.damage = ft_atoi(fields[4]);
+				pokemon->attack2.type = ft_strdup(fields[3]);
+			}
+			else if (ft_atoi(fields[0]) == pokemon->attack3.id)
+			{
+				pokemon->attack3.name = ft_strdup(fields[1]);
+				pokemon->attack3.damage = ft_atoi(fields[4]);
+				pokemon->attack3.type = ft_strdup(fields[3]);
+			}
+			else if (ft_atoi(fields[0]) == pokemon->attack4.id)
+			{
+				pokemon->attack4.name = ft_strdup(fields[1]);
+				pokemon->attack4.damage = ft_atoi(fields[4]);
+				pokemon->attack4.type = ft_strdup(fields[3]);
+			}
+		}
+		free_matrix(fields);
+		free(line);
+	}
+	close(fd);
+}
+
+void	get_pokemon_moves(t_pokemon *pokemon)
+{
+	int fd = open("pokemonData/pokemonID/pokemon_top_moves.csv", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Impossibile aprire il file");
+		return;
+	}
+	char *line;
+	while ((line = get_next_line(fd)))
+	{
+		char **fields = split_pokemon(line, ',');
+		if (fields && fields[0] && ft_atoi(fields[0]) == pokemon->id)
+		{
+			pokemon->attack1.id = ft_atoi(fields[1]);
+			pokemon->attack2.id = ft_atoi(fields[2]);
+			pokemon->attack3.id = ft_atoi(fields[3]);
+			pokemon->attack4.id = ft_atoi(fields[4]);
+			free_matrix(fields);
+			free(line);
+			close(fd);
+			return;
+		}
+		free_matrix(fields);
+		free(line);
+	}
+	printf("Pokemon con nome %s non trovato moves\n", pokemon->name);
+	close(fd);
+}
+
+void	get_pokemon_data(t_pokemon *pokemon)
+{
+	int fd = open("pokemonData/pokemonData/pokemon.csv", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Impossibile aprire il file");
+		return;
+	}
+	char *line;
+	while ((line = get_next_line(fd)))
+	{
+		printf("%s", line);
+		char **fields = split_pokemon(line, ',');
+		for (int i = 0; fields[i]; i++)
+		{
+			printf("Field[%d]: %s\n", i, fields[i]);
+		}
+		if (fields && fields[1] && !ft_strncmp(fields[1], pokemon->name, ft_strlen(pokemon->name)))
+		{
+			pokemon->id = ft_atoi(fields[0]);
+			free_matrix(fields);
+			free(line);
+			close(fd);
+			return ;
+		}
+		free_matrix(fields);
+		free(line);
+	}
+	printf("Pokemon con nome %s non trovato data\n", pokemon->name);
+	close(fd);
+}
+
+void	get_pokemon_stats(t_pokemon *pokemon)
+{
+	int IV = 31;
+	int Level = 50;
+	int fd = open("pokemonData/pokemonStats/pokemon_stats.csv", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Impossibile aprire il file");
+		return;
+	}
+	char *line;
+	while ((line = get_next_line(fd)))
+	{
+		
+		printf("%s", line);
+		char **fields = split_pokemon(line, ',');
+		for (int i = 0; fields[i]; i++)
+		{
+			printf("Field[%d]: %s\n", i, fields[i]);
+		}
+		if (fields && fields[0] && ft_atoi(fields[0]) == pokemon->id)
+		{
+			int base_stat = ft_atoi(fields[1]);
+			pokemon->health = ((2 * base_stat + IV) * Level / 100) + Level + 10;
+			pokemon->max_health = pokemon->health;
+			pokemon->defense = ((2 * ft_atoi(fields[3]) + IV) * Level / 100) + 5;
+			pokemon->attack = ((2 * ft_atoi(fields[2]) + IV) * Level / 100) + 5;
+			pokemon->speed = ((2 * ft_atoi(fields[6]) + IV) * Level / 100) + 5;
+			free_matrix(fields);
+			free(line);
+			close(fd);
+			return ;
+		}
+		free_matrix(fields);
+		free(line);
+	}
+	printf("Pokemon con nome %s non trovato stats\n", pokemon->name);
+	close(fd);
 }
 
 void	ft_pokemon()
 {
 	t_pokemon	*player_pokemon;
 	t_pokemon	*cpu_pokemon;
-	t_attack	*attacks;
 	int			player_turn;
-
-	char player_choice[50];
-	char enemy_choice[50];
-	
-	
-
 	player_turn = 1;
-	attacks = (t_attack *)malloc(sizeof(t_attack) * 4);
-	attacks[0] = create_attack("Thunderbolt", 90, "Electric");
-	attacks[1] = create_attack("Quick Attack", 40, "Normal");
-	attacks[2] = create_attack("Iron Tail", 100, "Steel");
-	attacks[3] = create_attack("Volt Tackle", 120, "Electric");
-	player_pokemon = ft_create_pokemon(player_choice, 100, 50, 90);
-	add_attacks(player_pokemon, attacks);
 
-	attacks[0] = create_attack("Vine Whip", 45, "Grass");
-	attacks[1] = create_attack("Tackle", 40, "Normal");
-	attacks[2] = create_attack("Razor Leaf", 55, "Grass");
-	attacks[3] = create_attack("Seed Bomb", 80, "Grass");
-	cpu_pokemon = ft_create_pokemon(enemy_choice, 100, 50, 45);
-	add_attacks(cpu_pokemon, attacks);
+	player_pokemon = (t_pokemon *)malloc(sizeof(t_pokemon));
+	cpu_pokemon = (t_pokemon *)malloc(sizeof(t_pokemon));
+	if (!player_pokemon || !cpu_pokemon)
+	{
+		perror("Memory allocation failed");
+		return;
+	}
+
 	char *player_path = choose_pokemon("Choose your Pokemon: ", player_pokemon);
 	char *enemy_path = choose_pokemon("Choose opponent's Pokemon: ", cpu_pokemon);
-
+	
 	get_pokemon_data(player_pokemon);
 	get_pokemon_data(cpu_pokemon);
+	// printf("You chose %d\n", player_pokemon->id);
+	// printf("Opponent chose %d\n", cpu_pokemon->id);
+	get_pokemon_stats(player_pokemon);
+	get_pokemon_stats(cpu_pokemon);
+	get_pokemon_moves(player_pokemon);
+	get_pokemon_moves(cpu_pokemon);
 
+	fill_pokemon_moves(player_pokemon);
+	fill_pokemon_moves(cpu_pokemon);
+	
+	
+	
 	printf("\nA wild %s appears!\n\n", cpu_pokemon->name);
 	display_battle(player_pokemon, cpu_pokemon);
 
@@ -371,9 +464,24 @@ void	ft_pokemon()
 	free(cpu_pokemon->ascii_path);
 	free(player_pokemon->name);
 	free(cpu_pokemon->name);
+	free(player_pokemon->attack1.name);
+	free(player_pokemon->attack2.name);
+	free(player_pokemon->attack3.name);
+	free(player_pokemon->attack4.name);
+	free(cpu_pokemon->attack1.name);
+	free(cpu_pokemon->attack2.name);
+	free(cpu_pokemon->attack3.name);
+	free(cpu_pokemon->attack4.name);
+	free(player_pokemon->attack1.type);
+	free(player_pokemon->attack2.type);
+	free(player_pokemon->attack3.type);
+	free(player_pokemon->attack4.type);
+	free(cpu_pokemon->attack1.type);
+	free(cpu_pokemon->attack2.type);
+	free(cpu_pokemon->attack3.type);
+	free(cpu_pokemon->attack4.type);
 	free(player_pokemon);
 	free(cpu_pokemon);
-	free(attacks);
 	free(player_path);
     free(enemy_path);
 	get_next_line(-42);
