@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/11 10:27:36 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:32:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
 	if (!(*node)->value)
 		return (util_free_env_var(before, tmp, after));
 	if (clean)
-		clean_quotes(node);
+		clean_quotes(node, gen);
 	util_free_env_var(before, tmp, after);
 }
 
@@ -108,5 +108,5 @@ void	single_quotes(t_lexing **node, t_gen *gen)
 	}
 	if (found)
 		handle_env_variable(node, gen, 0);
-	clean_quotes(node);
+	clean_quotes(node, gen);
 }

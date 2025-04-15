@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 09:56:59 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:48:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
 int			quote_handler(t_gen *gen);
-void		clean_quotes(t_lexing **node);
+void		clean_quotes(t_lexing **node, t_gen *gen);
 void		single_quotes(t_lexing **node, t_gen *gen);
 
 // env vars
@@ -139,6 +139,10 @@ int			check_files(t_gen *gen);
 int			check_here_doc(t_gen *gen);
 int			check_operators(t_gen *gen);
 int			check_wildcards(t_gen *gen);
+int			checks_layer(t_lexing *tmp, t_lexing *succ,
+				t_gen *gen, t_lexing *lst);
+int			check_not_opened(t_lexing *end, t_lexing *head);
+int			check_close(t_lexing *node, t_lexing *succ);
 
 // exec
 void		exec_command(t_gen *gen);
