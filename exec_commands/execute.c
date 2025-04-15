@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/11 11:16:01 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:11:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,11 +134,11 @@ int		find_cmd_num(t_lexing *node)
 	int			cmd_num;
 	t_lexing	*tmp;
 
-	cmd_num = 1;
+	cmd_num = 0;
 	tmp = node;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->type, "command", 8))
+		if (!ft_strncmp(tmp->type, "command", 7))
 			cmd_num++;
 		tmp = tmp->next;
 	}
@@ -150,7 +150,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 	if (!node)
 		return ;
 	collect_piped_cmds(node->left, cmds, i);
-	if (node->data && ft_strncmp(node->data->type, "command", 8) == 0)
+	if (node->data && ft_strncmp(node->data->type, "command", 7) == 0)
 		cmds[(*i)++] = node->data;
 	collect_piped_cmds(node->right, cmds, i);
 }
