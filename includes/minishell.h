@@ -115,7 +115,7 @@ int			find_char_pos(char *s, char *chars, int start);
 int			ft_swap(char **s1, char **s2);
 void		sort_export(t_gen *gen);
 void		util_free_env_var(char *before, char *tmp, char *after);
-int			util_infile(t_lexing *tmp, t_gen *gen);
+int			util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst);
 int			util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect,
 				t_lexing *lst);
 
@@ -152,6 +152,7 @@ int			checks_layer(t_lexing *tmp, t_lexing *succ,
 				t_gen *gen, t_lexing *lst);
 int			check_not_opened(t_lexing *end, t_lexing *head);
 int			check_close(t_lexing *node, t_lexing *succ);
+int			check_redirect(t_lexing *node);
 
 // exec
 void		exec_command(t_gen *gen);

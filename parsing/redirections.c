@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 14:06:37 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:14:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,28 +57,41 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 				tmp = tmp->next;
 			}
 		}
+		if (tmp == end)
+			break ;
 		if (tmp && tmp->next)
 			tmp = tmp->next;
 	}
 	return (NULL);
 }
 
+void	util_arg(t_lexing	*tmp, t_lexing *succ)
+{
+	if (tmp->next && !ft_strncmp(succ->type, "argument", 9))
+		succ->type = ft_strdup("command");
+}
+
 int	find_red(t_lexing *lst, t_gen *gen)
 {
 	t_lexing	*tmp;
 	t_lexing	*redirect;
+	t_lexing	*succ;
 
 	tmp = lst;
 	redirect = NULL;
 	while (tmp && ft_strncmp(tmp->type, "and_operator", 13) != 0)
 	{
+		if (tmp->next)
+			succ = tmp->next;
 		if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
 		{
-			if (!util_infile(tmp, gen))
+			util_arg(tmp, succ);
+			if (!util_infile(tmp, gen, lst))
 				return (0);
 		}
 		else if (!ft_strncmp(tmp->type, "outfile", 8) && !tmp->wildcard)
 		{
+			util_arg(tmp, succ);
 			if (!util_outfile(tmp, gen, redirect, lst))
 				return (0);
 		}

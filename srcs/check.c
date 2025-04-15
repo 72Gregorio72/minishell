@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 09:56:38 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 14:49:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:07:53 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,18 @@ int	check_not_command(t_lexing	*succ)
 		|| !ft_strncmp(succ->type, "or_operator", 12)
 		|| !ft_strncmp(succ->type, "close_parenthesis", 18)
 		|| !ft_strncmp(succ->type, "open_parenthesis", 17))
+		return (1);
+	return (0);
+}
+
+int	check_redirect(t_lexing *node)
+{
+	if (!ft_strncmp(node->type, "output_append", 14)
+		|| !ft_strncmp(node->type, "here_doc", 9)
+		|| !ft_strncmp(node->type, "redirect_input", 15)
+		|| !ft_strncmp(node->type, "redirect_output", 16)
+		|| !ft_strncmp(node->type, "infile", 7)
+		|| !ft_strncmp(node->type, "outfile", 8))
 		return (1);
 	return (0);
 }

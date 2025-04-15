@@ -108,9 +108,9 @@ int	parsing(t_gen *gen)
 		|| !check_here_doc(gen) || !check_wildcards(gen)
 		|| !check_operators(gen))
 		return (0);
+	print_list(gen->lexed_data);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 		gen->root = fill_tree(gen->cleaned_data,
