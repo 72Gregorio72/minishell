@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:44:49 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 10:48:30 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:50:30 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ int	checks_layer(t_lexing *tmp, t_lexing *succ, t_gen *gen, t_lexing *lst)
 	if (!ft_strncmp(succ->type, "close_parenthesis", 18)
 		&& !check_close(tmp, succ))
 		return (error_exit(gen, "minishell: syntax error", 2), 0);
-    return (1);
+	return (1);
 }
