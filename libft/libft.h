@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:12:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:55:02 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include "get_next_line/get_next_line.h"
+# include "ft_printf/ft_printf.h"
 
 typedef struct s_lexing
 {
@@ -82,5 +83,7 @@ t_lexing	*ft_lstnew_cleaned(char *value, char *type,
 void		print_list(t_lexing *lst);
 void		free_matrix(char **mat);
 char		**ft_strdup_matrix(char **matrix);
+
+
 
 #endif

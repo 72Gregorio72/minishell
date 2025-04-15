@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:13:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:51:56 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 				tmp = tmp->next;
 			}
 		}
-		tmp = tmp->next;
+		if (tmp && tmp->next)
+			tmp = tmp->next;
 	}
 	return (NULL);
 }

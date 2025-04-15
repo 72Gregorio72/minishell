@@ -42,7 +42,7 @@ void	pipex(t_data_bonus *data);
 int		empty_str(char *s);
 void	exit_free(t_data_bonus *data);
 void	open_temp_file_for_reading(int *fd);
-void	handle_here_doc(char *limiter, t_data_bonus *data);
+void	handle_here_doc(char *limiter, t_lexing *node);
 void	open_files(int ac, char **av, t_data_bonus *data);
 void	parse_commands(t_data_bonus *data);
 void	write_to_temp_file(int fd, char *limiter);

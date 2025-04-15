@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/15 12:44:16 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:22:42 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,35 @@ int	is_builtin(char *command)
 	return (0);
 }
 
+void	here_doccer(t_lexing *node)
+{
+	t_lexing	*current;
+	int 		found;
+
+	found = 0;
+	current = node;
+	while (current)
+	{
+		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
+		{
+			if (current->infile == -1)
+			{
+				ft_putstr_fd("Error opening here_doc file\n", 2);
+				return ;
+			}
+			if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19))
+				handle_here_doc(((t_lexing *)current->next)->value, current);
+			if (current->outfile == -1)
+			{
+				ft_putstr_fd("Error opening output file\n", 2);
+				close(current->infile);
+				return ;
+			}
+			found = 1;
+		}
+		current = current->next;
+	}
+}
 
 void	exec_single_command(t_gen *gen, t_lexing *node)
 {
@@ -46,7 +75,9 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	*cmd_path;
 	char	**env;
 
-	if (is_builtin(node->command[0]))
+	here_doccer(node);
+	node->outfile = 1;
+	if (node->command && is_builtin(node->command[0]))
 	{
 		if (exec_builtin(gen, node))
 			gen->exit_status = 0;
@@ -69,7 +100,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	env = copy_matrix(gen->my_env);
 	if (!node || !node->value)
 		return ;
-	cmd_path = get_path(node->value, env);
+	cmd_path = get_path(node->command[0], env);
 	if (!cmd_path)
 	{
 		cmd_path = ft_strdup(node->value);
@@ -105,16 +136,16 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	}
 	if (pid == 0)
 	{
-		// if (node->infile != -1)
-		// {
-		// 	dup2(node->infile, STDIN_FILENO);
-		// 	close(node->infile);
-		// }
-		// if (node->outfile != -1)
-		// {
-		// 	dup2(node->outfile, STDOUT_FILENO);
-		// 	close(node->outfile);
-		// }
+		if (node->infile != STDIN_FILENO && node->infile > 0)
+		{
+			dup2(node->infile, STDIN_FILENO);
+			close(node->infile);
+		}
+		if (node->outfile != STDOUT_FILENO && node->outfile > 0)
+		{
+			dup2(node->outfile, STDOUT_FILENO);
+			close(node->outfile);
+		}
 		execve(cmd_path, node->command, env);
 		ft_putstr_fd("execve error\n", 2);
 		free_matrix(env);
