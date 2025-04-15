@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/15 11:48:03 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:44:16 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,16 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	}
 	if (pid == 0)
 	{
+		// if (node->infile != -1)
+		// {
+		// 	dup2(node->infile, STDIN_FILENO);
+		// 	close(node->infile);
+		// }
+		// if (node->outfile != -1)
+		// {
+		// 	dup2(node->outfile, STDOUT_FILENO);
+		// 	close(node->outfile);
+		// }
 		execve(cmd_path, node->command, env);
 		ft_putstr_fd("execve error\n", 2);
 		free_matrix(env);
@@ -163,7 +173,6 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	pid_t		pid;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
-
 	for (i = 0; i < num_cmds; i++)
 	{
 		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)
@@ -183,13 +192,14 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		{
 			if (prev_fd != -1)
 			{
-				dup2(prev_fd, STDIN_FILENO);
+				dup2(prev_fd, gen->cleaned_data->infile);
+				dup2(pipe_fd[0], gen->cleaned_data->outfile);
 				close(prev_fd);
 			}
 			if (i < num_cmds - 1)
 			{
 				close(pipe_fd[0]);
-				dup2(pipe_fd[1], STDOUT_FILENO);
+				dup2(pipe_fd[1], gen->cleaned_data->infile);
 				close(pipe_fd[1]);
 			}
 			exec_single_command(gen, cmds[i]);
