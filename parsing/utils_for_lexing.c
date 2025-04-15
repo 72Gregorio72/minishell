@@ -6,11 +6,19 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 10:10:42 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:05:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	util_args(char *value, char **type)
+{
+	if (value[0] == '-')
+		(*type) = ft_strdup("option");
+	else
+		(*type) = ft_strdup("argument");
+}
 
 void	find_args(t_lexing *lexed)
 {
@@ -31,10 +39,7 @@ void	find_args(t_lexing *lexed)
 			{
 				if (check_not_command(succ))
 					break ;
-				if (succ->value[0] == '-')
-					succ->type = ft_strdup("option");
-				else
-					succ->type = ft_strdup("argument");
+				util_args(succ->value, &(succ->type));
 				succ = succ->next;
 			}
 		}
@@ -122,29 +127,5 @@ int	check_operators(t_gen *gen)
 		return (error_exit(gen, "minishell: syntax error near '||'", 2), 0);
 	else if (!ft_strncmp("pipe", last->type, 12))
 		return (error_exit(gen, "minishell: syntax error near '|'", 2), 0);
-	return (1);
-}
-
-int	check_files(t_gen *gen)
-{
-	t_lexing	*tmp;
-	t_lexing	*succ;
-
-	tmp = gen->lexed_data;
-	succ = NULL;
-	while (tmp)
-	{
-		if (tmp->next)
-			succ = tmp->next;
-		if (succ && !ft_strncmp(tmp->type, "redirect_input", 15)
-			&& check_not_command(succ))
-			return (error_exit(gen, "mininshell: syntax error", 2), 0);
-		if (succ
-			&& (!ft_strncmp(tmp->type, "redirect_output", 16)
-				|| !ft_strncmp(tmp->type, "output_append", 14))
-			&& check_not_command(succ))
-			return (error_exit(gen, "mininshell: syntax error", 2), 0);
-		tmp = tmp->next;
-	}
 	return (1);
 }
