@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 09:24:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:14:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:59:51 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,11 @@ void	ctrl_c(int new_line)
 
 void	ctrl_d(t_gen *gen)
 {
-	(void)gen;
 	printf("exit\n");
 	free_matrix(gen->my_env);
 	free_matrix(gen->export_env);
 	rl_clear_history();
-	exit(0);
+	exit(gen->exit_status);
 }
 
 void	ctrl_backslash(void)

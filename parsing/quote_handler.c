@@ -51,7 +51,7 @@ void	clean_quotes(t_lexing **node, t_gen *gen)
 	j = 0;
 	new_value = flag_quotes(&in_single, &in_double, value, &j);
 	if (!new_value)
-		return (safe_free(gen));
+		return (safe_free(gen), exit(gen->exit_status));
 	new_value[j] = '\0';
 	free((*node)->value);
 	(*node)->value = new_value;
@@ -59,6 +59,7 @@ void	clean_quotes(t_lexing **node, t_gen *gen)
 
 void	util_quotes(t_gen *gen, t_lexing **node, char *tmp, int bool_quote)
 {
+	(void)tmp;
 	if (bool_quote == 2)
 		handle_env_variable(node, gen, 1);
 	else if (bool_quote)
@@ -69,16 +70,11 @@ void	util_quotes(t_gen *gen, t_lexing **node, char *tmp, int bool_quote)
 		{
 			free((*node)->value);
 			(*node)->value = ft_itoa(gen->exit_status);
+			if (!(*node)->value)
+				return (safe_free(gen), exit(gen->exit_status));
 		}
 		else
-		{
-			tmp = ft_strdup((*node)->value);
-			free((*node)->value);
-			if (ft_isdigit(tmp[1]))
-				((*node)->value) = ft_substr(tmp, 2, ft_strlen(tmp));
-			else
-				(*node)->value = expand_env_var(gen->my_env, tmp);
-		}
+			handle_env_variable(node, gen, 1);
 	}
 }
 

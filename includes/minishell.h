@@ -100,6 +100,8 @@ void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
 // redirections and wildcards
 int			find_red(t_lexing *lst, t_gen *gen);
 int			expand_wildcard(t_lexing **node);
+t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
+t_lexing	*find_next_node(t_lexing *start, char *to_find);
 
 // utils
 void		free_matrix(char **av);
@@ -112,6 +114,9 @@ int			find_char_pos(char *s, char *chars, int start);
 int			ft_swap(char **s1, char **s2);
 void		sort_export(t_gen *gen);
 void		util_free_env_var(char *before, char *tmp, char *after);
+int			util_infile(t_lexing *tmp, t_gen *gen);
+int			util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect,
+				t_lexing *lst);
 
 // ctrl
 void		ctrl_c(int new_line);

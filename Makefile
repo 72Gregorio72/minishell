@@ -23,6 +23,7 @@ SRCS		=	main.c \
 				parsing/lexing_quotes.c \
 				parsing/redirections.c \
 				parsing/wildcards.c \
+				parsing/utils_reds.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \

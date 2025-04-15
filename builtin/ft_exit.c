@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:45:41 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/14 15:55:55 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:22:51 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 void	ft_exit(t_gen *gen)
 {
 	safe_free(gen);
-	exit(0);
+	exit(gen->exit_status);
 }

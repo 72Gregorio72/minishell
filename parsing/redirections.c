@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:13:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:06:37 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,17 @@ t_lexing	*find_next_node(t_lexing *start, char *to_find)
 	return (NULL);
 }
 
+int	check_end(t_lexing *tmp)
+{
+	if (!ft_strncmp(tmp->type, "and_operator", 13)
+		|| !ft_strncmp(tmp->type, "or_operator", 12)
+		|| !ft_strncmp(tmp->type, "open_parenthesis", 17)
+		|| !ft_strncmp(tmp->type, "close_parenthesis", 18)
+		|| !ft_strncmp(tmp->type, "pipe", 4))
+		return (1);
+	return (0);
+}
+
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 {
 	t_lexing	*tmp;
@@ -39,51 +50,17 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 			command = tmp;
 			while (tmp)
 			{
-				if (!ft_strncmp(tmp->type, "and_operator", 13)
-					|| !ft_strncmp(tmp->type, "or_operator", 12)
-					|| !ft_strncmp(tmp->type, "open_parenthesis", 17)
-					|| !ft_strncmp(tmp->type, "close_parenthesis", 18)
-					|| !ft_strncmp(tmp->type, "pipe", 4))
+				if (check_end(tmp))
 					break ;
 				if (!ft_strncmp(tmp->value, end->value, ft_strlen(end->value)))
 					return (command);
 				tmp = tmp->next;
 			}
 		}
-		tmp = tmp->next;
+		if (tmp && tmp->next)
+			tmp = tmp->next;
 	}
 	return (NULL);
-}
-
-int	util_infile(t_lexing *tmp, t_gen *gen)
-{
-	t_lexing	*command;
-
-	command = find_prev_command(gen->lexed_data, tmp);
-	if (!command)
-		return (error_exit(gen, "minishell: syntax error", 2), 0);
-	if (!access(tmp->value, F_OK))
-		command->infile = open(tmp->value, O_RDONLY);
-	else
-		return (error_exit(gen, "minishell: no such file or directory", 1), 0);
-	return (1);
-}
-
-int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
-{
-	t_lexing	*command;
-
-	command = find_prev_command(lst, tmp);
-	if (!command)
-		return (error_exit(gen, "minishell: syntax error", 2), 0);
-	redirect = find_next_node(command, "redirect_output");
-	if (!redirect)
-		command->outfile = open(tmp->value,
-				O_CREAT | O_WRONLY | O_APPEND, 0777);
-	else
-		command->outfile = open(tmp->value,
-				O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	return (1);
 }
 
 int	find_red(t_lexing *lst, t_gen *gen)

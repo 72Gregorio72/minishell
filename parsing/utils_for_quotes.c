@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:13:53 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:23:29 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	start_with_num(char **tmp, t_gen *gen, char *before, int *e)
 		perror("malloc error");
 		free(before);
 		safe_free(gen);
-		exit(1);
+		exit(gen->exit_status);
 	}
 	*e = 1;
 }
