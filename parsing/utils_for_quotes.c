@@ -6,26 +6,11 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 13:23:29 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:38:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*construct_env_var(char *before, char *after, char *tmp)
-{
-	char	*new_value;
-
-	new_value = (char *)malloc(ft_strlen(before)
-			+ ft_strlen(tmp) + ft_strlen(after) + 1);
-	if (!new_value)
-		return (NULL);
-	new_value[0] = '\0';
-	ft_strlcat(new_value, before, ft_strlen(before) + 1);
-	ft_strlcat(new_value, tmp, ft_strlen(new_value) + ft_strlen(tmp) + 1);
-	ft_strlcat(new_value, after, ft_strlen(new_value) + ft_strlen(after) + 1);
-	return (new_value);
-}
 
 char	*construct_before(char *value, int p, int clean)
 {
@@ -64,6 +49,31 @@ void	start_with_num(char **tmp, t_gen *gen, char *before, int *e)
 	*e = 1;
 }
 
+char	*build_tmp(t_gen *gen, int *e, t_lexing **node, int p)
+{
+	char	*tmp;
+
+	if ((*node)->value[p + 1] == '?')
+	{
+		tmp = ft_itoa(gen->exit_status);
+		if (!tmp)
+			return (safe_free(gen), exit(gen->exit_status), NULL);
+		*e = 2;
+	}
+	else
+	{
+		tmp = expand_env_var(gen->my_env, (*node)->value);
+		if (!tmp)
+		{
+			tmp = ft_strdup("");
+			if (!tmp)
+				return (safe_free(gen), exit(gen->exit_status), NULL);
+		}
+		*e = len_var((*node)->value, p);
+	}
+	return (tmp);
+}
+
 void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
 {
 	char	*before;
@@ -76,13 +86,7 @@ void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
 	before = construct_before((*node)->value, p, clean);
 	if (ft_isdigit((*node)->value[p + 1]))
 		start_with_num(&tmp, gen, before, &e);
-	else
-	{
-		tmp = expand_env_var(gen->my_env, (*node)->value);
-		if (!tmp)
-			tmp = ft_strdup("");
-		e = len_var((*node)->value, p);
-	}
+	tmp = build_tmp(gen, &e, node, p);
 	after = ft_substr((*node)->value, p + e + 1, ft_strlen((*node)->value));
 	free((*node)->value);
 	(*node)->value = construct_env_var(before, after, tmp);

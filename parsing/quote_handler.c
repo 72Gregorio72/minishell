@@ -65,17 +65,7 @@ void	util_quotes(t_gen *gen, t_lexing **node, char *tmp, int bool_quote)
 	else if (bool_quote)
 		single_quotes(node, gen);
 	else
-	{
-		if (!ft_strncmp((*node)->value, "$?", 2))
-		{
-			free((*node)->value);
-			(*node)->value = ft_itoa(gen->exit_status);
-			if (!(*node)->value)
-				return (safe_free(gen), exit(gen->exit_status));
-		}
-		else
-			handle_env_variable(node, gen, 1);
-	}
+		handle_env_variable(node, gen, 1);
 }
 
 void	handle_quotes(t_lexing **node, t_gen *gen)

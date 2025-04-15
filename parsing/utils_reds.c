@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 14:06:41 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:43:24 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
 	t_lexing	*command;
 
 	command = find_prev_command(lst, tmp);
+	if (!command)
+		command = find_next_node(tmp, "command");
 	if (!command)
 		return (error_exit(gen, "minishell: syntax error", 2), 0);
 	redirect = find_next_node(command, "redirect_output");

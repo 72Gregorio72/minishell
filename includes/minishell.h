@@ -96,6 +96,7 @@ void		single_quotes(t_lexing **node, t_gen *gen);
 int			len_var(char *str, int dollar_pos);
 char		*expand_env_var(char **env, char *var);
 void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
+char		*construct_env_var(char *before, char *after, char *tmp);
 
 // redirections and wildcards
 int			find_red(t_lexing *lst, t_gen *gen);
