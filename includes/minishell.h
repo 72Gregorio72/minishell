@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:38 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 09:56:59 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
 void		ft_exit(t_gen *gen);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
-int			ft_export(char ***env, const char *var, char ***export_env, t_gen *gen);
+int			ft_export(char ***env, const char *var,
+				char ***export_env, t_gen *gen);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 

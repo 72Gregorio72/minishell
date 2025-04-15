@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/11 12:30:13 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:01:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,11 @@ void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
 			{
 				construct_val(node, &entry, dir);
 				continue ;
-			}	
+			}
 		}
 		else
 		{
-			if (not_dot(&entry, dir, tmp , node))
+			if (not_dot(&entry, dir, tmp, node))
 				continue ;
 		}
 		entry = readdir(dir);
