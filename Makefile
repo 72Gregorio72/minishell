@@ -12,6 +12,7 @@ SRCS		=	main.c \
 				parsing/lexing.c \
 				parsing/parsing.c \
 				parsing/utils_for_lexing.c \
+				parsing/utils_for_lexing2.c \
 				parsing/check_lexing.c \
 				parsing/quote_handler.c \
 				parsing/dollar.c \

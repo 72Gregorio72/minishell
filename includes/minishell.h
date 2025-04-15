@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 12:15:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
 void		ft_exit(t_gen *gen);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
-void		ft_export(char ***envp, const char *var, char ***export_env);
+int			ft_export(char ***env, const char *var, char ***export_env, t_gen *gen);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 
@@ -95,7 +95,7 @@ void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
 
 // redirections and wildcards
 int			find_red(t_lexing *lst, t_gen *gen);
-int			check_wildcards(t_gen *gen);
+int			expand_wildcard(t_lexing **node);
 
 // utils
 void		free_matrix(char **av);
@@ -107,6 +107,7 @@ char		**ft_split_quote(char const *s, char c);
 int			find_char_pos(char *s, char *chars, int start);
 int			ft_swap(char **s1, char **s2);
 void		sort_export(t_gen *gen);
+void		util_free_env_var(char *before, char *tmp, char *after);
 
 // ctrl
 void		ctrl_c(int new_line);
@@ -136,6 +137,7 @@ int			check_not_command(t_lexing	*succ);
 int			check_files(t_gen *gen);
 int			check_here_doc(t_gen *gen);
 int			check_operators(t_gen *gen);
+int			check_wildcards(t_gen *gen);
 
 // exec
 void		exec_command(t_gen *gen);

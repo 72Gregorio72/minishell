@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:56:15 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:54:47 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:17:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,11 @@ void	error_exit(t_gen *gen, char *str, int exit_status)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	gen->exit_status = exit_status;
+}
+
+void	util_free_env_var(char *before, char *tmp, char *after)
+{
+	free(before);
+	free(tmp);
+	free(after);
 }

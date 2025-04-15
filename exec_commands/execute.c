@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/09 12:16:18 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:16:01 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		if (exec_builtin(gen, node))
 			gen->exit_status = 0;
 		else
-			gen->exit_status = 127;
+		{
+			if (gen->exit_status != 1)
+				gen->exit_status = 127;
+		}
 		if (node->piped)
 		{
 			ft_treeclear(gen->root);

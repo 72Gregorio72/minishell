@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:31:13 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:36:26 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:14:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,10 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 					{
 						tmp = ft_strdup((*node)->value);
 						free((*node)->value);
-						(*node)->value = expand_env_var(gen->my_env, tmp);
+						if (ft_isdigit(tmp[1]))
+							((*node)->value) = ft_substr(tmp, 2, ft_strlen(tmp));
+						else
+							(*node)->value = expand_env_var(gen->my_env, tmp);
 					}
 				}
 				break ;

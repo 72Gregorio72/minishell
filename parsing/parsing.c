@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:15:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 12:30:55 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:34:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ int	unset_and_export(t_gen *gen, char *succ, char *curr)
 		&& ft_strlen(curr) == ft_strlen("export"))
 	{
 		if (!succ)
-			ft_export(&gen->my_env, NULL, &gen->export_env);
-		else
-			ft_export(&gen->my_env, succ, &gen->export_env);
-		return (1);
+			return (ft_export(&gen->my_env, NULL, &gen->export_env, gen));
+		return (ft_export(&gen->my_env, succ, &gen->export_env, gen));
 	}
 	else if (ft_strncmp("unset", curr, ft_strlen("unset")) == 0
 		&& ft_strlen(curr) == ft_strlen("unset"))
@@ -161,7 +159,7 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	print_list(gen->lexed_data);
+	// print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 	{

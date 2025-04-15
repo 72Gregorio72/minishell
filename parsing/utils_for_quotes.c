@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 09:50:12 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:27:36 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,6 @@ char	*construct_env_var(char *before, char *after, char *tmp)
 	return (new_value);
 }
 
-static void	util_free(char *before, char *tmp, char *after)
-{
-	free(before);
-	free(tmp);
-	free(after);
-}
-
 char	*construct_before(char *value, int p, int clean)
 {
 	char	*before;
@@ -51,11 +44,24 @@ char	*construct_before(char *value, int p, int clean)
 		if (!clean)
 			before = ft_substr(value, 0, p);
 		else
-			before = ft_substr(value, 1, p - 1);
+			before = ft_substr(value, 0, p);
 	}
 	if (!before)
 		before = ft_strdup("");
 	return (before);
+}
+
+void	start_with_num(char **tmp, t_gen *gen, char *before, int *e)
+{
+	*tmp = ft_strdup("");
+	if (!(*tmp))
+	{
+		perror("malloc error");
+		free(before);
+		safe_free(gen);
+		exit(1);
+	}
+	*e = 1;
 }
 
 void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
@@ -68,18 +74,23 @@ void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
 
 	p = find_char_pos((*node)->value, "$", 0);
 	before = construct_before((*node)->value, p, clean);
-	tmp = expand_env_var(gen->my_env, (*node)->value);
-	if (!tmp)
-		tmp = ft_strdup("");
-	e = len_var((*node)->value, p);
+	if (ft_isdigit((*node)->value[p + 1]))
+		start_with_num(&tmp, gen, before, &e);
+	else
+	{
+		tmp = expand_env_var(gen->my_env, (*node)->value);
+		if (!tmp)
+			tmp = ft_strdup("");
+		e = len_var((*node)->value, p);
+	}
 	after = ft_substr((*node)->value, p + e + 1, ft_strlen((*node)->value));
 	free((*node)->value);
 	(*node)->value = construct_env_var(before, after, tmp);
+	if (!(*node)->value)
+		return (util_free_env_var(before, tmp, after));
 	if (clean)
 		clean_quotes(node);
-	if (!(*node)->value)
-		return (util_free(before, tmp, after));
-	util_free(before, tmp, after);
+	util_free_env_var(before, tmp, after);
 }
 
 void	single_quotes(t_lexing **node, t_gen *gen)

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 12:45:15 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/11 09:57:26 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	find_env_var_and_wild(t_lexing *lexed)
 		dollar_pos = find_char_pos(tmp->value, "$", 0);
 		if (ft_strchr(tmp->value, '$') != NULL)
 		{
-			if (!(ft_strlen(tmp->value) == 1 && tmp->value[0] == '$'))
+			if (!(ft_strlen(tmp->value) == 1 && dollar_pos == 0))
 				tmp->env_variable = 1;
 		}
 		if (ft_strchr(tmp->value, '*') != NULL
