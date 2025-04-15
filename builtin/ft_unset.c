@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/08 16:46:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:02:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,33 @@ void	ft_unset(char ***env, const char *var)
 		}
 		i++;
 	}
+}
+
+void	call_unset(char **command, t_gen *gen)
+{
+	int	i;
+
+	i = 1;
+	while (command[i])
+	{
+		ft_unset(&gen->my_env, command[i]);
+		ft_unset_export(&gen->export_env, command[i]);
+		i++;
+	}
+}
+
+int	call_export(t_gen *gen, char **command)
+{
+	int	i;
+
+	i = 1;
+	while (command[i])
+	{
+		if (!ft_export(&gen->my_env, command[i], &gen->export_env, gen))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 /* int main() {

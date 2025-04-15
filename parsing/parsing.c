@@ -98,7 +98,6 @@ t_lexing	*clean_data(t_gen *gen)
 	return (head);
 }
 
-// las || (echo ciao && (cat in | wc))
 int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
