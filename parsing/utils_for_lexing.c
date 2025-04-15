@@ -6,11 +6,19 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 11:09:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:13:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	util_args(char *value, char **type)
+{
+	if (value[0] == '-')
+		(*type) = ft_strdup("option");
+	else
+		(*type) = ft_strdup("argument");
+}
 
 void	find_args(t_lexing *lexed)
 {
@@ -31,10 +39,7 @@ void	find_args(t_lexing *lexed)
 			{
 				if (check_not_command(succ))
 					break ;
-				if (succ->value[0] == '-')
-					succ->type = ft_strdup("option");
-				else
-					succ->type = ft_strdup("argument");
+				util_args(succ->value, &(succ->type));
 				succ = succ->next;
 			}
 		}
@@ -51,9 +56,11 @@ void	find_env_var_and_wild(t_lexing *lexed)
 	while (tmp)
 	{
 		dollar_pos = find_char_pos(tmp->value, "$", 0);
-		if (ft_strchr(tmp->value, '$') != NULL
-			&& !ft_isdigit(tmp->value[dollar_pos + 1]))
-			tmp->env_variable = 1;
+		if (ft_strchr(tmp->value, '$') != NULL)
+		{
+			if (!(ft_strlen(tmp->value) == 1 && dollar_pos == 0))
+				tmp->env_variable = 1;
+		}
 		if (ft_strchr(tmp->value, '*') != NULL
 			&& (!ft_strchr(tmp->value, '\"') && !ft_strchr(tmp->value, '\'')))
 			tmp->wildcard = 1;
@@ -90,7 +97,7 @@ int	find_files(t_lexing *lexed, t_gen *gen)
 	return (1);
 }
 
-int	count_nodes_before(t_lexing *end, t_lexing *start)
+/* int	count_nodes_before(t_lexing *end, t_lexing *start)
 {
 	int			count;
 	t_lexing	*tmp;
@@ -105,28 +112,20 @@ int	count_nodes_before(t_lexing *end, t_lexing *start)
 		tmp = tmp->next;
 	}
 	return (count);
-}
+} */
 
-int	check_files(t_gen *gen)
+int	check_operators(t_gen *gen)
 {
 	t_lexing	*tmp;
-	t_lexing	*succ;
+	t_lexing	*last;
 
 	tmp = gen->lexed_data;
-	succ = NULL;
-	while (tmp)
-	{
-		if (tmp->next)
-			succ = tmp->next;
-		if (succ && !ft_strncmp(tmp->type, "redirect_input", 15)
-			&& check_not_command(succ))
-			return (error_exit(gen, "mininshell: syntax error", 2), 0);
-		if (succ
-			&& (!ft_strncmp(tmp->type, "redirect_output", 16)
-				|| !ft_strncmp(tmp->type, "output_append", 14))
-			&& check_not_command(succ))
-			return (error_exit(gen, "mininshell: syntax error", 2), 0);
-		tmp = tmp->next;
-	}
+	last = ft_lstlast(tmp);
+	if (!ft_strncmp("and_operator", last->type, 13))
+		return (error_exit(gen, "minishell: syntax error near '&&'", 2), 0);
+	else if (!ft_strncmp("or_operator", last->type, 12))
+		return (error_exit(gen, "minishell: syntax error near '||'", 2), 0);
+	else if (!ft_strncmp("pipe", last->type, 12))
+		return (error_exit(gen, "minishell: syntax error near '|'", 2), 0);
 	return (1);
 }

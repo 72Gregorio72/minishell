@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 13:42:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:12:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ int			ft_lstsize(t_lexing *lst);
 t_lexing	*ft_lstlast(t_lexing *lst);
 void		ft_lstadd_back(t_lexing **lst, t_lexing *new);
 void		ft_lstdelone(t_lexing *lst);
-void		ft_lstclear(t_lexing *lex_head);
+void		ft_lstdelone_clean(t_lexing *lst);
+void		ft_lstclear(t_lexing *lex_head, int clean);
 t_lexing	*ft_lstnew_cleaned(char *value, char *type,
 				int strength, char **command);
 void		print_list(t_lexing *lst);

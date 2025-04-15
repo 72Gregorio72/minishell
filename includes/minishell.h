@@ -7,6 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 10:53:50 by vcastald          #+#    #+#             */
 /*   Updated: 2025/04/08 16:18:29 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:48:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +61,15 @@ typedef struct s_tree
 
 typedef struct s_gen
 {
-	char		**my_env;
-	char		**export_env;
-	char		**av;
-	int			exit_status;
-	t_tree		*root;
-	t_lexing	*lexed_data;
-	t_lexing	*cleaned_data;
-	int			*fds;
+	char				**my_env;
+	char				**export_env;
+	char				**av;
+	int					exit_status;
+	t_tree				*root;
+	t_lexing			*lexed_data;
+	t_lexing			*cleaned_data;
+	int					*fds;
+	struct sigaction	sa;
 }				t_gen;
 
 // built in
@@ -76,7 +78,8 @@ int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
 void		ft_exit(t_gen *gen);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
-void		ft_export(char ***envp, const char *var, char ***export_env);
+int			ft_export(char ***env, const char *var,
+				char ***export_env, t_gen *gen);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 
@@ -97,7 +100,7 @@ void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
 int			quote_handler(t_gen *gen);
-void		clean_quotes(t_lexing **node);
+void		clean_quotes(t_lexing **node, t_gen *gen);
 void		single_quotes(t_lexing **node, t_gen *gen);
 
 // env vars
@@ -107,7 +110,7 @@ void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
 
 // redirections and wildcards
 int			find_red(t_lexing *lst, t_gen *gen);
-int			check_wildcards(t_gen *gen);
+int			expand_wildcard(t_lexing **node);
 
 // utils
 void		free_matrix(char **av);
@@ -119,6 +122,7 @@ char		**ft_split_quote(char const *s, char c);
 int			find_char_pos(char *s, char *chars, int start);
 int			ft_swap(char **s1, char **s2);
 void		sort_export(t_gen *gen);
+void		util_free_env_var(char *before, char *tmp, char *after);
 
 // ctrl
 void		ctrl_c(int new_line);
@@ -147,6 +151,12 @@ int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
 int			check_files(t_gen *gen);
 int			check_here_doc(t_gen *gen);
+int			check_operators(t_gen *gen);
+int			check_wildcards(t_gen *gen);
+int			checks_layer(t_lexing *tmp, t_lexing *succ,
+				t_gen *gen, t_lexing *lst);
+int			check_not_opened(t_lexing *end, t_lexing *head);
+int			check_close(t_lexing *node, t_lexing *succ);
 
 // exec
 void		exec_command(t_gen *gen);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:14:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 12:38:39 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:29:45 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void	ft_lstclear(t_lexing *lex_head)
+void	ft_lstclear(t_lexing *lex_head, int clean)
 {
 	t_lexing	*temp;
 
@@ -22,7 +22,10 @@ void	ft_lstclear(t_lexing *lex_head)
 	while (lex_head)
 	{
 		temp = (lex_head)->next;
-		ft_lstdelone(lex_head);
+		if (clean)
+			ft_lstdelone_clean(lex_head);
+		else
+			ft_lstdelone(lex_head);
 		lex_head = temp;
 	}
 }

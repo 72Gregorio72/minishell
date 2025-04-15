@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:42 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/04 11:32:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:12:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,21 @@ void	ft_lstdelone(t_lexing *lst)
 		|| !ft_strncmp(lst->type, "infile", 7)
 		|| !ft_strncmp(lst->type, "here_doc_delimiter", 19))
 		free(lst->type);
+	if (lst->command)
+		free_matrix(lst->command);
+	if (lst->outfile != 1)
+		close(lst->outfile);
+	if (lst->infile != 0)
+		close(lst->infile);
+	free(lst);
+}
+
+void	ft_lstdelone_clean(t_lexing *lst)
+{
+	if (!lst)
+		return ;
+	free(lst->value);
+	free(lst->type);
 	if (lst->command)
 		free_matrix(lst->command);
 	if (lst->outfile != 1)

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 14:54:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:12:51 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	add_token(t_lexing **lexed, char *content, char *type, int strength)
 	if (content && *content)
 		ft_lstadd_back(lexed, ft_lstnew(ft_strdup(content), type, strength));
 }
-// infinite se metto operatori dopo echo &?
+
 int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 {
 	int		i;
@@ -28,6 +28,7 @@ int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 	while (word[i])
 	{
 		check_quotes(&i, lexed, word);
+		other_checks_1(&i, lexed, word);
 		while (word[i] == ' ')
 			i++;
 		start = i;
@@ -38,14 +39,18 @@ int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 			sub = ft_substr(word, start, i - start);
 			add_token(lexed, sub, "command", 1);
 			free(sub);
+			continue ;
 		}
+		if (word[i] == '&')
+			return (error_exit(gen, "minishell: syntax error near '&'", 2),
+				ft_lstclear(*lexed, 0), 0);
+		if (word[i] == '~')
+			return (error_exit(gen, "minishell: syntax error near '~'", 2),
+				ft_lstclear(*lexed, 0), 0);
 		if (!word[i])
 			break ;
 		if (!other_checks(&i, lexed, word, gen))
 			return (0);
-/* 		if (ft_strchr("|&<>()", word[i]))
-			i++; */
-		other_checks_1(&i, lexed, word);
 		check_pipe(&i, lexed, word);
 	}
 	return (1);
@@ -68,7 +73,6 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	find_env_var_and_wild(lexed);
 	return (lexed);
 }
-// ( < echo 1 > || << echo 2 >> ) | ( echo '3 ' && echo " 4 " )
 
 int	check_here_doc(t_gen *gen)
 {

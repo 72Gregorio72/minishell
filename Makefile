@@ -12,10 +12,15 @@ SRCS		=	main.c \
 				parsing/lexing.c \
 				parsing/parsing.c \
 				parsing/utils_for_lexing.c \
+				parsing/utils_for_lexing2.c \
 				parsing/check_lexing.c \
 				parsing/quote_handler.c \
 				parsing/dollar.c \
+				parsing/utils_layer.c \
 				parsing/utils_for_quotes.c \
+				parsing/utils_for_quotes2.c \
+				parsing/parsing_builtin.c \
+				parsing/lexing_quotes.c \
 				parsing/redirections.c \
 				parsing/wildcards.c \
 				binary_tree/tree_functions.c \

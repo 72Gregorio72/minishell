@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/08 14:58:49 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:48:03 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,30 @@
 
 int	is_builtin(char *command)
 {
-	if (!ft_strncmp(command, "cd", ft_strlen(command)))
+	if (ft_strncmp(command, "cd", ft_strlen("cd")) == 0
+		&& ft_strlen(command) == ft_strlen("cd"))
 		return (1);
-	else if (!ft_strncmp(command, "echo", ft_strlen(command)))
+	else if (ft_strncmp(command, "echo", ft_strlen("echo")) == 0
+		&& ft_strlen(command) == ft_strlen("echo"))
 		return (1);
-	else if (!ft_strncmp(command, "env", ft_strlen(command)))
+	else if (ft_strncmp(command, "env", ft_strlen("env")) == 0
+		&& ft_strlen(command) == ft_strlen("env"))
 		return (1);
-	else if (!ft_strncmp(command, "exit", ft_strlen(command)))
+	else if (ft_strncmp(command, "exit", ft_strlen("exit")) == 0
+		&& ft_strlen(command) == ft_strlen("exit"))
 		return (1);
-	else if (!ft_strncmp(command, "export", ft_strlen(command)))
+	else if (ft_strncmp(command, "export", ft_strlen("export")) == 0
+		&& ft_strlen(command) == ft_strlen("export"))
 		return (1);
-	else if (!ft_strncmp(command, "unset", ft_strlen(command)))
+	else if (ft_strncmp(command, "unset", ft_strlen("unset")) == 0
+		&& ft_strlen(command) == ft_strlen("unset"))
 		return (1);
-	else if (!ft_strncmp(command, "pwd", ft_strlen(command)))
+	else if (ft_strncmp(command, "pwd", ft_strlen("pwd")) == 0
+		&& ft_strlen(command) == ft_strlen("pwd"))
 		return (1);
 	return (0);
 }
+
 
 void	exec_single_command(t_gen *gen, t_lexing *node)
 {
@@ -43,14 +51,17 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		if (exec_builtin(gen, node))
 			gen->exit_status = 0;
 		else
-			gen->exit_status = 127;
+		{
+			if (gen->exit_status != 1)
+				gen->exit_status = 127;
+		}
 		if (node->piped)
 		{
 			ft_treeclear(gen->root);
 			free_matrix(gen->my_env);
 			free_matrix(gen->export_env);
-			ft_lstclear(gen->lexed_data);
-			ft_lstclear(gen->cleaned_data);
+			ft_lstclear(gen->lexed_data, 0);
+			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
 		}
 		return ;
@@ -78,8 +89,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_treeclear(gen->root);
 			free_matrix(gen->my_env);
 			free_matrix(gen->export_env);
-			ft_lstclear(gen->lexed_data);
-			ft_lstclear(gen->cleaned_data);
+			ft_lstclear(gen->lexed_data, 0);
+			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
 		}
 		return ;
@@ -111,8 +122,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		ft_treeclear(gen->root);
 		free_matrix(gen->my_env);
 		free_matrix(gen->export_env);
-		ft_lstclear(gen->lexed_data);
-		ft_lstclear(gen->cleaned_data);
+		ft_lstclear(gen->lexed_data, 0);
+		ft_lstclear(gen->cleaned_data, 1);
 		free_matrix(gen->av);
 	}
 	free(cmd_path);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ctrl.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 09:24:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/08 12:36:20 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:14:05 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ void	ctrl_c(int new_line)
 {
 	if (new_line)
 		write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (RL_ISSTATE(RL_STATE_READCMD))
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 void	ctrl_d(t_gen *gen)
@@ -33,7 +36,8 @@ void	ctrl_d(t_gen *gen)
 
 void	ctrl_backslash(void)
 {
-	printf("Quit (core dumped)");
-	ctrl_c(0);
+	printf("Quit (core dumped)\n");
+	if (RL_ISSTATE(RL_STATE_READCMD))
+		ctrl_c(0);
 	g_sig_received = CTRL_BACK;
 }

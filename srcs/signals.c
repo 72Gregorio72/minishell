@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 11:27:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/26 09:56:23 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:17:26 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,7 @@ int	set_signals(struct sigaction sa)
 		return (0);
 	if (isatty(STDIN_FILENO))
 		signal(SIGQUIT, SIG_IGN);
-	else
-	{
-		if (sigaction(SIGQUIT, &sa, NULL) == -1)
-			return (0);
-	}
+	else if (sigaction(SIGQUIT, &sa, NULL) == -1)
+		return (0);
 	return (1);
 }
