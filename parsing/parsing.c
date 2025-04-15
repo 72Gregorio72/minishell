@@ -87,6 +87,8 @@ t_lexing	*clean_data(t_gen *gen)
 		{
 			t_lexing *new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
+			new_node->outfile = tmp->outfile;
+			new_node->infile = tmp->infile;
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
@@ -109,18 +111,17 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	print_list(gen->lexed_data);
+	// print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	if (ft_lstsize(gen->cleaned_data) != 2)
 		gen->root = fill_tree(gen->cleaned_data,
 				ft_lstlast(gen->cleaned_data), gen->root);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
-	if (find_cmd_num(tmp2) > 1) // conta male con redirections
+	if (find_cmd_num(tmp2) > 1)
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp);
 	ft_treeclear(gen->root);
 	return (1);
 }
-//echo -n ciao | echo -n ciao1 && echo ciao2 | ciao3
