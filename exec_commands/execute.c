@@ -226,7 +226,6 @@ void	exec_tree(t_gen *gen, t_tree *root)
 			exec_tree(gen, root->right);
 	}
 }
-//((echo 1 && echo 2) && (echo 3 || echo 4)) || (echo 5 && echo 6)
 
 void	flag_piped(t_tree *node)
 {
