@@ -388,10 +388,10 @@ void	get_pokemon_stats(t_pokemon *pokemon)
 		
 		printf("%s", line);
 		char **fields = split_pokemon(line, ',');
-		for (int i = 0; fields[i]; i++)
-		{
-			printf("Field[%d]: %s\n", i, fields[i]);
-		}
+		// for (int i = 0; fields[i]; i++)
+		// {
+		// 	printf("Field[%d]: %s\n", i, fields[i]);
+		// }
 		if (fields && fields[0] && ft_atoi(fields[0]) == pokemon->id)
 		{
 			int base_stat = ft_atoi(fields[1]);
@@ -432,18 +432,12 @@ void	ft_pokemon()
 	
 	get_pokemon_data(player_pokemon);
 	get_pokemon_data(cpu_pokemon);
-	// printf("You chose %d\n", player_pokemon->id);
-	// printf("Opponent chose %d\n", cpu_pokemon->id);
 	get_pokemon_stats(player_pokemon);
 	get_pokemon_stats(cpu_pokemon);
 	get_pokemon_moves(player_pokemon);
 	get_pokemon_moves(cpu_pokemon);
-
 	fill_pokemon_moves(player_pokemon);
 	fill_pokemon_moves(cpu_pokemon);
-	
-	
-	
 	printf("\nA wild %s appears!\n\n", cpu_pokemon->name);
 	display_battle(player_pokemon, cpu_pokemon);
 
