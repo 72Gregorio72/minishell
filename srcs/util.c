@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:18:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:47:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,8 @@ void	print_list(t_lexing *lst)
 {
 	while (lst)
 	{
-		/*printf("%s                          %.10s
-		                                layer: %d
-										         env: %d\n", lst->value,
-												 lst->type, lst->layer,
-												 lst->env_variable);*/
 		printf("%s: %s   Infile:%d     Outfile: %d\n",
-		lst->type, lst->value, lst->infile, lst->outfile);
+			lst->type, lst->value, lst->infile, lst->outfile);
 		lst = lst->next;
 	}
 }

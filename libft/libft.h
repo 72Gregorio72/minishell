@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:12:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:55:25 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@
 
 typedef struct s_lexing
 {
-	char	*value;
-	char	*type;
-	int		pos;
-	int		layer;
-	int		strength;
-	int		env_variable;
-	void	*next;
-	char	**command;
-	int		infile;
-	int		outfile;
-	int		piped;
-	int		wildcard;
+	char			*value;
+	char			*type;
+	int				pos;
+	int				layer;
+	int				strength;
+	int				env_variable;
+	char			**command;
+	int				infile;
+	int				outfile;
+	int				piped;
+	int				wildcard;
+	struct s_lexing	*next;
 }				t_lexing;
 
 int			ft_isalpha(int c);

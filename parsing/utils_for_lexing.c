@@ -6,18 +6,28 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 16:08:28 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/16 09:02:17 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	util_args(char *value, char **type)
+void	util_args(t_lexing *succ, int which_util, t_lexing *tmp)
 {
-	if (value[0] == '-')
-		(*type) = ft_strdup("option");
+	if (which_util)
+	{
+		if (succ->value[0] == '-')
+			succ->type = ft_strdup("option");
+		else
+			succ->type = ft_strdup("argument");
+	}
 	else
-		(*type) = ft_strdup("argument");
+	{
+		if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
+			&& !ft_strncmp(succ->type, "command", 8))
+			succ->type = ft_strdup("here_doc_delimiter");
+	}
+
 }
 
 void	find_args(t_lexing *lexed)
@@ -29,18 +39,21 @@ void	find_args(t_lexing *lexed)
 	succ = NULL;
 	while (tmp)
 	{
+		if (check_redirect(tmp))
+		{
+			tmp = tmp->next->next;
+			continue ;
+		}
 		if (tmp->next)
 			succ = tmp->next;
-		if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
-			&& !ft_strncmp(succ->type, "command", 8))
-			succ->type = ft_strdup("here_doc_delimiter");
+		util_args(succ, 0, tmp);
 		if (!ft_strncmp(tmp->type, "command", 8) && succ)
 		{
 			while (succ && succ->type && !ft_strncmp(succ->type, "command", 8))
 			{
 				if (check_not_command(succ))
 					break ;
-				util_args(succ->value, &succ->type);
+				util_args(succ, 1, tmp);
 				succ = succ->next;
 			}
 		}
