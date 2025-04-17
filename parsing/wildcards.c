@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/16 10:41:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:31:17 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,10 @@ int	not_dot(struct dirent **entry, DIR *dir, char *tmp, t_lexing **node)
 
 void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
 {
-	int				dot_pres;
+	int	dot_pres;
+	int	i;
 
+	i = 0;
 	if (!ft_strchr(tmp, '.'))
 		dot_pres = 0;
 	else
@@ -67,7 +69,7 @@ void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
 	entry = readdir(dir);
 	while (entry)
 	{
-		if (!dot_pres)
+		if (!ft_strncmp(tmp, "*", ft_strlen(tmp)))
 		{
 			if (entry->d_name[0] != '.')
 			{
@@ -77,8 +79,13 @@ void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
 		}
 		else
 		{
-			if (not_dot(&entry, dir, tmp, node))
+			if ((*node)->value[0] != '*' && (*node)->value[0] != entry->d_name[0])
 				continue ;
+			while ((*node)->value && (*node)->value[i])
+			{
+				while ((*node)->value[i] && (*node)->value[i] == '*')
+					i++;
+			}
 		}
 		entry = readdir(dir);
 	}

@@ -6,11 +6,38 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 09:29:29 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/16 11:10:35 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:25:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_isupper(int c)
+{
+	return (c >= 'A' && c <= 'Z');
+}
+
+int	compare_words(const char *a, const char *b)
+{
+	int				i;
+	unsigned char	ca;
+	unsigned char	cb;
+
+	i = 0;
+	while (a[i] && b[i])
+	{
+		ca = ft_tolower(a[i]);
+		cb = ft_tolower(b[i]);
+
+		if (ca != cb)
+			return (ca - cb);
+		if (a[i] != b[i])
+			return (a[i] - b[i]);
+
+		i++;
+	}
+	return ((unsigned char)a[i] - (unsigned char)b[i]);
+}
 
 void	sort_words(char **input_words)
 {
@@ -24,7 +51,7 @@ void	sort_words(char **input_words)
 		j = i + 1;
 		while (input_words[j])
 		{
-			if (ft_strncmp(input_words[i], input_words[j], 1000) > 0)
+			if (compare_words(input_words[i], input_words[j]) > 0)
 			{
 				tmp = input_words[i];
 				input_words[i] = input_words[j];

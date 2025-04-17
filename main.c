@@ -106,3 +106,5 @@ int	main(int ac, char **av, char **env)
 5. Esegui dal tree 
 
 */
+
+// fare pieu' di due pipe
