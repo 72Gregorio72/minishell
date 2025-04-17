@@ -108,7 +108,7 @@ int	parsing(t_gen *gen)
 		|| !check_here_doc(gen) || !check_wildcards(gen)
 		|| !check_operators(gen))
 		return (0);
-	print_list(gen->lexed_data);
+	// print_list(gen->lexed_data);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
 	gen->cleaned_data = clean_data(gen);

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:13:59 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/16 10:41:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
 	}
 }
 
-int	expand_wildcard(t_lexing **node)
+int	expand_wildcard(t_lexing **node, t_gen *gen)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -107,7 +107,6 @@ int	expand_wildcard(t_lexing **node)
 		free((*node)->value);
 		(*node)->value = ft_strdup(tmp);
 	}
-	closedir(dir);
-	free(tmp);
-	return (1);
+	sort_value(node, gen);
+	return (closedir(dir), free(tmp), 1);
 }

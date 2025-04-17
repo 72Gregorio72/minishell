@@ -6,111 +6,100 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 14:38:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/17 09:52:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*construct_before(char *value, int p, int clean)
+int	double_quotes(int *i, t_lexing **node, t_gen *gen)
 {
-	char	*before;
-
-	quote_checker("\0", 0);
-	if (p > 1 && quote_checker(value, p - 1) == 2)
+	(*i)++;
+	while ((*node)->value[*i] && (*node)->value[*i] != '\"')
 	{
-		if (!clean)
-			before = ft_substr(value, 0, p - 2);
-		else
-			before = ft_substr(value, 1, p - 2);
+		if ((*node)->value[*i] == '$')
+			handle_env_variable(node, gen, i);
+		(*i)++;
 	}
-	else
-	{
-		if (!clean)
-			before = ft_substr(value, 0, p);
-		else
-			before = ft_substr(value, 0, p);
-	}
-	if (!before)
-		before = ft_strdup("");
-	return (before);
+	if ((*node)->value[*i])
+		(*i)++;
+	return (1);
 }
 
-void	start_with_num(char **tmp, t_gen *gen, char *before, int *e)
+void	start_with_num(char **tmp, t_gen *gen, int *e)
 {
 	*tmp = ft_strdup("");
 	if (!(*tmp))
 	{
 		perror("malloc error");
-		free(before);
 		safe_free(gen);
 		exit(gen->exit_status);
 	}
 	*e = 1;
 }
 
-char	*build_tmp(t_gen *gen, int *e, t_lexing **node, int p)
+char	*build_tmp(t_gen *gen, int *e, char **value, int p)
 {
 	char	*tmp;
 
-	if ((*node)->value[p + 1] == '?')
+	if (ft_isdigit((*value)[p + 1]))
+		start_with_num(&tmp, gen, e);
+	else if ((*value)[p + 1] == '?')
 	{
 		tmp = ft_itoa(gen->exit_status);
 		if (!tmp)
 			return (safe_free(gen), exit(gen->exit_status), NULL);
-		*e = 2;
+		*e = ft_strlen(tmp);
 	}
 	else
 	{
-		tmp = expand_env_var(gen->my_env, (*node)->value);
+		tmp = expand_env_var(gen->my_env, *value);
 		if (!tmp)
 		{
 			tmp = ft_strdup("");
 			if (!tmp)
 				return (safe_free(gen), exit(gen->exit_status), NULL);
 		}
-		*e = len_var((*node)->value, p);
+		*e = len_var(*value, p);
 	}
 	return (tmp);
 }
 
-void	handle_env_variable(t_lexing **node, t_gen *gen, int clean)
+void	util_exit(t_gen *gen)
 {
-	char	*before;
-	char	*tmp;
-	char	*after;
-	int		p;
-	int		e;
-
-	p = find_char_pos((*node)->value, "$", 0);
-	before = construct_before((*node)->value, p, clean);
-	if (ft_isdigit((*node)->value[p + 1]))
-		start_with_num(&tmp, gen, before, &e);
-	tmp = build_tmp(gen, &e, node, p);
-	after = ft_substr((*node)->value, p + e + 1, ft_strlen((*node)->value));
-	free((*node)->value);
-	(*node)->value = construct_env_var(before, after, tmp);
-	if (!(*node)->value)
-		return (util_free_env_var(before, tmp, after));
-	if (clean)
-		clean_quotes(node, gen);
-	util_free_env_var(before, tmp, after);
+	safe_free(gen);
+	perror("malloc error");
+	exit(gen->exit_status);
 }
 
-void	single_quotes(t_lexing **node, t_gen *gen)
+// p = doll_pos
+// n = node
+// l = len
+void	handle_env_variable(t_lexing **n, t_gen *gen, int *p)
 {
-	size_t	i;
-	int		found;
+	char	*tmp;
+	char	*before;
+	char	*after;
+	int		l;
+	int		len_var_expanded;
 
-	i = 1;
-	found = 0;
-	while ((*node)->value[i] && i < ft_strlen((*node)->value) - 1)
-	{
-		if ((*node)->value[i] == '\'')
-			found = 1;
-		i++;
-	}
-	if (found)
-		handle_env_variable(node, gen, 0);
-	clean_quotes(node, gen);
+	len_var_expanded = 0;
+	tmp = NULL;
+	after = NULL;
+	before = NULL;
+	l = 0;
+	before = ft_substr((*n)->value, 0, *p);
+	if (!before)
+		return (util_exit(gen));
+	tmp = build_tmp(gen, &l, &(*n)->value, *p);
+	len_var_expanded = ft_strlen(tmp);
+	after = ft_substr((*n)->value, (*p) + l + 1, ft_strlen((*n)->value));
+	if (!before)
+		return (free(before), free(tmp), util_exit(gen));
+	free((*n)->value);
+	(*n)->value = construct_env_var(before, after, tmp);
+	if (!(*n)->value)
+		return (util_free_env_var(before, after, tmp), util_exit(gen));
+	util_free_env_var(before, tmp, after);
+	(*p) += len_var_expanded - 1;
 }

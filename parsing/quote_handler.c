@@ -57,42 +57,40 @@ void	clean_quotes(t_lexing **node, t_gen *gen)
 	(*node)->value = new_value;
 }
 
-void	util_quotes(t_gen *gen, t_lexing **node, char *tmp, int bool_quote)
+int	single_quotes(int *i, t_lexing **node)
 {
-	(void)tmp;
-	if (bool_quote == 2)
-		handle_env_variable(node, gen, 1);
-	else if (bool_quote)
-		single_quotes(node, gen);
-	else
-		handle_env_variable(node, gen, 1);
+	(*i)++;
+	while ((*node)->value[*i] && (*node)->value[*i] != '\'')
+		(*i)++;
+	if ((*node)->value[*i])
+		(*i)++;
+	return (1);
 }
 
 void	handle_quotes(t_lexing **node, t_gen *gen)
 {
 	int		i;
-	int		bool_quote;
-	char	*tmp;
 
 	i = 0;
-	tmp = NULL;
 	if (!(*node)->env_variable)
-		clean_quotes(node, gen);
-	else
+		return (clean_quotes(node, gen));
+	while ((*node)->value && (*node)->value[i])
 	{
-		quote_checker("\0", 0);
-		while ((*node)->value[i])
+		if ((*node)->value[i] == '\'')
 		{
-			bool_quote = quote_checker((*node)->value, i);
-			if ((*node)->env_variable)
-			{
-				util_quotes(gen, node, tmp, bool_quote);
-				break ;
-			}
-			i++;
+			if (single_quotes(&i, node))
+				continue ;
 		}
+		if ((*node)->value[i] == '\"')
+		{
+			if (double_quotes(&i, node, gen))
+				continue ;
+		}
+		if ((*node)->value[i] == '$')
+			handle_env_variable(node, gen, &i);
+		i++;
 	}
-	free(tmp);
+	clean_quotes(node, gen);
 }
 
 int	quote_handler(t_gen *gen)
@@ -116,18 +114,3 @@ int	quote_handler(t_gen *gen)
 	}
 	return (1);
 }
-
-/*
-QUOTE CHECKER
-- NULL: ultimo valore trovato
-- 1: single quote prima
-- 2: doubl quote prima
-- passando \0: resetta statica */
-
-/*
-Ordine per virgolette
-- controllo se ci sono (syntax error per virgolette non chiuse (D))
-- controllo se dollaro va espanso
-- tolgo virgolette
-- espando dollaro
-*/

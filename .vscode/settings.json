@@ -3,6 +3,7 @@
 		"stdlib.h": "c",
 		"minishell.h": "c",
 		"libft.h": "c",
-		"get_next_line.h": "c"
+		"get_next_line.h": "c",
+		"type_traits": "c"
 	}
 }
