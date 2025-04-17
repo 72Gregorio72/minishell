@@ -75,9 +75,12 @@ char	**ft_strdup_matrix(char **matrix)
 
 t_lexing	*clean_data(t_gen *gen)
 {
-	t_lexing	*tmp = gen->lexed_data;
-	t_lexing	*head = NULL;
+	t_lexing	*tmp;
+	t_lexing	*head;
+	t_lexing	*new_node;
 
+	tmp = gen->lexed_data;
+	head = NULL;
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->type, "argument", 9)
@@ -85,7 +88,7 @@ t_lexing	*clean_data(t_gen *gen)
 			&& ft_strncmp(tmp->type, "open_parenthesis", 17)
 			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
 		{
-			t_lexing *new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
+			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
