@@ -26,6 +26,7 @@
 # include <errno.h>
 # include <termios.h>
 # include <curses.h>
+# include <stddef.h>
 # include <term.h>
 # include <readline/readline.h>
 # include <readline/history.h>

@@ -6,35 +6,32 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 09:32:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:24:19 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_peek(DIR *dir, char *tmp2, t_lexing **node, struct dirent *peek)
+void	construct_val(t_lexing **node, struct dirent **entry, int add_space,
+					t_gen *gen)
 {
-	while (peek && peek->d_name[0] == '.')
-		peek = readdir(dir);
-	if (peek)
+	char	*tmp;
+	char	*tmp2;
+
+	if (add_space)
 	{
-		tmp2 = ft_strjoin((*node)->value, " ");
-		free((*node)->value);
-		(*node)->value = tmp2;
+		tmp = ft_strjoin((*node)->value, " ");
+		if (!tmp)
+			return (safe_free(gen), exit(1));
+		tmp2 = ft_strjoin(tmp, (*entry)->d_name);
+		free(tmp);
 	}
-}
-
-void	construct_val(t_lexing **node, struct dirent **entry, DIR *dir)
-{
-	struct dirent	*peek;
-	char			*tmp2;
-
-	tmp2 = ft_strjoin((*node)->value, (*entry)->d_name);
+	else
+		tmp2 = ft_strjoin((*node)->value, (*entry)->d_name);
+	if (!tmp2)
+		return (safe_free(gen), exit(1));
 	free((*node)->value);
 	(*node)->value = tmp2;
-	peek = readdir(dir);
-	check_peek(dir, tmp2, node, peek);
-	(*entry) = peek;
 }
 
 int	match_wildcard(const char *str, const char *pattern)
@@ -51,23 +48,25 @@ int	match_wildcard(const char *str, const char *pattern)
 	return (0);
 }
 
-void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *wild)
+void	loop_wild(DIR *dir, t_lexing **node, char *wild, t_gen *gen)
 {
+	struct dirent	*entry;
+	int				first;
+
+	first = 1;
 	entry = readdir(dir);
 	while (entry)
 	{
-		if (!ft_strncmp(wild, "*", ft_strlen(wild)))
+		if (entry->d_name[0] == '.' && wild[0] != '.')
 		{
-			if (entry->d_name[0] != '.' && wild[0] != '.')
-			{
-				construct_val(node, &entry, dir);
-				continue ;
-			}
+			entry = readdir(dir);
+			continue ;
 		}
-		else
+		if (!ft_strncmp(wild, "*", ft_strlen(wild))
+			|| match_wildcard(entry->d_name, wild))
 		{
-			if (match_wildcard(entry->d_name, wild))
-				construct_val(node, &entry, dir);
+			construct_val(node, &entry, !first, gen);
+			first = 0;
 		}
 		entry = readdir(dir);
 	}
@@ -76,11 +75,9 @@ void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *wild)
 int	expand_wildcard(t_lexing **node, t_gen *gen)
 {
 	DIR				*dir;
-	struct dirent	*entry;
 	char			*tmp;
 
 	dir = opendir(".");
-	entry = NULL;
 	if (!dir)
 		return (perror("opendir"), 0);
 	tmp = ft_strdup((*node)->value);
@@ -90,7 +87,7 @@ int	expand_wildcard(t_lexing **node, t_gen *gen)
 	(*node)->value = ft_strdup("");
 	if (!(*node)->value)
 		return (closedir(dir), free(tmp), 0);
-	loop_wild(entry, dir, node, tmp);
+	loop_wild(dir, node, tmp, gen);
 	if ((*node)->value[0] == '\0')
 	{
 		free((*node)->value);
