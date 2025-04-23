@@ -113,13 +113,13 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	//print_list(gen->lexed_data);
+	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
+	tmp = gen->cleaned_data;
+	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)
 		gen->root = fill_tree(gen->cleaned_data,
 				ft_lstlast(gen->cleaned_data), gen->root);
-	tmp = gen->cleaned_data;
-	tmp2 = gen->lexed_data;
 	if (find_cmd_num(tmp2) > 1)
 		exec_command(gen);
 	else
