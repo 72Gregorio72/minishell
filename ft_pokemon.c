@@ -451,9 +451,17 @@ void	ft_pokemon()
 		ft_wait(800000000);
 	}
 	if (player_pokemon->health <= 0)
+	{
+		player_pokemon->health = 0;
+		display_battle(player_pokemon, cpu_pokemon);
 		printf("\n%s fainted!\n", player_pokemon->name);
+	}
 	if (cpu_pokemon->health <= 0)
+	{
+		cpu_pokemon->health = 0;
+		display_battle(player_pokemon, cpu_pokemon);
 		printf("\n%s fainted!\n", cpu_pokemon->name);
+	}
 	free(player_pokemon->ascii_path);
 	free(cpu_pokemon->ascii_path);
 	free(player_pokemon->name);
