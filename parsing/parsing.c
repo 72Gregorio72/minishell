@@ -113,7 +113,7 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	//print_list(gen->lexed_data);
+	// print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
