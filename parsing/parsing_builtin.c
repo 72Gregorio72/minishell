@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:58:04 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/17 10:56:15 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:16:18 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 		return (ft_pwd(gen->my_env, node->outfile));
 	else if (ft_strncmp("exit", node->command[0], ft_strlen("exit")) == 0
 		&& ft_strlen(node->command[0]) == ft_strlen("exit"))
-		ft_exit(gen);
+		return (ft_exit(gen, node));
 	else if (ft_strncmp("cd", node->command[0], ft_strlen("cd")) == 0
 		&& ft_strlen(node->command[0]) == ft_strlen("cd"))
 		return (ft_cd(node->command[1], gen->export_env, gen));

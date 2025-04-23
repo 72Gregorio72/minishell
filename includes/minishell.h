@@ -64,7 +64,7 @@ typedef struct s_gen
 int			ft_echo(t_lexing *node, t_gen *gen, int fd);
 int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
-void		ft_exit(t_gen *gen);
+int			ft_exit(t_gen *gen, t_lexing *node);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
 int			ft_export(char ***env, const char *var,
 				char ***export_env, t_gen *gen);
