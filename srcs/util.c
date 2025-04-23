@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/16 08:47:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 12:02:09 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,12 @@ char	**copy_matrix(char **src)
 
 void	print_list(t_lexing *lst)
 {
-	while (lst)
+	t_lexing	*tmp;
+	tmp = lst;
+	while (tmp)
 	{
 		printf("%s: %s   Infile:%d     Outfile: %d\n",
-			lst->type, lst->value, lst->infile, lst->outfile);
-		lst = lst->next;
+			tmp->type, tmp->value, tmp->infile, tmp->outfile);
+		tmp = tmp->next;
 	}
 }

@@ -115,6 +115,9 @@ int	parsing(t_gen *gen)
 		ft_pokemon();
 	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
+	//print_list(gen->cleaned_data);
+	tmp = gen->cleaned_data;
+	tmp2 = gen->lexed_data;
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)
