@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:52:22 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:10:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:59:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,24 +85,37 @@ void	update_pwd(char **export_env, char *path, t_gen *gen, int i)
 	}
 }
 
+static void	util(char *path, char *tmp)
+{
+	free(path);
+	free(tmp);
+}
+
 int	ft_cd(char *new_path, char **export_env, t_gen *gen)
 {
 	int		res;
 	char	*path;
 	int		i;
+	char	*tmp;
 
 	path = getcwd(NULL, 0);
 	i = 0;
 	update_oldpwd(export_env, path, gen, i);
-	res = chdir(new_path);
-	if (res == -1)
+	tmp = expand_env_var(gen->my_env, "$HOME");
+	if (!new_path)
 	{
-		error_exit(gen, "minishell: cd error", 1);
-		return (free(path), 0);
+		res = chdir(tmp);
+		if (res == -1)
+			return (error_exit(gen, "minishell: cd: HOME not set", 1),
+				util(path, tmp), 0);
 	}
+	else
+		res = chdir(new_path);
+	if (res == -1)
+		return (error_exit(gen, "minishell: cd error", 1), util(path, tmp), 0);
 	free(path);
 	path = getcwd(NULL, 0);
 	i = 0;
 	update_pwd(export_env, path, gen, i);
-	return (free(path), 1);
+	return (util(path, tmp), 1);
 }

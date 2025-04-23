@@ -6,18 +6,27 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:13:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:42:45 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	util_args(char *value, char **type)
+void	util_args(t_lexing *succ, int which_util, t_lexing *tmp)
 {
-	if (value[0] == '-')
-		(*type) = ft_strdup("option");
+	if (which_util)
+	{
+		if (succ->value[0] == '-')
+			succ->type = ft_strdup("option");
+		else
+			succ->type = ft_strdup("argument");
+	}
 	else
-		(*type) = ft_strdup("argument");
+	{
+		if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
+			&& !ft_strncmp(succ->type, "command", 8))
+			succ->type = ft_strdup("here_doc_delimiter");
+	}
 }
 
 void	find_args(t_lexing *lexed)
@@ -26,20 +35,24 @@ void	find_args(t_lexing *lexed)
 	t_lexing	*succ;
 
 	tmp = lexed;
+	succ = NULL;
 	while (tmp)
 	{
 		if (tmp->next)
 			succ = tmp->next;
-		if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
-			&& !ft_strncmp(succ->type, "command", 8))
-			succ->type = ft_strdup("here_doc_delimiter");
-		if (!ft_strncmp(tmp->type, "command", 8) && tmp->next)
+		util_args(succ, 0, tmp);
+		if (!ft_strncmp(tmp->type, "command", 8) && succ)
 		{
 			while (succ && succ->type && !ft_strncmp(succ->type, "command", 8))
 			{
+				if (check_redirect(succ) && succ->next && succ->next->next)
+				{
+					succ = succ->next->next;
+					continue ;
+				}
 				if (check_not_command(succ))
 					break ;
-				util_args(succ->value, &(succ->type));
+				util_args(succ, 1, tmp);
 				succ = succ->next;
 			}
 		}
@@ -50,13 +63,17 @@ void	find_args(t_lexing *lexed)
 void	find_env_var_and_wild(t_lexing *lexed)
 {
 	t_lexing	*tmp;
+	t_lexing	*command;
 	int			dollar_pos;
 
 	tmp = lexed;
 	while (tmp)
 	{
+		command = find_prev_command(lexed, tmp);
 		dollar_pos = find_char_pos(tmp->value, "$", 0);
-		if (ft_strchr(tmp->value, '$') != NULL)
+		if (ft_strchr(tmp->value, '$') != NULL
+			&& ft_strncmp(command->value, "export",
+				ft_strlen(command->value)) != 0)
 		{
 			if (!(ft_strlen(tmp->value) == 1 && dollar_pos == 0))
 				tmp->env_variable = 1;

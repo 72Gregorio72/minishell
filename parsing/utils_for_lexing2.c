@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 12:28:58 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:04:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/16 09:48:28 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_wildcards(t_gen *gen)
 				|| !ft_strncmp(tmp->type, "infile", 7))
 				return (error_exit(gen, "minishell: ambiguos redirect", 1), 0);
 			else
-				expand_wildcard(&tmp);
+				expand_wildcard(&tmp, gen);
 		}
 		tmp = tmp->next;
 	}

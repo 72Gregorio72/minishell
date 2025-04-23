@@ -51,62 +51,46 @@ void	clean_quotes(t_lexing **node, t_gen *gen)
 	j = 0;
 	new_value = flag_quotes(&in_single, &in_double, value, &j);
 	if (!new_value)
-		return (safe_free(gen));
+		return (safe_free(gen), exit(gen->exit_status));
 	new_value[j] = '\0';
 	free((*node)->value);
 	(*node)->value = new_value;
 }
 
-void	util_quotes(t_gen *gen, t_lexing **node, char *tmp, int bool_quote)
+int	single_quotes(int *i, t_lexing **node)
 {
-	if (bool_quote == 2)
-		handle_env_variable(node, gen, 1);
-	else if (bool_quote)
-		single_quotes(node, gen);
-	else
-	{
-		if (!ft_strncmp((*node)->value, "$?", 2))
-		{
-			free((*node)->value);
-			(*node)->value = ft_itoa(gen->exit_status);
-		}
-		else
-		{
-			tmp = ft_strdup((*node)->value);
-			free((*node)->value);
-			if (ft_isdigit(tmp[1]))
-				((*node)->value) = ft_substr(tmp, 2, ft_strlen(tmp));
-			else
-				(*node)->value = expand_env_var(gen->my_env, tmp);
-		}
-	}
+	(*i)++;
+	while ((*node)->value[*i] && (*node)->value[*i] != '\'')
+		(*i)++;
+	if ((*node)->value[*i])
+		(*i)++;
+	return (1);
 }
 
 void	handle_quotes(t_lexing **node, t_gen *gen)
 {
 	int		i;
-	int		bool_quote;
-	char	*tmp;
 
 	i = 0;
-	tmp = NULL;
 	if (!(*node)->env_variable)
-		clean_quotes(node, gen);
-	else
+		return (clean_quotes(node, gen));
+	while ((*node)->value && (*node)->value[i])
 	{
-		quote_checker("\0", 0);
-		while ((*node)->value[i])
+		if ((*node)->value[i] == '\'')
 		{
-			bool_quote = quote_checker((*node)->value, i);
-			if ((*node)->env_variable)
-			{
-				util_quotes(gen, node, tmp, bool_quote);
-				break ;
-			}
-			i++;
+			if (single_quotes(&i, node))
+				continue ;
 		}
+		if ((*node)->value[i] == '\"')
+		{
+			if (double_quotes(&i, node, gen))
+				continue ;
+		}
+		if ((*node)->value[i] == '$')
+			handle_env_variable(node, gen, &i);
+		i++;
 	}
-	free(tmp);
+	clean_quotes(node, gen);
 }
 
 int	quote_handler(t_gen *gen)
@@ -130,18 +114,3 @@ int	quote_handler(t_gen *gen)
 	}
 	return (1);
 }
-
-/*
-QUOTE CHECKER
-- NULL: ultimo valore trovato
-- 1: single quote prima
-- 2: doubl quote prima
-- passando \0: resetta statica */
-
-/*
-Ordine per virgolette
-- controllo se ci sono (syntax error per virgolette non chiuse (D))
-- controllo se dollaro va espanso
-- tolgo virgolette
-- espando dollaro
-*/

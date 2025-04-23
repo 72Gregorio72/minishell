@@ -26,6 +26,7 @@
 # include <errno.h>
 # include <termios.h>
 # include <curses.h>
+# include <stddef.h>
 # include <term.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -63,12 +64,14 @@ typedef struct s_gen
 int			ft_echo(t_lexing *node, t_gen *gen, int fd);
 int			ft_env(char **env, int export);
 int			ft_pwd(char **env, int fd);
-void		ft_exit(t_gen *gen);
+int			ft_exit(t_gen *gen, t_lexing *node);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
 int			ft_export(char ***env, const char *var,
 				char ***export_env, t_gen *gen);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
+void		call_unset(char **command, t_gen *gen);
+int			call_export(t_gen *gen, char **command);
 
 // parsing
 int			parsing(t_gen *gen);
@@ -81,6 +84,7 @@ void		check_pipe(int *i, t_lexing **lexed, char *word);
 int			find_files(t_lexing *lexed, t_gen *gen);
 void		find_env_var_and_wild(t_lexing *lexed);
 void		find_args(t_lexing *lexed);
+int			layerize(t_gen *gen);
 
 // quotes
 void		check_quotes(int *i, t_lexing **lexed, char *word);
@@ -88,28 +92,36 @@ int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
 int			quote_handler(t_gen *gen);
 void		clean_quotes(t_lexing **node, t_gen *gen);
-void		single_quotes(t_lexing **node, t_gen *gen);
+int			double_quotes(int *i, t_lexing **node, t_gen *gen);
 
 // env vars
 int			len_var(char *str, int dollar_pos);
 char		*expand_env_var(char **env, char *var);
-void		handle_env_variable(t_lexing **node, t_gen *gen, int clean);
+void		handle_env_variable(t_lexing **n, t_gen *gen, int *p);
+char		*construct_env_var(char *before, char *after, char *tmp);
+char		*build_tmp(t_gen *gen, int *e, char **value, int p);
 
 // redirections and wildcards
 int			find_red(t_lexing *lst, t_gen *gen);
-int			expand_wildcard(t_lexing **node);
+int			expand_wildcard(t_lexing **node, t_gen *gen);
+t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
+t_lexing	*find_next_node(t_lexing *start, char *to_find);
+void		sort_value(t_lexing **node, t_gen *gen);
 
 // utils
 void		free_matrix(char **av);
 void		safe_free(t_gen *gen);
 char		**copy_matrix(char **src);
-int			layerize(t_gen *gen);
 void		error_exit(t_gen *gen, char *str, int exit_status);
 char		**ft_split_quote(char const *s, char c);
 int			find_char_pos(char *s, char *chars, int start);
 int			ft_swap(char **s1, char **s2);
 void		sort_export(t_gen *gen);
 void		util_free_env_var(char *before, char *tmp, char *after);
+int			util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst);
+int			util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect,
+				t_lexing *lst);
+void		util_exit(t_gen *gen);
 
 // ctrl
 void		ctrl_c(int new_line);
@@ -144,6 +156,7 @@ int			checks_layer(t_lexing *tmp, t_lexing *succ,
 				t_gen *gen, t_lexing *lst);
 int			check_not_opened(t_lexing *end, t_lexing *head);
 int			check_close(t_lexing *node, t_lexing *succ);
+int			check_redirect(t_lexing *node);
 
 // exec
 void		exec_command(t_gen *gen);

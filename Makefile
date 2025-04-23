@@ -19,10 +19,12 @@ SRCS		=	main.c \
 				parsing/utils_layer.c \
 				parsing/utils_for_quotes.c \
 				parsing/utils_for_quotes2.c \
+				parsing/utils_wild.c \
 				parsing/parsing_builtin.c \
 				parsing/lexing_quotes.c \
 				parsing/redirections.c \
 				parsing/wildcards.c \
+				parsing/utils_reds.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \

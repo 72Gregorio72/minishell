@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:22:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 10:23:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:38:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,19 @@ int	unclosed_quotes(char *word)
 		i++;
 	}
 	return (1);
+}
+
+char	*construct_env_var(char *before, char *after, char *tmp)
+{
+	char	*new_value;
+
+	new_value = (char *)malloc(ft_strlen(before)
+			+ ft_strlen(tmp) + ft_strlen(after) + 1);
+	if (!new_value)
+		return (NULL);
+	new_value[0] = '\0';
+	ft_strlcat(new_value, before, ft_strlen(before) + 1);
+	ft_strlcat(new_value, tmp, ft_strlen(new_value) + ft_strlen(tmp) + 1);
+	ft_strlcat(new_value, after, ft_strlen(new_value) + ft_strlen(after) + 1);
+	return (new_value);
 }

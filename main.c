@@ -19,6 +19,14 @@ void	util_free(t_gen *gen, char *line)
 	free(line);
 }
 
+void	util_line(char **line)
+{
+	if (!isatty(STDIN_FILENO))
+		(*line) = get_next_line(0);
+	else
+		(*line) = readline("minishell$ ");
+}
+
 void	init(t_gen *gen)
 {
 	if (gen->lexed_data != NULL)
@@ -40,22 +48,23 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	char				*line;
 
 	(void)ac;
-	if (sigaction(SIGINT, &sa, NULL) == -1)
+	if (isatty(STDIN_FILENO) && sigaction(SIGINT, &sa, NULL) == -1)
 		return (perror("Sigaction error"));
 	while (1)
 	{
-		signal(SIGQUIT, SIG_IGN);
-		line = readline("minishell$ ");
+		if (isatty(STDIN_FILENO))
+			signal(SIGQUIT, SIG_IGN);
+		util_line(&line);
 		if (checks(line, gen))
 			continue ;
 		add_history(line);
-		if (sigaction(SIGQUIT, &sa, NULL) == -1)
+		if (isatty(STDIN_FILENO) && sigaction(SIGQUIT, &sa, NULL) == -1)
 			return (perror("Sigaction error"));
 		gen->av = ft_split_quote(line, ' ');
 		if (!gen->av)
 		{
 			safe_free(gen);
-			exit(0);
+			exit(gen->exit_status);
 		}
 		gen->lexed_data = lexer(gen->av, gen);
 		init(gen);
@@ -97,3 +106,5 @@ int	main(int ac, char **av, char **env)
 5. Esegui dal tree 
 
 */
+
+// fare pieu' di due pipe

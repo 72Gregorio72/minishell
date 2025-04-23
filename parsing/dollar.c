@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:13:30 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/02 10:30:11 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:02:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int	len_var(char *str, int dollar_pos)
 	dollar_pos++;
 	while (str[dollar_pos + len]
 		&& str[dollar_pos + len] != '\''
-		&& (ft_isalnum(str[dollar_pos + len]) || str[dollar_pos + len] == '_'))
+		&& (ft_isalnum(str[dollar_pos + len]) || str[dollar_pos + len] == '_')
+		&& str[dollar_pos + len] != '$')
 		len++;
 	return (len);
 }
