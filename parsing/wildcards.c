@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/17 10:31:17 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:32:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,41 +37,28 @@ void	construct_val(t_lexing **node, struct dirent **entry, DIR *dir)
 	(*entry) = peek;
 }
 
-int	not_dot(struct dirent **entry, DIR *dir, char *tmp, t_lexing **node)
+int	match_wildcard(const char *str, const char *pattern)
 {
-	char			*dot_pos;
-	char			*dot_pos_wild;
-
-	if ((*entry)->d_name[0] != '.')
-	{
-		dot_pos = ft_strrchr((*entry)->d_name, '.');
-		dot_pos_wild = ft_strrchr(tmp, '.');
-		if (dot_pos && dot_pos_wild
-			&& !ft_strncmp(dot_pos, dot_pos_wild, ft_strlen(dot_pos_wild)))
-		{
-			construct_val(node, entry, dir);
-			return (1);
-		}
-	}
+	if (!pattern || !str)
+		return (0);
+	if (*pattern == '\0')
+		return (*str == '\0');
+	if (*pattern == '*')
+		return (match_wildcard(str, pattern + 1)
+			|| (*str && match_wildcard(str + 1, pattern)));
+	if (*pattern == *str)
+		return (match_wildcard(str + 1, pattern + 1));
 	return (0);
 }
 
-void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
+void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *wild)
 {
-	int	dot_pres;
-	int	i;
-
-	i = 0;
-	if (!ft_strchr(tmp, '.'))
-		dot_pres = 0;
-	else
-		dot_pres = 1;
 	entry = readdir(dir);
 	while (entry)
 	{
-		if (!ft_strncmp(tmp, "*", ft_strlen(tmp)))
+		if (!ft_strncmp(wild, "*", ft_strlen(wild)))
 		{
-			if (entry->d_name[0] != '.')
+			if (entry->d_name[0] != '.' && wild[0] != '.')
 			{
 				construct_val(node, &entry, dir);
 				continue ;
@@ -79,13 +66,8 @@ void	loop_wild(struct dirent *entry, DIR *dir, t_lexing **node, char *tmp)
 		}
 		else
 		{
-			if ((*node)->value[0] != '*' && (*node)->value[0] != entry->d_name[0])
-				continue ;
-			while ((*node)->value && (*node)->value[i])
-			{
-				while ((*node)->value[i] && (*node)->value[i] == '*')
-					i++;
-			}
+			if (match_wildcard(entry->d_name, wild))
+				construct_val(node, &entry, dir);
 		}
 		entry = readdir(dir);
 	}

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 09:29:29 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/17 10:25:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/17 12:40:05 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,10 @@ int	compare_words(const char *a, const char *b)
 	{
 		ca = ft_tolower(a[i]);
 		cb = ft_tolower(b[i]);
-
 		if (ca != cb)
 			return (ca - cb);
 		if (a[i] != b[i])
 			return (a[i] - b[i]);
-
 		i++;
 	}
 	return ((unsigned char)a[i] - (unsigned char)b[i]);

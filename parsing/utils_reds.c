@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 15:20:15 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:18:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst)
 	if (!command)
 		command = find_next_node(tmp, "command");
 	if (!command)
-		return (error_exit(gen, "minishell: syntax error", 2), 0);
+		command = tmp;
 	if (!access(tmp->value, F_OK))
 		command->infile = open(tmp->value, O_RDONLY);
 	else
@@ -32,11 +32,12 @@ int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
 {
 	t_lexing	*command;
 
+	(void)gen;
 	command = find_prev_command(lst, tmp);
 	if (!command)
 		command = find_next_node(tmp, "command");
 	if (!command)
-		return (error_exit(gen, "minishell: syntax error", 2), 0);
+		command = tmp;
 	redirect = find_next_node(command, "redirect_output");
 	if (!redirect)
 		command->outfile = open(tmp->value,

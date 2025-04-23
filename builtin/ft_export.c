@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/15 11:11:25 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:16:24 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	ft_export(char ***env, const char *var, char ***export_env, t_gen *gen)
 		return (0);
 	if (!var)
 		return (ft_env(*export_env, 1), 1);
-	if (ft_isdigit(var[1]))
+	if (ft_isdigit(var[2]))
 	{
 		ft_putstr_fd(RED"bash: export: ", 2);
 		ft_putstr_fd(YELLOW"\'", 2);
