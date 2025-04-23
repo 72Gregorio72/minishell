@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 09:42:45 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:20:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,12 @@ int	check_operators(t_gen *gen)
 	t_lexing	*last;
 
 	tmp = gen->lexed_data;
+	if (!ft_strncmp("and_operator", tmp->type, 13))
+		return (error_exit(gen, "minishell: syntax error near '&&'", 2), 0);
+	else if (!ft_strncmp("or_operator", tmp->type, 12))
+		return (error_exit(gen, "minishell: syntax error near '||'", 2), 0);
+	else if (!ft_strncmp("pipe", tmp->type, 12))
+		return (error_exit(gen, "minishell: syntax error near '|'", 2), 0);
 	last = ft_lstlast(tmp);
 	if (!ft_strncmp("and_operator", last->type, 13))
 		return (error_exit(gen, "minishell: syntax error near '&&'", 2), 0);
