@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/23 13:44:54 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 13:46:26 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,6 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	pid_t		pid;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
-	// printf("num_cmds: %d\n", num_cmds);
 	for (i = 0; i < num_cmds; i++)
 	{
 		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)
@@ -204,8 +203,6 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 			close(pipe_fd[1]);
 			prev_fd = pipe_fd[0];
 		}
-		printf("subroot->data->value: %s\n", cmds[i]->value);
-		printf("outfile: %d\n", cmds[i]->outfile);
 	}
 	for (i = 0; i < num_cmds; i++)
 	{
