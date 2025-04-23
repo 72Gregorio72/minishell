@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/23 14:27:59 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:12:48 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,6 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	pid_t		pid;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
-	// printf("num_cmds: %d\n", num_cmds);
 	for (i = 0; i < num_cmds; i++)
 	{
 		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/19 16:39:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:14:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,27 @@ int	find_red(t_lexing *lst, t_gen *gen)
 {
 	t_lexing	*tmp;
 	t_lexing	*redirect;
+	t_lexing	*operator;
 
 	tmp = lst;
 	redirect = NULL;
+	operator = NULL;
 	while (tmp && ft_strncmp(tmp->type, "and_operator", 13) != 0)
 	{
+		if (!ft_strncmp(tmp->type, "or_operator", 12)
+			|| !ft_strncmp(tmp->type, "pipe", 4))
+			operator = tmp;
 		if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
 		{
+			if (operator && !util_infile(tmp, gen, operator))
+				return (0);
 			if (!util_infile(tmp, gen, lst))
 				return (0);
 		}
 		else if (!ft_strncmp(tmp->type, "outfile", 8) && !tmp->wildcard)
 		{
+			if (operator && !util_outfile(tmp, gen, redirect, operator))
+				return (0);
 			if (!util_outfile(tmp, gen, redirect, lst))
 				return (0);
 		}

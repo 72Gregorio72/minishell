@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:45:41 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 11:19:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:09:26 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	ft_exit(t_gen *gen, t_lexing *node)
 	}
 	else if (node->command[1])
 		gen->exit_status = ft_atoi(node->command[1]);
+	if (gen->exit_status > 255)
+		gen->exit_status %= 256;
 	safe_free(gen);
 	exit(gen->exit_status);
 	return (1);
