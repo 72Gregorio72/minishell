@@ -20,10 +20,10 @@ char	**get_command(t_lexing *node)
 
 	i = 0;
 	tmp = node;
-	printf("tmp->type: %s\n", tmp->type);
+	//printf("tmp->type: %s\n", tmp->type);
 	if (ft_strncmp(tmp->type, "command", 8))
 	{
-		printf("tmp->type1: %s\n", tmp->type);
+		//printf("tmp->type1: %s\n", tmp->type);
 		return (NULL);
 	}
 	while (tmp)
@@ -87,7 +87,7 @@ t_lexing	*clean_data(t_gen *gen)
 	head = NULL;
 	while (tmp)
 	{
-		printf("tmp->type2: %s\n", tmp->type);
+		//printf("tmp->type2: %s\n", tmp->type);
 		if (ft_strncmp(tmp->type, "argument", 9)
 			&& ft_strncmp(tmp->type, "option", 7)
 			&& ft_strncmp(tmp->type, "open_parenthesis", 17)
@@ -114,7 +114,7 @@ t_lexing	*clean_data(t_gen *gen)
 			int i = 0;
 			while (new_node->command[i])
 			{
-				ft_printf("[0]%s\n", new_node->command[i]);
+				//ft_printf("[0]%s\n", new_node->command[i]);
 				i++;
 			}
 		}
@@ -135,7 +135,7 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	// print_list(gen->lexed_data);
+	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;

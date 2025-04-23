@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/23 15:12:48 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:20:38 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,21 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	int		status;
 	char	*cmd_path;
 	char	**env;
+	int saved_stdin = dup(STDIN_FILENO);
+	int saved_stdout = dup(STDOUT_FILENO);
 
 	if (node && node->command && node->command[0] && is_builtin(node->command[0]))
 	{
+		if (node->infile != STDIN_FILENO)
+		{
+			dup2(node->infile, STDIN_FILENO);
+			close(node->infile);
+		}
+		if (node->outfile != STDOUT_FILENO)
+		{
+			dup2(node->outfile, STDOUT_FILENO);
+			close(node->outfile);
+		}
 		if (exec_builtin(gen, node))
 			gen->exit_status = 0;
 		else
@@ -136,6 +148,10 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		free_matrix(gen->av);
 	}
 	free(cmd_path);
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
 }
 
 int		find_cmd_num(t_lexing *node)
@@ -191,17 +207,15 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		{
 			if (prev_fd != -1)
 			{
-				dup2(prev_fd, cmds[i]->infile);
-				dup2(cmds[i]->infile, STDIN_FILENO);
-				dup2(cmds[i]->outfile, STDOUT_FILENO);
+				dup2(prev_fd, STDIN_FILENO);
 				close(prev_fd);
 			}
 			if (i < num_cmds - 1)
 			{
-				close(pipe_fd[0]);
-				dup2(pipe_fd[1], cmds[i]->outfile);
+				dup2(pipe_fd[1], STDOUT_FILENO);
 				close(pipe_fd[1]);
 			}
+			close(pipe_fd[0]);
 			exec_single_command(gen, cmds[i]);
 			exit(gen->exit_status);
 		}
@@ -209,11 +223,9 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 			close(prev_fd);
 		if (i < num_cmds - 1)
 		{
-			close(pipe_fd[1]);
 			prev_fd = pipe_fd[0];
+			close(pipe_fd[1]);
 		}
-		// printf("subroot->data->value: %s\n", cmds[i]->value);
-		// printf("outfile: %d\n", cmds[i]->outfile);
 	}
 	for (i = 0; i < num_cmds; i++)
 	{
