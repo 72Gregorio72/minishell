@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 10:24:19 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/29 10:01:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	expand_wildcard(t_lexing **node, t_gen *gen)
 
 	dir = opendir(".");
 	if (!dir)
-		return (perror("opendir"), 0);
+		return (safe_free(gen), perror("opendir"), exit(1), 0);
 	tmp = ft_strdup((*node)->value);
 	if (!tmp)
 		return (closedir(dir), 0);

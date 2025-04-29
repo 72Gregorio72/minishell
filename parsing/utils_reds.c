@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 14:04:47 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:59:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ int	util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst)
 	if (!command)
 		command = tmp;
 	if (!access(tmp->value, F_OK))
+	{
 		command->infile = open(tmp->value, O_RDONLY);
+		if (command->infile == -1)
+			return (safe_free(gen), perror("open error"), exit(1), 0);
+	}
 	else
 		return (error_exit(gen, "minishell: no such file or directory", 1), 0);
 	return (1);
@@ -45,5 +49,7 @@ int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
 	else
 		command->outfile = open(tmp->value,
 				O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	if (command->outfile == -1)
+		return (safe_free(gen), perror("open error"), exit(1), 0);
 	return (1);
 }
