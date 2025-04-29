@@ -94,17 +94,3 @@ int	main(int ac, char **av, char **env)
 	safe_free(&gen);
 	return (0);
 }
-
-/*
-0. Layering e sysntax error per parentesi (D )
-1. Espandere quotes --> blocca su sysntax error (D)
-2. Redirections 
-(mettere le flag di input ed output file) --> blocca su file_input_not found
-3. Copia della list e clean_list 
-(togliere parentesi, redirections, arguments e options) (D)
-4. Costruisci tree sulla lista pulita (D)
-5. Esegui dal tree 
-
-*/
-
-// fare pieu' di due pipe
