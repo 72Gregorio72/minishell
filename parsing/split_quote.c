@@ -6,21 +6,23 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:21:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/03/24 09:24:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/29 12:57:31 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "minishell.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-static char	*ft_strndup(char const *src, int len)
+static char	*ft_strndup(const char *src, int len)
 {
-	int		i;
 	char	*dest;
+	int		i;
 
 	dest = (char *)malloc((len + 1) * sizeof(char));
-	if (dest == NULL)
+	if (!dest)
 		return (NULL);
 	i = 0;
 	while (i < len)
@@ -32,82 +34,86 @@ static char	*ft_strndup(char const *src, int len)
 	return (dest);
 }
 
-static int	n_words(char c, char const *str)
-{
-	int	i;
-	int	count;
-	int	in_word;
-
-	i = 0;
-	count = 0;
-	in_word = 0;
-	while (str[i])
-	{
-		if (!(str[i] == c) && !in_word)
-		{
-			count++;
-			in_word = 1;
-		}
-		else if (str[i] == c)
-			in_word = 0;
-		i++;
-	}
-	return (count);
-}
-
-static int	parse_next_token(char const *str, char c, int *index)
+static int	parse_next_token(const char *str, char delim, int *index)
 {
 	int		start;
-	int		in_quotes;
+	char	quote;
 
-	in_quotes = 0;
-	while (str[*index] && (str[*index] == c && !in_quotes))
+	while (str[*index] && str[*index] == delim)
 		(*index)++;
 	start = *index;
-	while (str[*index] && (in_quotes || str[*index] != c))
+	quote = 0;
+	while (str[*index])
 	{
-		if (str[*index] == '\'' || str[*index] == '"')
-			in_quotes = !in_quotes;
+		if ((str[*index] == '\'' || str[*index] == '"')
+			&& (quote == 0 || quote == str[*index]))
+		{
+			if (quote == 0)
+				quote = str[*index];
+			else
+				quote = 0;
+		}
+		else if (str[*index] == delim && quote == 0)
+			break ;
 		(*index)++;
 	}
 	return (start);
 }
 
-static char	**split(char **final, char const *str, char c, int freed)
+static int	count_words(const char *str, char delim)
 {
-	int		i;
+	int		index;
+	int		count;
 	int		start;
-	int		row;
 
-	i = 0;
-	row = 0;
-	while (str[i])
+	index = 0;
+	count = 0;
+	while (str[index])
 	{
-		start = parse_next_token(str, c, &i);
-		if (i > start)
+		start = parse_next_token(str, delim, &index);
+		if (index > start)
+			count++;
+	}
+	return (count);
+}
+
+static char	**split_tokens(const char *str, char delim, int count)
+{
+	char	**final;
+	int		index;
+	int		row;
+	int		start;
+
+	index = 0;
+	row = 0;
+	final = (char **)malloc((count + 1) * sizeof(char *));
+	if (!final)
+		return (NULL);
+	while (str[index])
+	{
+		start = parse_next_token(str, delim, &index);
+		if (index > start)
 		{
-			final[row] = ft_strndup(str + start, i - start);
-			if (final[row] == NULL)
-				freed = free_final(final, row);
+			final[row] = ft_strndup(str + start, index - start);
+			if (!final[row])
+				return (free_final(final, row), NULL);
 			row++;
 		}
 	}
-	if (!freed)
-		final[row] = NULL;
+	final[row] = NULL;
 	return (final);
 }
 
-char	**ft_split_quote(char const *s, char c)
+char	**ft_split_quote(const char *s, char c)
 {
-	int		num_words;
-	char	**final;
+	int		word_count;
 
-	num_words = n_words(c, s);
-	final = (char **)malloc((num_words + 1) * sizeof(char *));
-	if (final == NULL)
+	if (!s)
 		return (NULL);
-	return (split(final, s, c, 0));
+	word_count = count_words(s, c);
+	return (split_tokens(s, c, word_count));
 }
+
 
 /* #include <stdio.h>
 
