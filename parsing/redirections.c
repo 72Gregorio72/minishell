@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 14:14:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:27:34 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,19 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 	return (NULL);
 }
 
+static int	infile_checks(t_lexing *tmp, t_gen *gen,
+	t_lexing *operator, t_lexing *lst)
+{
+	if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
+	{
+		if (operator && !util_infile(tmp, gen, operator))
+			return (0);
+		if (!util_infile(tmp, gen, lst))
+			return (0);
+	}
+	return (1);
+}
+
 int	find_red(t_lexing *lst, t_gen *gen)
 {
 	t_lexing	*tmp;
@@ -79,13 +92,8 @@ int	find_red(t_lexing *lst, t_gen *gen)
 		if (!ft_strncmp(tmp->type, "or_operator", 12)
 			|| !ft_strncmp(tmp->type, "pipe", 4))
 			operator = tmp;
-		if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
-		{
-			if (operator && !util_infile(tmp, gen, operator))
-				return (0);
-			if (!util_infile(tmp, gen, lst))
-				return (0);
-		}
+		if (!infile_checks(tmp, gen, operator, lst))
+			return (0);
 		else if (!ft_strncmp(tmp->type, "outfile", 8) && !tmp->wildcard)
 		{
 			if (operator && !util_outfile(tmp, gen, redirect, operator))
