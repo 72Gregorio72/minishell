@@ -72,7 +72,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//vcastald king
+//gpicchio king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;

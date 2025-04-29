@@ -164,6 +164,9 @@ int			find_cmd_num(t_lexing *node);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			exec_builtin(t_gen *gen, t_lexing *node);
 
+// qui doc
+void	here_doccer(t_lexing *node);
+
 // pokemon :)
 typedef struct s_attack
 {

@@ -100,6 +100,7 @@ t_lexing	*clean_data(t_gen *gen)
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
+			new_node->layer = tmp->layer;
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
@@ -113,10 +114,7 @@ t_lexing	*clean_data(t_gen *gen)
 		{
 			int i = 0;
 			while (new_node->command[i])
-			{
-				//ft_printf("[0]%s\n", new_node->command[i]);
 				i++;
-			}
 		}
 		new_node = new_node->next;
 	}
@@ -135,7 +133,6 @@ int	parsing(t_gen *gen)
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
-	print_list(gen->lexed_data);
 	gen->cleaned_data = clean_data(gen);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;

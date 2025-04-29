@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/11 12:18:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:17:17 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@ void	open_temp_file_for_reading(int *fd)
 	}
 }
 
-void	handle_here_doc(char *limiter, t_data_bonus *data)
+void	handle_here_doc(char *limiter, t_lexing *node)
 {
 	int	fd;
 
 	open_temp_file(&fd);
 	write_to_temp_file(fd, limiter);
 	close(fd);
-	open_temp_file_for_reading(&data->fd1);
+	open_temp_file_for_reading(&node->infile);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)
 {
 	if (ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
-		handle_here_doc(av[2], data);
+		//handle_here_doc(av[2], data);
 		data->fd2 = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 	}
 	else
@@ -80,7 +80,7 @@ void	write_to_temp_file(int fd, char *limiter)
 
 	while (1)
 	{
-		printf(GREEN"HEREDOC> "RESET);
+		ft_putstr_fd(GREEN"HEREDOC> "RESET, 1);
 		line = get_next_line(0);
 		if (!line)
 			break ;

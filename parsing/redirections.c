@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 14:14:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:38:00 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,14 @@ int	find_red(t_lexing *lst, t_gen *gen)
 		{
 			if (operator && !util_infile(tmp, gen, operator))
 				return (0);
-			if (!util_infile(tmp, gen, lst))
+			else if (!operator && !util_infile(tmp, gen, lst))
 				return (0);
 		}
 		else if (!ft_strncmp(tmp->type, "outfile", 8) && !tmp->wildcard)
 		{
 			if (operator && !util_outfile(tmp, gen, redirect, operator))
 				return (0);
-			if (!util_outfile(tmp, gen, redirect, lst))
+			else if (!operator && !util_outfile(tmp, gen, redirect, lst))
 				return (0);
 		}
 		tmp = tmp->next;
