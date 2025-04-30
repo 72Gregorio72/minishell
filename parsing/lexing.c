@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 09:37:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:24:11 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,12 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	return (lexed);
 }
 
-int	check_here_doc(t_gen *gen)
+int	check_here_doc(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 	t_lexing	*succ;
 
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	while (tmp)
 	{
 		if (tmp->next)

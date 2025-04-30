@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 09:21:50 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:06:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	print_list(t_lexing *lst)
 	tmp = lst;
 	while (tmp)
 	{
-		printf("%s: %s   Infile:%d     Outfile: %d\n",
-			tmp->type, tmp->value, tmp->infile, tmp->outfile);
+		printf("%s: %s   Infile:%d     Outfile: %d, env: %d\n",
+			tmp->type, tmp->value, tmp->infile, tmp->outfile, tmp->env_variable);
 		tmp = tmp->next;
 	}
 }

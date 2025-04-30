@@ -101,16 +101,20 @@ t_lexing	*clean_data(t_gen *gen)
 	return (head);
 }
 
-// print_list(gen->lexed_data);
+/// spostare clean_quotes in espansione var ambiente 
+// print_list(gen->lexed_data)
 int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
 	t_lexing	*tmp2;
 
 	gen->root = NULL;
-	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen)
-		|| !check_here_doc(gen) || !check_wildcards(gen)
-		|| !check_operators(gen))
+	if (!quote_handler(gen, gen->lexed_data) || !find_red(gen->lexed_data, gen)
+		|| !check_here_doc(gen, gen->lexed_data)
+		|| !check_wildcards(gen, gen->lexed_data)
+		|| !check_operators(gen, gen->lexed_data))
+		return (0);
+	if (!loop_expand(gen))
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();

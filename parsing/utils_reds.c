@@ -6,11 +6,20 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 10:44:47 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 13:02:11 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_directory(char *path)
+{
+	struct stat	path_stat;
+
+	if (stat(path, &path_stat) != 0)
+		return (0);
+	return (S_ISDIR(path_stat.st_mode));
+}
 
 int	util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst)
 {
@@ -21,6 +30,8 @@ int	util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst)
 		command = find_next_node(tmp, "command");
 	if (!command)
 		command = tmp;
+	if (is_directory(tmp->value))
+		return (error_exit(gen, "minishell: path is a directory", 1), 0);
 	if (!access(tmp->value, F_OK))
 	{
 		command->infile = open(tmp->value, O_RDONLY);
@@ -43,6 +54,8 @@ int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
 	if (!command)
 		command = tmp;
 	redirect = find_next_node(command, "redirect_output");
+	if (is_directory(tmp->value))
+		return (error_exit(gen, "minishell: path is a directory", 1), 0);
 	if (!redirect)
 		command->outfile = open(tmp->value,
 				O_CREAT | O_WRONLY | O_APPEND, 0777);

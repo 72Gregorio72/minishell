@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 14:57:43 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:46:13 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,12 @@ int	find_files(t_lexing *lexed, t_gen *gen)
 	return (count);
 } */
 
-int	check_operators(t_gen *gen)
+int	check_operators(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 	t_lexing	*last;
 
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	if (!ft_strncmp("and_operator", tmp->type, 13))
 		return (error_exit(gen, "minishell: syntax error near '&&'", 2), 0);
 	else if (!ft_strncmp("or_operator", tmp->type, 12))

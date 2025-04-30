@@ -83,13 +83,13 @@ int	check_parenthesis(t_lexing *lst, t_gen *gen)
 	return (1);
 }
 
-int	layerize(t_gen *gen)
+int	layerize(t_gen *gen, t_lexing *lexed)
 {
 	int			i;
 	t_lexing	*tmp;
 
 	i = 0;
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	if (!check_parenthesis(tmp, gen))
 		return (0);
 	while (tmp)

@@ -31,10 +31,11 @@ void	init(t_gen *gen)
 {
 	if (gen->lexed_data != NULL)
 	{
-		if (check_files(gen) && find_files(gen->lexed_data, gen))
+		if (check_files(gen, gen->lexed_data)
+			&& find_files(gen->lexed_data, gen))
 		{
 			find_args(gen->lexed_data);
-			if (layerize(gen))
+			if (layerize(gen, gen->lexed_data))
 			{
 				if (parsing(gen))
 					ft_lstclear(gen->cleaned_data, 1);

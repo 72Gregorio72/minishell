@@ -84,13 +84,14 @@ void		check_pipe(int *i, t_lexing **lexed, char *word);
 int			find_files(t_lexing *lexed, t_gen *gen);
 void		find_env_var_and_wild(t_lexing *lexed);
 void		find_args(t_lexing *lexed);
-int			layerize(t_gen *gen);
+int			layerize(t_gen *gen, t_lexing *lexed);
+int			loop_expand(t_gen *gen);
 
 // quotes
 void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
-int			quote_handler(t_gen *gen);
+int			quote_handler(t_gen *gen, t_lexing *lexed);
 void		clean_quotes(t_lexing **node, t_gen *gen);
 int			double_quotes(int *i, t_lexing **node, t_gen *gen);
 
@@ -148,15 +149,16 @@ void		print_binary_tree(t_tree *node, int depth);
 int			check_all_upper(char *word);
 int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
-int			check_files(t_gen *gen);
-int			check_here_doc(t_gen *gen);
-int			check_operators(t_gen *gen);
-int			check_wildcards(t_gen *gen);
+int			check_files(t_gen *gen, t_lexing *lexed);
+int			check_here_doc(t_gen *gen, t_lexing *lexed);
+int			check_operators(t_gen *gen, t_lexing *lexed);
+int			check_wildcards(t_gen *gen, t_lexing *lexed);
 int			checks_layer(t_lexing *tmp, t_lexing *succ,
 				t_gen *gen, t_lexing *lst);
 int			check_not_opened(t_lexing *end, t_lexing *head);
 int			check_close(t_lexing *node, t_lexing *succ);
 int			check_redirect(t_lexing *node);
+int			check_after_close(char *word, int *i);
 
 // exec
 void		exec_command(t_gen *gen);
