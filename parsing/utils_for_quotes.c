@@ -6,25 +6,11 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/17 09:52:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:19:19 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	double_quotes(int *i, t_lexing **node, t_gen *gen)
-{
-	(*i)++;
-	while ((*node)->value[*i] && (*node)->value[*i] != '\"')
-	{
-		if ((*node)->value[*i] == '$')
-			handle_env_variable(node, gen, i);
-		(*i)++;
-	}
-	if ((*node)->value[*i])
-		(*i)++;
-	return (1);
-}
 
 void	start_with_num(char **tmp, t_gen *gen, int *e)
 {
@@ -38,11 +24,19 @@ void	start_with_num(char **tmp, t_gen *gen, int *e)
 	*e = 1;
 }
 
+static void	util_tmp(char **tmp, int *e)
+{
+	*tmp = ft_strdup("$");
+	*e = 1;
+}
+
 char	*build_tmp(t_gen *gen, int *e, char **value, int p)
 {
 	char	*tmp;
 
-	if (ft_isdigit((*value)[p + 1]))
+	if (!(*value)[p + 1])
+		util_tmp(&tmp, e);
+	else if (ft_isdigit((*value)[p + 1]))
 		start_with_num(&tmp, gen, e);
 	else if ((*value)[p + 1] == '?')
 	{

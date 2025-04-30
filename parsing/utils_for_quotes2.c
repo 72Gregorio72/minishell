@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:22:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 12:36:38 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:18:13 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,18 @@ char	*construct_env_var(char *before, char *after, char *tmp)
 	ft_strlcat(new_value, tmp, ft_strlen(new_value) + ft_strlen(tmp) + 1);
 	ft_strlcat(new_value, after, ft_strlen(new_value) + ft_strlen(after) + 1);
 	return (new_value);
+}
+
+int	double_quotes(int *i, t_lexing **node, t_gen *gen)
+{
+	(*i)++;
+	while ((*node)->value[*i] && (*node)->value[*i] != '\"')
+	{
+		if ((*node)->value[*i] == '$')
+			handle_env_variable(node, gen, i);
+		(*i)++;
+	}
+	if ((*node)->value[*i])
+		(*i)++;
+	return (1);
 }
