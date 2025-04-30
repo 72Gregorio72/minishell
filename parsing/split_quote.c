@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:21:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 12:57:31 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 09:55:00 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ char	**ft_split_quote(const char *s, char c)
 	word_count = count_words(s, c);
 	return (split_tokens(s, c, word_count));
 }
-
 
 /* #include <stdio.h>
 
