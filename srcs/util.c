@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 15:59:10 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:08:33 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ void	print_list(t_lexing *lst)
 	tmp = lst;
 	while (tmp)
 	{
-		printf("tmp->type: %s\n", tmp->type);
-		printf("tmp->value: %s\n", tmp->value);
-		printf("tmp->strength: %d\n", tmp->strength);
-		printf("tmp->layer: %d\n", tmp->layer);
-		printf("-----------------------------");
+		printf("-----------------------------\n");
+		printf("value: %s\n", tmp->value);
+		printf("infile: %d\n", tmp->infile);
+		printf("outfile: %d\n", tmp->outfile);
+		printf("-----------------------------\n");
 		tmp = tmp->next;
 	}
 }

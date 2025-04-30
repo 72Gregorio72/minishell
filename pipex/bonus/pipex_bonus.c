@@ -3,18 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 09:44:58 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/11 12:23:28 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:44:37 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	open_temp_file(int *fd)
+void	open_temp_file(int *fd, int here_doc_num)
 {
-	*fd = open(".here_doc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	char *filename;
+	char *filenum;
+
+	filenum = ft_itoa(here_doc_num);
+	filename = ft_strjoin(".here_doc_tmp", filenum);
+	*fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	free(filename);
+	free(filenum);
 	if (*fd < 0)
 	{
 		printf(RED"Error opening temporary file: %s"RESET"\n",

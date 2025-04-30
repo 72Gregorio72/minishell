@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/29 16:09:41 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:25:32 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	*cmd_path;
 	char	**env;
 
-	here_doccer(node);
 	if (node && node->command && node->command[0] && is_builtin(node->command[0]))
 	{
 		if (exec_builtin(gen, node))
@@ -168,13 +167,17 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 	collect_piped_cmds(node->right, cmds, i);
 }
 
-void	here_doccer(t_lexing *node)
+void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 {
 	t_lexing	*current;
+	t_lexing	*tmp;
 	int 		found;
+	int			here_doc_num;
 
 	found = 0;
 	current = node;
+	tmp = cleaned_data;
+	here_doc_num = 0;
 	while (current)
 	{
 		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
@@ -184,8 +187,14 @@ void	here_doccer(t_lexing *node)
 				ft_putstr_fd("Error opening here_doc file\n", 2);
 				return ;
 			}
-			if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19))
-				handle_here_doc(((t_lexing *)current->next)->value, current);
+			if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19)
+				&& tmp)
+			{
+				handle_here_doc(((t_lexing *)current->next)->value, tmp, &here_doc_num);
+				tmp = tmp->next;
+				while(tmp && ft_strncmp(tmp->type, "command", 8))
+					tmp = tmp->next;
+			}
 			if (current->outfile == -1)
 			{
 				ft_putstr_fd("Error opening output file\n", 2);

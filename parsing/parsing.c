@@ -20,12 +20,10 @@ char	**get_command(t_lexing *node)
 
 	i = 0;
 	tmp = node;
-	//printf("tmp->type: %s\n", tmp->type);
-	if (ft_strncmp(tmp->type, "command", 8))
-	{
-		//printf("tmp->type1: %s\n", tmp->type);
+	if (ft_strncmp(tmp->type, "command", 8)
+		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
+		&& !check_redirect(tmp))
 		return (NULL);
-	}
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->type, "argument", 9)
@@ -87,14 +85,14 @@ t_lexing	*clean_data(t_gen *gen)
 	head = NULL;
 	while (tmp)
 	{
-		//printf("tmp->type2: %s\n", tmp->type);
 		if (ft_strncmp(tmp->type, "argument", 9)
 			&& ft_strncmp(tmp->type, "option", 7)
 			&& ft_strncmp(tmp->type, "open_parenthesis", 17)
 			&& ft_strncmp(tmp->type, "close_parenthesis", 18)
 			&& !check_redirect(tmp)
 			&& ft_strncmp(tmp->type, "infile", 7)
-			&& ft_strncmp(tmp->type, "outfile", 8))
+			&& ft_strncmp(tmp->type, "outfile", 8)
+			&& ft_strncmp(tmp->type, "here_doc_delimiter", 19))
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
@@ -134,6 +132,8 @@ int	parsing(t_gen *gen)
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
 	gen->cleaned_data = clean_data(gen);
+	here_doccer(gen->lexed_data, gen->cleaned_data);
+	//print_list(gen->cleaned_data);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)
