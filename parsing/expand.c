@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:41:35 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/30 12:43:12 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 09:30:35 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static t_lexing	*check_continue(t_lexing *lexed)
 	tmp = lexed;
 	while (tmp)
 	{
-		if (tmp->env_variable && !ft_strncmp(tmp->type, "command", 8))
+		if (tmp->env_variable && !ft_strncmp(tmp->type, "command", 8)
+			&& tmp->expanded)
 			return (tmp);
 		tmp = tmp->next;
 	}

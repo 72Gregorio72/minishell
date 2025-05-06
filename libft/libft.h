@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/16 08:55:25 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 09:10:21 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_lexing
 	int				infile;
 	int				outfile;
 	int				piped;
+	int				expanded;
 	int				wildcard;
 	struct s_lexing	*next;
 }				t_lexing;

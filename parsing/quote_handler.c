@@ -64,6 +64,7 @@ int	single_quotes(int *i, t_lexing **node)
 		(*i)++;
 	if ((*node)->value[*i])
 		(*i)++;
+	(*node)->expanded = 0;
 	return (1);
 }
 

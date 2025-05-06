@@ -92,6 +92,7 @@ t_lexing	*clean_data(t_gen *gen)
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
+			new_node->expanded = tmp->expanded;
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);

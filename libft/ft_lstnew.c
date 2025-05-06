@@ -31,6 +31,7 @@ t_lexing	*ft_lstnew_cleaned(char *value, char *type,
 	d->wildcard = 0;
 	d->infile = 0;
 	d->outfile = 1;
+	d->expanded = 1;
 	d->next = NULL;
 	d->command = command;
 	d->piped = 0;
@@ -51,6 +52,7 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->strength = strength;
 	d->env_variable = 0;
 	d->wildcard = 0;
+	d->expanded = 1;
 	d->infile = 0;
 	d->outfile = 1;
 	d->next = NULL;

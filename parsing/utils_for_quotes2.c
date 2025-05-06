@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:22:26 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/30 12:05:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 09:32:24 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,6 @@ int	double_quotes(int *i, t_lexing **node, t_gen *gen)
 	}
 	if ((*node)->value[*i])
 		(*i)++;
+	(*node)->expanded = 0;
 	return (1);
 }
