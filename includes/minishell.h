@@ -66,7 +66,8 @@ int			ft_env(char **env, int export, t_lexing *node);
 int			ft_pwd(char **env, int fd);
 int			ft_exit(t_gen *gen, t_lexing *node);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
-int			ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env);
+int			ft_export(const char *var, t_gen *gen,
+				t_lexing *node, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 void		call_unset(char **command, t_gen *gen);
@@ -102,7 +103,7 @@ char		*construct_env_var(char *before, char *after, char *tmp);
 char		*build_tmp(t_gen *gen, int *e, char **value, int p);
 
 // redirections and wildcards
-int			find_red(t_lexing *lst, t_gen *gen);
+int			find_red(t_lexing *lst, t_gen *gen, int infile);
 int			expand_wildcard(t_lexing **node, t_gen *gen);
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
 t_lexing	*find_next_node(t_lexing *start, char *to_find);

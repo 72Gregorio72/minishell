@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 10:40:04 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:51:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst)
 			return (safe_free(gen), perror("open error"), exit(1), 0);
 	}
 	else
-		return (error_exit(gen, "minishell: no such file or directory", 1), 0);
+		return (error_exit(gen, "minishell: no such file or directory", 1), 2);
 	return (1);
 }
 

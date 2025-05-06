@@ -128,7 +128,8 @@ int	parsing(t_gen *gen)
 	t_lexing	*tmp2;
 
 	gen->root = NULL;
-	if (!quote_handler(gen, gen->lexed_data) || !find_red(gen->lexed_data, gen)
+	if (!quote_handler(gen, gen->lexed_data)
+		|| !find_red(gen->lexed_data, gen, 0)
 		|| !check_here_doc(gen, gen->lexed_data)
 		|| !check_wildcards(gen, gen->lexed_data)
 		|| !check_operators(gen, gen->lexed_data))
@@ -139,7 +140,6 @@ int	parsing(t_gen *gen)
 		ft_pokemon();
 	gen->cleaned_data = clean_data(gen);
 	here_doccer(gen->lexed_data, gen->cleaned_data);
-	//print_list(gen->cleaned_data);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)
