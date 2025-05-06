@@ -31,10 +31,11 @@ void	init(t_gen *gen)
 {
 	if (gen->lexed_data != NULL)
 	{
-		if (check_files(gen) && find_files(gen->lexed_data, gen))
+		if (check_files(gen, gen->lexed_data)
+			&& find_files(gen->lexed_data, gen))
 		{
 			find_args(gen->lexed_data);
-			if (layerize(gen))
+			if (layerize(gen, gen->lexed_data))
 			{
 				if (parsing(gen))
 					ft_lstclear(gen->cleaned_data, 1);
@@ -72,7 +73,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//gpicchio king
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
@@ -94,17 +95,3 @@ int	main(int ac, char **av, char **env)
 	safe_free(&gen);
 	return (0);
 }
-
-/*
-0. Layering e sysntax error per parentesi (D )
-1. Espandere quotes --> blocca su sysntax error (D)
-2. Redirections 
-(mettere le flag di input ed output file) --> blocca su file_input_not found
-3. Copia della list e clean_list 
-(togliere parentesi, redirections, arguments e options) (D)
-4. Costruisci tree sulla lista pulita (D)
-5. Esegui dal tree 
-
-*/
-
-// fare pieu' di due pipe

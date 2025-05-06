@@ -6,17 +6,17 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 12:28:58 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/16 09:48:28 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:55:43 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_wildcards(t_gen *gen)
+int	check_wildcards(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	while (tmp)
 	{
 		if (tmp->wildcard
@@ -33,12 +33,29 @@ int	check_wildcards(t_gen *gen)
 	return (1);
 }
 
-int	check_files(t_gen *gen)
+static int	util_chek(t_lexing *tmp, t_lexing *succ)
+{
+	if (!ft_strncmp(tmp->type, "redirect_input", 15)
+		&& !ft_strncmp(succ->type, "redirect_input", 15))
+		return (0);
+	if (!ft_strncmp(tmp->type, "redirect_output", 16)
+		&& !ft_strncmp(succ->type, "redirect_output", 16))
+		return (0);
+	if (!ft_strncmp(tmp->type, "output_append", 14)
+		&& !ft_strncmp(succ->type, "output_append", 14))
+		return (0);
+	if (!ft_strncmp(tmp->type, "here_doc", 9)
+		&& !ft_strncmp(succ->type, "here_doc", 9))
+		return (0);
+	return (1);
+}
+
+int	check_files(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 	t_lexing	*succ;
 
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	succ = NULL;
 	while (tmp)
 	{
@@ -46,6 +63,8 @@ int	check_files(t_gen *gen)
 			succ = tmp->next;
 		if (succ && !ft_strncmp(tmp->type, "redirect_input", 15)
 			&& check_not_command(succ))
+			return (error_exit(gen, "mininshell: syntax error", 2), 0);
+		if (succ && !util_chek(tmp, succ))
 			return (error_exit(gen, "mininshell: syntax error", 2), 0);
 		if (succ
 			&& (!ft_strncmp(tmp->type, "redirect_output", 16)

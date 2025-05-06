@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 09:56:38 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 09:38:46 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:33:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,15 @@ int	check_redirect(t_lexing *node)
 		|| !ft_strncmp(node->type, "here_doc", 9)
 		|| !ft_strncmp(node->type, "redirect_input", 15)
 		|| !ft_strncmp(node->type, "redirect_output", 16))
+		return (1);
+	return (0);
+}
+
+int	check_after_close(char *word, int *i)
+{
+	if (word[(*i) + 1] == ')' || word[(*i) + 1] == '|'
+		|| word[(*i) + 1] == '&' || word[(*i) + 1] == '>'
+		|| word[(*i) + 1] == '<')
 		return (1);
 	return (0);
 }

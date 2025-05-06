@@ -99,6 +99,7 @@ t_lexing	*clean_data(t_gen *gen)
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
 			new_node->layer = tmp->layer;
+			new_node->expanded = tmp->expanded;
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
@@ -119,21 +120,26 @@ t_lexing	*clean_data(t_gen *gen)
 	return (head);
 }
 
+/// spostare clean_quotes in espansione var ambiente 
+// print_list(gen->lexed_data)
 int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
 	t_lexing	*tmp2;
 
 	gen->root = NULL;
-	if (!quote_handler(gen) || !find_red(gen->lexed_data, gen)
-		|| !check_here_doc(gen) || !check_wildcards(gen)
-		|| !check_operators(gen))
+	if (!quote_handler(gen, gen->lexed_data)
+		|| !find_red(gen->lexed_data, gen, 0)
+		|| !check_here_doc(gen, gen->lexed_data)
+		|| !check_wildcards(gen, gen->lexed_data)
+		|| !check_operators(gen, gen->lexed_data))
+		return (0);
+	if (!loop_expand(gen))
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon(gen);
 	gen->cleaned_data = clean_data(gen);
 	here_doccer(gen->lexed_data, gen->cleaned_data);
-	//print_list(gen->cleaned_data);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)

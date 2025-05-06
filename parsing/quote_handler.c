@@ -64,6 +64,7 @@ int	single_quotes(int *i, t_lexing **node)
 		(*i)++;
 	if ((*node)->value[*i])
 		(*i)++;
+	(*node)->expanded = 0;
 	return (1);
 }
 
@@ -72,7 +73,8 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 	int		i;
 
 	i = 0;
-	if (!(*node)->env_variable)
+	if (!(*node)->env_variable
+		&& ft_strchr((*node)->value, '=') == NULL)
 		return (clean_quotes(node, gen));
 	while ((*node)->value && (*node)->value[i])
 	{
@@ -90,14 +92,15 @@ void	handle_quotes(t_lexing **node, t_gen *gen)
 			handle_env_variable(node, gen, &i);
 		i++;
 	}
-	clean_quotes(node, gen);
+	if (ft_strchr((*node)->value, '=') == NULL)
+		clean_quotes(node, gen);
 }
 
-int	quote_handler(t_gen *gen)
+int	quote_handler(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	while (tmp)
 	{
 		if (!unclosed_quotes(tmp->value) || unclosed_quotes(tmp->value) == 2)

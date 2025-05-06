@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 09:24:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 13:59:51 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:27:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ctrl_c(int new_line)
 {
 	if (new_line)
-		write(STDOUT_FILENO, "\n", 1);
+		write(2, "\n", 1);
 	if (RL_ISSTATE(RL_STATE_READCMD))
 	{
 		rl_on_new_line();
@@ -35,7 +35,7 @@ void	ctrl_d(t_gen *gen)
 
 void	ctrl_backslash(void)
 {
-	printf("Quit (core dumped)\n");
+	ft_putendl_fd("Quit (core dumped)", 2);
 	if (RL_ISSTATE(RL_STATE_READCMD))
 		ctrl_c(0);
 	g_sig_received = CTRL_BACK;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 09:44:58 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/30 12:44:37 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:10:01 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	open_temp_file(int *fd, int here_doc_num)
 {
-	char *filename;
-	char *filenum;
+	char	*filename;
+	char	*filenum;
 
 	filenum = ft_itoa(here_doc_num);
 	filename = ft_strjoin(".here_doc_tmp", filenum);

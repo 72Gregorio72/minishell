@@ -66,7 +66,8 @@ int			ft_env(char **env, int export, t_lexing *node);
 int			ft_pwd(char **env, int fd);
 int			ft_exit(t_gen *gen, t_lexing *node);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
-int			ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env);
+int			ft_export(const char *var, t_gen *gen,
+				t_lexing *node, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 void		call_unset(char **command, t_gen *gen);
@@ -83,13 +84,14 @@ void		check_pipe(int *i, t_lexing **lexed, char *word);
 int			find_files(t_lexing *lexed, t_gen *gen);
 void		find_env_var_and_wild(t_lexing *lexed);
 void		find_args(t_lexing *lexed);
-int			layerize(t_gen *gen);
+int			layerize(t_gen *gen, t_lexing *lexed);
+int			loop_expand(t_gen *gen);
 
 // quotes
 void		check_quotes(int *i, t_lexing **lexed, char *word);
 int			quote_checker(char *line, int i);
 int			unclosed_quotes(char *word);
-int			quote_handler(t_gen *gen);
+int			quote_handler(t_gen *gen, t_lexing *lexed);
 void		clean_quotes(t_lexing **node, t_gen *gen);
 int			double_quotes(int *i, t_lexing **node, t_gen *gen);
 
@@ -101,7 +103,7 @@ char		*construct_env_var(char *before, char *after, char *tmp);
 char		*build_tmp(t_gen *gen, int *e, char **value, int p);
 
 // redirections and wildcards
-int			find_red(t_lexing *lst, t_gen *gen);
+int			find_red(t_lexing *lst, t_gen *gen, int infile);
 int			expand_wildcard(t_lexing **node, t_gen *gen);
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
 t_lexing	*find_next_node(t_lexing *start, char *to_find);
@@ -147,15 +149,16 @@ void		print_binary_tree(t_tree *node, int depth);
 int			check_all_upper(char *word);
 int			check_spaces(char *line);
 int			check_not_command(t_lexing	*succ);
-int			check_files(t_gen *gen);
-int			check_here_doc(t_gen *gen);
-int			check_operators(t_gen *gen);
-int			check_wildcards(t_gen *gen);
+int			check_files(t_gen *gen, t_lexing *lexed);
+int			check_here_doc(t_gen *gen, t_lexing *lexed);
+int			check_operators(t_gen *gen, t_lexing *lexed);
+int			check_wildcards(t_gen *gen, t_lexing *lexed);
 int			checks_layer(t_lexing *tmp, t_lexing *succ,
 				t_gen *gen, t_lexing *lst);
 int			check_not_opened(t_lexing *end, t_lexing *head);
 int			check_close(t_lexing *node, t_lexing *succ);
 int			check_redirect(t_lexing *node);
+int			check_after_close(char *word, int *i);
 
 // exec
 void		exec_command(t_gen *gen);
@@ -164,7 +167,7 @@ void		exec_single_command(t_gen *gen, t_lexing *node);
 int			exec_builtin(t_gen *gen, t_lexing *node);
 
 // qui doc
-void	here_doccer(t_lexing *node, t_lexing *cleaned_data);
+void		here_doccer(t_lexing *node, t_lexing *cleaned_data);
 
 // pokemon :)
 typedef struct s_attack

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 14:38:00 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:57:00 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,20 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 	return (NULL);
 }
 
-int	find_red(t_lexing *lst, t_gen *gen)
+static int	infile_checks(t_lexing *tmp, t_gen *gen,
+	t_lexing *operator, t_lexing *lst)
+{
+	if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
+	{
+		if (operator)
+			return (util_infile(tmp, gen, operator));
+		else
+			return (util_infile(tmp, gen, lst));
+	}
+	return (1);
+}
+
+int	find_red(t_lexing *lst, t_gen *gen, int infile)
 {
 	t_lexing	*tmp;
 	t_lexing	*redirect;
@@ -79,13 +92,9 @@ int	find_red(t_lexing *lst, t_gen *gen)
 		if (!ft_strncmp(tmp->type, "or_operator", 12)
 			|| !ft_strncmp(tmp->type, "pipe", 4))
 			operator = tmp;
-		if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
-		{
-			if (operator && !util_infile(tmp, gen, operator))
-				return (0);
-			else if (!operator && !util_infile(tmp, gen, lst))
-				return (0);
-		}
+		infile = infile_checks(tmp, gen, operator, lst);
+		if (infile != 1)
+			return (infile);
 		else if (!ft_strncmp(tmp->type, "outfile", 8) && !tmp->wildcard)
 		{
 			if (operator && !util_outfile(tmp, gen, redirect, operator))

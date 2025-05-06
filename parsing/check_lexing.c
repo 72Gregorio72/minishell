@@ -22,7 +22,7 @@ int	other_checks(int *i, t_lexing **lexed, char *word, t_gen *gen)
 	else if (ft_strncmp(&word[*i], ")", ft_strlen(")")) == 0)
 	{
 		add_token(lexed, ")", "close_parenthesis", -1);
-		if (word[(*i) + 1])
+		if (word[(*i) + 1] && !check_after_close(word, i))
 			return (error_exit(gen, "minishell: syntax error", 2),
 				ft_lstclear(*lexed, 0), 0);
 		*i += ft_strlen(")");

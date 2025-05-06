@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:12:51 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:24:11 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,17 @@ void	add_token(t_lexing **lexed, char *content, char *type, int strength)
 		ft_lstadd_back(lexed, ft_lstnew(ft_strdup(content), type, strength));
 }
 
+static void	util_tokenize(char *word, int *i, t_lexing **lexed, int *start)
+{
+	check_quotes(i, lexed, word);
+	other_checks_1(i, lexed, word);
+	while (word[*i] == ' ')
+		(*i)++;
+	*start = *i;
+	while (word[*i] && word[*i] != ' ' && !ft_strchr("|&<>()", word[*i]))
+		(*i)++;
+}
+
 int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 {
 	int		i;
@@ -27,13 +38,7 @@ int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 	i = 0;
 	while (word[i])
 	{
-		check_quotes(&i, lexed, word);
-		other_checks_1(&i, lexed, word);
-		while (word[i] == ' ')
-			i++;
-		start = i;
-		while (word[i] && word[i] != ' ' && !ft_strchr("|&<>()", word[i]))
-			i++;
+		util_tokenize(word, &i, lexed, &start);
 		if (i > start)
 		{
 			sub = ft_substr(word, start, i - start);
@@ -43,9 +48,6 @@ int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 		}
 		if (word[i] == '&')
 			return (error_exit(gen, "minishell: syntax error near '&'", 2),
-				ft_lstclear(*lexed, 0), 0);
-		if (word[i] == '~')
-			return (error_exit(gen, "minishell: syntax error near '~'", 2),
 				ft_lstclear(*lexed, 0), 0);
 		if (!word[i])
 			break ;
@@ -74,12 +76,12 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	return (lexed);
 }
 
-int	check_here_doc(t_gen *gen)
+int	check_here_doc(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 	t_lexing	*succ;
 
-	tmp = gen->lexed_data;
+	tmp = lexed;
 	while (tmp)
 	{
 		if (tmp->next)
@@ -87,7 +89,7 @@ int	check_here_doc(t_gen *gen)
 		if (!ft_strncmp(tmp->type, "here_doc", 9)
 			&& (!tmp->next
 				|| ft_strncmp(succ->type, "here_doc_delimiter", 19) != 0))
-			return (error_exit(gen, "minishell : syntax error", 2), 0);
+			return (error_exit(gen, "minishell: syntax error", 2), 0);
 		tmp = tmp->next;
 	}
 	return (1);

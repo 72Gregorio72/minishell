@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:45:41 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 14:09:26 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:01:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	ft_exit(t_gen *gen, t_lexing *node)
 	printf("exit\n");
 	if (rows_in_mat(node->command) > 2)
 		return (error_exit(gen, "minishell: too many arguments", 1), 0);
-	if (node->command[1] && !all_num(node->command[1]))
+	if (node->command[1] && !all_num(node->command[1])
+		&& node->command[1][0] != '-')
 	{
 		ft_putstr_fd(RED"minishell: exit: ", 2);
 		ft_putstr_fd(YELLOW, 2);
@@ -56,6 +57,8 @@ int	ft_exit(t_gen *gen, t_lexing *node)
 		gen->exit_status = ft_atoi(node->command[1]);
 	if (gen->exit_status > 255)
 		gen->exit_status %= 256;
+	else if (gen->exit_status < 0)
+		gen->exit_status = 256 + gen->exit_status;
 	safe_free(gen);
 	exit(gen->exit_status);
 	return (1);
