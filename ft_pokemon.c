@@ -40,7 +40,7 @@ void	free_all(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon)
 
 t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed)
 {
-	t_pokemon *pokemon;
+	t_pokemon	*pokemon;
 
 	pokemon = (t_pokemon *)malloc(sizeof(t_pokemon));
 	if (!pokemon)
@@ -104,57 +104,60 @@ void	clear_window(void)
 	printf("\033[H");
 }
 
-int pseudo_random()
+int	pseudo_random(void)
 {
-    int fd = open("/dev/urandom", O_RDONLY);
-    if (fd == -1)
-        return 1;
-    unsigned char num;
-    read(fd, &num, 1);
-    close(fd);
-    return (num % 4) + 1;
+	int				fd;
+	unsigned char	num;
+
+	fd = open("/dev/urandom", O_RDONLY);
+	if (fd == -1)
+		return (1);
+	read(fd, &num, 1);
+	close(fd);
+	return (num % 4) + 1;
 }
 
-void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *player_turn, t_gen *gen, char *player_path, char *enemy_path)
+void	apply_attack(t_pokemon *attacker, t_pokemon *defender, t_attack attack)
 {
-	char *line;
-	printf("\nWhat will %s do?\n", player_pokemon->name);
-	printf("1. %s\n", player_pokemon->attack1.name);
-	printf("2. %s\n", player_pokemon->attack2.name);
-	printf("3. %s\n", player_pokemon->attack3.name);
-	printf("4. %s\n", player_pokemon->attack4.name);
+	printf("\n%s used %s!\n", attacker->name, attack.name);
+	defender->health -= (((2 * 50 / 5 + 2) * attack.damage * attacker->attack / defender->defense) / 50) + 2;
+	if (defender->health <= 0)
+		defender->health = 0;
+}
 
-	line = get_next_line(0);
-	if (!line)
-	{
-		free_all(player_pokemon, cpu_pokemon);
-		free(player_path);
-    	free(enemy_path);
-		free_matrix(gen->av);
-		ft_lstclear(gen->lexed_data, 0);
-		ctrl_d(gen);
-		return ;
-	}
+int	choose_attack_from_input(char *line)
+{
 	if (ft_strncmp(line, "1", 1) == 0)
-	{
-		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack1.name);
-		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack1.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
-	}
+		return 1;
 	else if (ft_strncmp(line, "2", 1) == 0)
-	{
-		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack2.name);
-		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack2.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
-	}
+		return 2;
 	else if (ft_strncmp(line, "3", 1) == 0)
-	{
-		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack3.name);
-		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack3.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
-	}
+		return 3;
 	else if (ft_strncmp(line, "4", 1) == 0)
-	{
-		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack4.name);
-		cpu_pokemon->health -= (((2 * 50 / 5 + 2) * player_pokemon->attack4.damage * player_pokemon->attack / cpu_pokemon->defense) / 50) + 2;
-	}
+		return 4;
+	return 0;
+}
+
+void	print_attack_choises(t_pokemon *pokemon)
+{
+	printf("\nWhat will %s do?\n", pokemon->name);
+	printf("1. %s\n", pokemon->attack1.name);
+	printf("2. %s\n", pokemon->attack2.name);
+	printf("3. %s\n", pokemon->attack3.name);
+	printf("4. %s\n", pokemon->attack4.name);
+}
+
+void	execute_player_attack(t_pokemon *player_pokemon,
+		t_pokemon *cpu_pokemon, int attack_choice, int *player_turn, char *line)
+{
+	if (attack_choice == 1)
+		apply_attack(player_pokemon, cpu_pokemon, player_pokemon->attack1);
+	else if (attack_choice == 2)
+		apply_attack(player_pokemon, cpu_pokemon, player_pokemon->attack2);
+	else if (attack_choice == 3)
+		apply_attack(player_pokemon, cpu_pokemon, player_pokemon->attack3);
+	else if (attack_choice == 4)
+		apply_attack(player_pokemon, cpu_pokemon, player_pokemon->attack4);
 	else
 	{
 		printf("\nInvalid attack!\n");
@@ -162,8 +165,28 @@ void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *playe
 		free(line);
 		return ;
 	}
-	if (cpu_pokemon->health <= 0)
-		cpu_pokemon->health = 0;
+}
+
+void	player_attack(t_pokemon *player_pokemon,
+		t_pokemon *cpu_pokemon, int *player_turn, t_gen *gen, char *player_path, char *enemy_path)
+{
+	char	*line;
+	int		attack_choice;
+
+	print_attack_choises(player_pokemon);
+	line = get_next_line(0);
+	if (!line)
+	{
+		free_all(player_pokemon, cpu_pokemon);
+		free(player_path);
+		free(enemy_path);
+		free_matrix(gen->av);
+		ft_lstclear(gen->lexed_data, 0);
+		ctrl_d(gen);
+		return ;
+	}
+	attack_choice = choose_attack_from_input(line);
+	execute_player_attack(player_pokemon, cpu_pokemon, attack_choice, player_turn, line);
 	*player_turn = 0;
 	free(line);
 }
