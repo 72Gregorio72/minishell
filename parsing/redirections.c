@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 11:57:00 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:28:10 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,44 +65,62 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 	return (NULL);
 }
 
-static int	infile_checks(t_lexing *tmp, t_gen *gen,
-	t_lexing *operator, t_lexing *lst)
+void	remove_redirections(t_lexing *node)
 {
-	if (!ft_strncmp(tmp->type, "infile", 7) && !tmp->wildcard)
+	int	i;
+
+	i = 0;
+	while (node->command[i])
 	{
-		if (operator)
-			return (util_infile(tmp, gen, operator));
-		else
-			return (util_infile(tmp, gen, lst));
+		if (!ft_strncmp(node->command[i], "<", 1))
+		{
+			free(node->command[i]);
+			node->command[i] = NULL;
+		}
+		else if (!ft_strncmp(node->command[i], ">", 1))
+		{
+			free(node->command[i]);
+			node->command[i] = NULL;
+		}
+		else if (!ft_strncmp(node->command[i], ">>", 2))
+		{
+			free(node->command[i]);
+			node->command[i] = NULL;
+		}
+		else if (node->command[i][0] == '|' && node->command[i][1] == '\0')
+			break ;
+		i++;
 	}
-	return (1);
 }
 
-int	find_red(t_lexing *lst, t_gen *gen, int infile)
+int	find_red(t_lexing *node, t_gen *gen)
 {
-	t_lexing	*tmp;
-	t_lexing	*redirect;
-	t_lexing	*operator;
+	int	i;
+	int	val;
 
-	tmp = lst;
-	redirect = NULL;
-	operator = NULL;
-	while (tmp && ft_strncmp(tmp->type, "and_operator", 13) != 0)
+	i = 0;
+	val = -1;
+	while (node->command[i])
 	{
-		if (!ft_strncmp(tmp->type, "or_operator", 12)
-			|| !ft_strncmp(tmp->type, "pipe", 4))
-			operator = tmp;
-		infile = infile_checks(tmp, gen, operator, lst);
-		if (infile != 1)
-			return (infile);
-		else if (!ft_strncmp(tmp->type, "outfile", 8) && !tmp->wildcard)
+		if (!ft_strncmp(node->command[i], "<", 1))
+			val = util_infile(node->command[i + 1], gen, node);
+		else if (!ft_strncmp(node->command[i], ">", 1))
+			val = util_outfile(node->command[i + 1], gen, node, 1);
+		else if (!ft_strncmp(node->command[i], ">>", 2))
+			val = util_outfile(node->command[i + 1], gen, node, 2);
+		if (val == 0)
 		{
-			if (operator && !util_outfile(tmp, gen, redirect, operator))
-				return (0);
-			else if (!operator && !util_outfile(tmp, gen, redirect, lst))
-				return (0);
+			if (node->infile != -1)
+				close(node->infile);
+			if (node->outfile != -1)
+				close(node->outfile);
+			return (0);
 		}
-		tmp = tmp->next;
+		i++;
+	}
+	if (val != -1)
+	{
+		remove_redirections(node);
 	}
 	return (1);
 }

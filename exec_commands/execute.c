@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 12:06:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:09:58 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		}
 		if (pid == 0)
 		{
+			find_red(cmds[i], gen);
 			if (i > 0)
 			{
 				dup2(prev_pipe, STDIN_FILENO);

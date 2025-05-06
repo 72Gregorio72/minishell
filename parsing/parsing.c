@@ -12,36 +12,69 @@
 
 #include "minishell.h"
 
+int	check_prev(t_lexing *node, int *i)
+{
+	if (node && node->prev && node->prev->prev && !ft_strncmp(node->type, "command", 8)
+		&& !ft_strncmp(node->prev->type, "infile", 7)
+		&& !ft_strncmp(node->prev->prev->type, "redirect_input", 15))
+	{
+		(*i) += 2;
+		return (1);
+	}
+	return (0);
+}
+
 char	**get_command(t_lexing *node)
 {
 	char		**command;
 	t_lexing	*tmp;
 	int			i;
+	int			found;
 
 	i = 0;
 	tmp = node;
+	found = 0;
 	if (ft_strncmp(tmp->type, "command", 8)
 		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
 		&& !check_redirect(tmp))
 		return (NULL);
 	while (tmp)
 	{
+		found = check_prev(tmp, &i);
 		if (!ft_strncmp(tmp->type, "argument", 9)
 			|| !ft_strncmp(tmp->type, "option", 7)
-			|| !ft_strncmp(tmp->type, "command", 8))
+			|| !ft_strncmp(tmp->type, "command", 8)
+			|| !ft_strncmp(tmp->type, "output_append", 14)
+			|| !ft_strncmp(tmp->type, "redirect_input", 15)
+			|| !ft_strncmp(tmp->type, "redirect_output", 16)
+			|| !ft_strncmp(tmp->type, "outfile", 8)
+			|| !ft_strncmp(tmp->type, "infile", 7))
 			i++;
 		tmp = tmp->next;
 	}
 	command = (char **)malloc(sizeof(char *) * (i + 1));
 	if (!command)
 		return (NULL);
-	i = 0;
 	tmp = node;
+	found = check_prev(tmp, &i);
+	i = 0;
+	if (found)
+	{
+		command[i] = ft_strdup(tmp->prev->prev->value);
+		i++;
+		command[i] = ft_strdup(tmp->prev->value);
+		i++;
+	}
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->type, "argument", 9)
 			|| !ft_strncmp(tmp->type, "option", 7)
-			|| !ft_strncmp(tmp->type, "command", 8))
+			|| !ft_strncmp(tmp->type, "command", 8)
+			|| !ft_strncmp(tmp->type, "output_append", 14)
+			|| !ft_strncmp(tmp->type, "redirect_input", 15)
+			|| !ft_strncmp(tmp->type, "redirect_output", 16)
+			|| !ft_strncmp(tmp->type, "outfile", 8)
+			|| !ft_strncmp(tmp->type, "infile", 7))
 		{
 			command[i] = ft_strdup(tmp->value);
 			i++;
@@ -120,8 +153,6 @@ t_lexing	*clean_data(t_gen *gen)
 	return (head);
 }
 
-/// spostare clean_quotes in espansione var ambiente 
-// print_list(gen->lexed_data)
 int	parsing(t_gen *gen)
 {
 	t_lexing	*tmp;
@@ -129,7 +160,6 @@ int	parsing(t_gen *gen)
 
 	gen->root = NULL;
 	if (!quote_handler(gen, gen->lexed_data)
-		|| !find_red(gen->lexed_data, gen, 0)
 		|| !check_here_doc(gen, gen->lexed_data)
 		|| !check_wildcards(gen, gen->lexed_data)
 		|| !check_operators(gen, gen->lexed_data))

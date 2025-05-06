@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 10:38:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:19:28 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_lexing
 	int				expanded;
 	int				wildcard;
 	struct s_lexing	*next;
+	struct s_lexing	*prev;
 }				t_lexing;
 
 int			ft_isalpha(int c);
