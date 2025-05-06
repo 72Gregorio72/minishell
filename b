@@ -1,6 +1,1 @@
-ss
-sss
-sss
-sss
-s
-ss
+1
