@@ -194,7 +194,7 @@ typedef struct s_pokemon
 
 t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed);
 t_attack	create_attack(char *name, int damage, char *type);
-void		ft_pokemon(void);
+void		ft_pokemon(t_gen *gen);
 
 #endif
 

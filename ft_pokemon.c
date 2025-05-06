@@ -12,6 +12,32 @@
 
 #include "minishell.h"
 
+void	free_all(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon)
+{
+	free(player_pokemon->ascii_path);
+	free(cpu_pokemon->ascii_path);
+	free(player_pokemon->name);
+	free(cpu_pokemon->name);
+	free(player_pokemon->attack1.name);
+	free(player_pokemon->attack2.name);
+	free(player_pokemon->attack3.name);
+	free(player_pokemon->attack4.name);
+	free(cpu_pokemon->attack1.name);
+	free(cpu_pokemon->attack2.name);
+	free(cpu_pokemon->attack3.name);
+	free(cpu_pokemon->attack4.name);
+	free(player_pokemon->attack1.type);
+	free(player_pokemon->attack2.type);
+	free(player_pokemon->attack3.type);
+	free(player_pokemon->attack4.type);
+	free(cpu_pokemon->attack1.type);
+	free(cpu_pokemon->attack2.type);
+	free(cpu_pokemon->attack3.type);
+	free(cpu_pokemon->attack4.type);
+	free(player_pokemon);
+	free(cpu_pokemon);
+}
+
 t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed)
 {
 	t_pokemon *pokemon;
@@ -89,7 +115,7 @@ int pseudo_random()
     return (num % 4) + 1;
 }
 
-void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *player_turn)
+void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *player_turn, t_gen *gen, char *player_path, char *enemy_path)
 {
 	char *line;
 	printf("\nWhat will %s do?\n", player_pokemon->name);
@@ -99,6 +125,16 @@ void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *playe
 	printf("4. %s\n", player_pokemon->attack4.name);
 
 	line = get_next_line(0);
+	if (!line)
+	{
+		free_all(player_pokemon, cpu_pokemon);
+		free(player_path);
+    	free(enemy_path);
+		free_matrix(gen->av);
+		ft_lstclear(gen->lexed_data, 0);
+		ctrl_d(gen);
+		return ;
+	}
 	if (ft_strncmp(line, "1", 1) == 0)
 	{
 		printf("\n%s used %s!\n", player_pokemon->name, player_pokemon->attack1.name);
@@ -124,7 +160,7 @@ void	player_attack(t_pokemon *player_pokemon, t_pokemon *cpu_pokemon, int *playe
 		printf("\nInvalid attack!\n");
 		*player_turn = 1;
 		free(line);
-		return;
+		return ;
 	}
 	if (cpu_pokemon->health <= 0)
 		cpu_pokemon->health = 0;
@@ -193,34 +229,54 @@ void	display_battle(t_pokemon *player, t_pokemon *enemy)
 	print_healthbar(player->name, player->health, player->max_health, 0);
 }
 
+int	ft_str_is_alnum(const char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != '\n')
+	{
+		if (!((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z')))
+			return (0);
+			
+		i++;
+	}
+	return (1);
+}
+
 char *choose_pokemon(char *prompt, t_pokemon *pokemon)
 {
-	char *input = NULL;
-	int	file;
-	char base_path[] = "pokemonData/pokemonImages/";
-	char filepath[256];
+	char	*input = NULL;
+	int		file;
+	char	base_path[] = "pokemonData/pokemonImages/";
+	char	filepath[256];
 
 	while (1)
 	{
 		ft_putendl_fd(prompt, 1);
 		input = get_next_line(0);
-
-		if (!input)
+		if (!input || !ft_str_is_alnum(input))
 		{
 			ft_putendl_fd("Error reading input.", 1);
-			continue;
+			free(input);
+			continue ;
 		}
 		size_t len = strlen(input);
 		if (len > 0 && input[len - 1] == '\n')
 			input[len - 1] = '\0';
 		ft_strlcpy(filepath, base_path, sizeof(filepath));
 		ft_strlcat(filepath, input, sizeof(filepath));
-
 		file = open(filepath, O_RDONLY);
-		if (file != -1)
+		if (file != -1 && ft_strncmp(filepath, base_path, ft_strlen(filepath)))
 		{
 			close(file);
-			break;
+			break ;
+		}
+		else if (file != -1)
+		{
+			close(file);
+			ft_putendl_fd("Pokemon not found. Please try again.", 1);
+			free(input);
 		}
 		else
 		{
@@ -351,12 +407,8 @@ void	get_pokemon_data(t_pokemon *pokemon)
 	char *line;
 	while ((line = get_next_line(fd)))
 	{
-		printf("%s", line);
+		//printf("%s", line);
 		char **fields = split_pokemon(line, ',');
-		for (int i = 0; fields[i]; i++)
-		{
-			printf("Field[%d]: %s\n", i, fields[i]);
-		}
 		if (fields && fields[1] && !ft_strncmp(fields[1], pokemon->name, ft_strlen(pokemon->name)))
 		{
 			pokemon->id = ft_atoi(fields[0]);
@@ -386,12 +438,8 @@ void	get_pokemon_stats(t_pokemon *pokemon)
 	while ((line = get_next_line(fd)))
 	{
 		
-		printf("%s", line);
+		//printf("%s", line);
 		char **fields = split_pokemon(line, ',');
-		for (int i = 0; fields[i]; i++)
-		{
-			printf("Field[%d]: %s\n", i, fields[i]);
-		}
 		if (fields && fields[0] && ft_atoi(fields[0]) == pokemon->id)
 		{
 			int base_stat = ft_atoi(fields[1]);
@@ -412,7 +460,7 @@ void	get_pokemon_stats(t_pokemon *pokemon)
 	close(fd);
 }
 
-void	ft_pokemon()
+void	ft_pokemon(t_gen *gen)
 {
 	t_pokemon	*player_pokemon;
 	t_pokemon	*cpu_pokemon;
@@ -432,26 +480,27 @@ void	ft_pokemon()
 	
 	get_pokemon_data(player_pokemon);
 	get_pokemon_data(cpu_pokemon);
-	// printf("You chose %d\n", player_pokemon->id);
-	// printf("Opponent chose %d\n", cpu_pokemon->id);
 	get_pokemon_stats(player_pokemon);
 	get_pokemon_stats(cpu_pokemon);
 	get_pokemon_moves(player_pokemon);
 	get_pokemon_moves(cpu_pokemon);
-
 	fill_pokemon_moves(player_pokemon);
 	fill_pokemon_moves(cpu_pokemon);
-	
-	
-	
 	printf("\nA wild %s appears!\n\n", cpu_pokemon->name);
 	display_battle(player_pokemon, cpu_pokemon);
 
+	if (isatty(STDIN_FILENO) && sigaction(SIGINT, &gen->sa, NULL) == -1)
+		return (perror("Sigaction error"));
 	while (player_pokemon->health > 0 && cpu_pokemon->health > 0)
 	{
+		if (isatty(STDIN_FILENO))
+			signal(SIGQUIT, SIG_IGN);
+		checks("a", gen);
+		if (isatty(STDIN_FILENO) && sigaction(SIGQUIT, &gen->sa, NULL) == -1)
+			return (perror("Sigaction error"));
 		display_battle(player_pokemon, cpu_pokemon);
 		if (player_turn)
-			player_attack(player_pokemon, cpu_pokemon, &player_turn);
+			player_attack(player_pokemon, cpu_pokemon, &player_turn, gen, player_path, enemy_path);
 		else
 			cpu_attack(player_pokemon, cpu_pokemon, &player_turn);
 		ft_wait(800000000);
@@ -466,28 +515,7 @@ void	ft_pokemon()
 		display_battle(player_pokemon, cpu_pokemon);
 		printf("\n%s fainted!\n", cpu_pokemon->name);
 	}
-	free(player_pokemon->ascii_path);
-	free(cpu_pokemon->ascii_path);
-	free(player_pokemon->name);
-	free(cpu_pokemon->name);
-	free(player_pokemon->attack1.name);
-	free(player_pokemon->attack2.name);
-	free(player_pokemon->attack3.name);
-	free(player_pokemon->attack4.name);
-	free(cpu_pokemon->attack1.name);
-	free(cpu_pokemon->attack2.name);
-	free(cpu_pokemon->attack3.name);
-	free(cpu_pokemon->attack4.name);
-	free(player_pokemon->attack1.type);
-	free(player_pokemon->attack2.type);
-	free(player_pokemon->attack3.type);
-	free(player_pokemon->attack4.type);
-	free(cpu_pokemon->attack1.type);
-	free(cpu_pokemon->attack2.type);
-	free(cpu_pokemon->attack3.type);
-	free(cpu_pokemon->attack4.type);
-	free(player_pokemon);
-	free(cpu_pokemon);
+	free_all(player_pokemon, cpu_pokemon);
 	free(player_path);
     free(enemy_path);
 	get_next_line(-42);

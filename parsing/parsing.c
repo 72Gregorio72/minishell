@@ -130,7 +130,7 @@ int	parsing(t_gen *gen)
 		|| !check_operators(gen))
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
-		ft_pokemon();
+		ft_pokemon(gen);
 	gen->cleaned_data = clean_data(gen);
 	here_doccer(gen->lexed_data, gen->cleaned_data);
 	//print_list(gen->cleaned_data);
