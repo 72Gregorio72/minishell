@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/30 12:43:57 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:05:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,6 @@ void	handle_here_doc(char *limiter, t_lexing *node, int *here_doc_num)
 	write_to_temp_file(fd, limiter);
 	close(fd);
 	open_temp_file_for_reading(&node->infile, here_doc_num);
-	printf("node->command: %s\n", node->command[0]);
-	printf("node->infile: %d\n", node->infile);
-	printf("node->outfile: %d\n", node->outfile);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)
