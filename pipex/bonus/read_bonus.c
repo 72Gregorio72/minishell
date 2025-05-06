@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 11:05:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:09:53 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	open_files(int ac, char **av, t_data_bonus *data)
 {
 	if (ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
-		//handle_here_doc(av[2], data);
 		data->fd2 = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 	}
 	else

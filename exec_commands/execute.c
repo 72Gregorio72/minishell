@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 11:14:40 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:06:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 {
 	t_lexing	*current;
 	t_lexing	*tmp;
-	int 		found;
+	int			found;
 	int			here_doc_num;
 
 	found = 0;
@@ -192,7 +192,7 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 			{
 				handle_here_doc(((t_lexing *)current->next)->value, tmp, &here_doc_num);
 				tmp = tmp->next;
-				while(tmp && ft_strncmp(tmp->type, "command", 8))
+				while (tmp && ft_strncmp(tmp->type, "command", 8))
 					tmp = tmp->next;
 			}
 			if (current->outfile == -1)
