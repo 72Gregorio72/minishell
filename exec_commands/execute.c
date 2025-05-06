@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 16:23:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:38:53 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	**env;
 
 	if (!node->piped)
-		find_red(node, gen);
+	{
+		if (!find_red(node, gen))
+			return ;
+	}
 	if (node && node->command && node->command[0] && is_builtin(node->command[0]))
 	{
 		if (exec_builtin(gen, node))
@@ -239,24 +242,27 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		}
 		if (pid == 0)
 		{
-			find_red(cmds[i], gen);
-			if (i > 0)
+			if (find_red(cmds[i], gen) != 0)
 			{
-				dup2(prev_pipe, STDIN_FILENO);
-				close(prev_pipe);
+				if (i > 0)
+				{
+					dup2(prev_pipe, STDIN_FILENO);
+					close(prev_pipe);
+				}
+				else if (cmds[i]->infile != STDIN_FILENO)
+				{
+					dup2(cmds[i]->infile, STDIN_FILENO);
+					close(cmds[i]->infile);
+				}
+				if (i < num_cmds - 1)
+				{
+					close(pipe_fd[0]);
+					dup2(pipe_fd[1], STDOUT_FILENO);
+					close(pipe_fd[1]);
+				}
+				exec_single_command(gen, cmds[i]);
 			}
-			else if (cmds[i]->infile != STDIN_FILENO)
-			{
-				dup2(cmds[i]->infile, STDIN_FILENO);
-				close(cmds[i]->infile);
-			}
-			if (i < num_cmds - 1)
-			{
-				close(pipe_fd[0]);
-				dup2(pipe_fd[1], STDOUT_FILENO);
-				close(pipe_fd[1]);
-			}
-			exec_single_command(gen, cmds[i]);
+			// da fare bene free
 			exit(gen->exit_status);
 		}
 		if (i > 0)

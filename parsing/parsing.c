@@ -161,7 +161,6 @@ int	parsing(t_gen *gen)
 	gen->root = NULL;
 	if (!quote_handler(gen, gen->lexed_data)
 		|| !check_here_doc(gen, gen->lexed_data)
-		|| !find_red(gen->lexed_data, gen, 0)
 		|| !check_wildcards(gen, gen->lexed_data)
 		|| !check_operators(gen, gen->lexed_data))
 		return (0);

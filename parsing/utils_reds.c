@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 16:24:12 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:42:23 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,6 @@ int	util_infile(char *filename, t_gen *gen, t_lexing *node)
 	return (1);
 }
 
-t_lexing	*find_prev_redirect(t_lexing *start, t_lexing *end)
-{
-	t_lexing	*tmp;
-
-	tmp = start;
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->type, "redirect_output", 16)
-			&& tmp->next && tmp->next == end)
-			return (tmp);
-		if (tmp == end)
-			break ;
-		if (tmp && tmp->next)
-			tmp = tmp->next;
-	}
-	return (NULL);
-}
-
 int	util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag)
 {
 	if (is_directory(filename))
@@ -67,4 +49,23 @@ int	util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag)
 	if (node->outfile < 0)
 		return (safe_free(gen), perror("open error"), exit(1), 0);
 	return (1);
+}
+
+int	calc_mat_len(t_lexing *node, int *i)
+{
+	int	mat_length;
+
+	mat_length = 0;
+	while (node->command[*i])
+	{
+		if (ft_strncmp(node->command[*i], "<", 1)
+			&& ft_strncmp(node->command[*i], ">>", 2)
+			&& ft_strncmp(node->command[*i], ">", 1))
+			mat_length++;
+		else
+			(*i)++;
+		(*i)++;
+	}
+	*i = 0;
+	return (mat_length);
 }
