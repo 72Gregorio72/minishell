@@ -20,7 +20,9 @@ char	**get_command(t_lexing *node)
 
 	i = 0;
 	tmp = node;
-	if (ft_strncmp(tmp->type, "command", 8))
+	if (ft_strncmp(tmp->type, "command", 8)
+		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
+		&& !check_redirect(tmp))
 		return (NULL);
 	while (tmp)
 	{
@@ -86,18 +88,34 @@ t_lexing	*clean_data(t_gen *gen)
 		if (ft_strncmp(tmp->type, "argument", 9)
 			&& ft_strncmp(tmp->type, "option", 7)
 			&& ft_strncmp(tmp->type, "open_parenthesis", 17)
-			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
+			&& ft_strncmp(tmp->type, "close_parenthesis", 18)
+			&& !check_redirect(tmp)
+			&& ft_strncmp(tmp->type, "infile", 7)
+			&& ft_strncmp(tmp->type, "outfile", 8)
+			&& ft_strncmp(tmp->type, "here_doc_delimiter", 19))
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
+			new_node->layer = tmp->layer;
 			new_node->expanded = tmp->expanded;
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
 		}
 		tmp = tmp->next;
+	}
+	new_node = head;
+	while (new_node)
+	{
+		if (new_node->command)
+		{
+			int i = 0;
+			while (new_node->command[i])
+				i++;
+		}
+		new_node = new_node->next;
 	}
 	return (head);
 }
@@ -120,6 +138,8 @@ int	parsing(t_gen *gen)
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon();
 	gen->cleaned_data = clean_data(gen);
+	here_doccer(gen->lexed_data, gen->cleaned_data);
+	//print_list(gen->cleaned_data);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)

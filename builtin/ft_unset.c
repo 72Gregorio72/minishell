@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/15 12:02:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 09:52:32 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,14 @@ void	call_unset(char **command, t_gen *gen)
 	}
 }
 
-int	call_export(t_gen *gen, char **command)
+int	call_export(t_gen *gen, t_lexing *node)
 {
 	int	i;
 
 	i = 1;
-	while (command[i])
+	while (node->command[i])
 	{
-		if (!ft_export(&gen->my_env, command[i], &gen->export_env, gen))
+		if (!ft_export(node->command[i], gen, node, &gen->export_env))
 			return (0);
 		i++;
 	}

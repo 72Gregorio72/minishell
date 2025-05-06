@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 09:27:34 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:39:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	find_red(t_lexing *lst, t_gen *gen)
 		{
 			if (operator && !util_outfile(tmp, gen, redirect, operator))
 				return (0);
-			if (!util_outfile(tmp, gen, redirect, lst))
+			else if (!operator && !util_outfile(tmp, gen, redirect, lst))
 				return (0);
 		}
 		tmp = tmp->next;

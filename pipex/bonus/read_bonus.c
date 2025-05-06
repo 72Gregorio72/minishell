@@ -3,18 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   read_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/11 12:18:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:43:57 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-
-void	open_temp_file_for_reading(int *fd)
+// << lim cat > b | << lim1 grep c
+void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 {
-	*fd = open(".here_doc_tmp", O_RDONLY);
+	char	*filename;
+	char	*filenum;
+
+	filenum = ft_itoa(*here_doc_num);
+	filename = ft_strjoin(".here_doc_tmp", filenum);
+	*fd = open(filename, O_RDONLY);
+	free(filename);
+	free(filenum);
+	(*here_doc_num)++;
 	if (*fd < 0)
 	{
 		printf(RED"Error opening temporary file for reading: %s"RESET"\n",
@@ -23,21 +31,24 @@ void	open_temp_file_for_reading(int *fd)
 	}
 }
 
-void	handle_here_doc(char *limiter, t_data_bonus *data)
+void	handle_here_doc(char *limiter, t_lexing *node, int *here_doc_num)
 {
 	int	fd;
 
-	open_temp_file(&fd);
+	open_temp_file(&fd, *here_doc_num);
 	write_to_temp_file(fd, limiter);
 	close(fd);
-	open_temp_file_for_reading(&data->fd1);
+	open_temp_file_for_reading(&node->infile, here_doc_num);
+	printf("node->command: %s\n", node->command[0]);
+	printf("node->infile: %d\n", node->infile);
+	printf("node->outfile: %d\n", node->outfile);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)
 {
 	if (ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
-		handle_here_doc(av[2], data);
+		//handle_here_doc(av[2], data);
 		data->fd2 = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 	}
 	else
@@ -80,7 +91,7 @@ void	write_to_temp_file(int fd, char *limiter)
 
 	while (1)
 	{
-		printf(GREEN"HEREDOC> "RESET);
+		ft_putstr_fd(GREEN"HEREDOC> "RESET, 1);
 		line = get_next_line(0);
 		if (!line)
 			break ;

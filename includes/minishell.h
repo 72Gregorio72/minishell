@@ -62,16 +62,15 @@ typedef struct s_gen
 
 // built in
 int			ft_echo(t_lexing *node, t_gen *gen, int fd);
-int			ft_env(char **env, int export);
+int			ft_env(char **env, int export, t_lexing *node);
 int			ft_pwd(char **env, int fd);
 int			ft_exit(t_gen *gen, t_lexing *node);
 int			ft_cd(char *new_path, char **export_env, t_gen *gen);
-int			ft_export(char ***env, const char *var,
-				char ***export_env, t_gen *gen);
+int			ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 void		call_unset(char **command, t_gen *gen);
-int			call_export(t_gen *gen, char **command);
+int			call_export(t_gen *gen, t_lexing *node);
 
 // parsing
 int			parsing(t_gen *gen);
@@ -165,6 +164,9 @@ void		exec_command(t_gen *gen);
 int			find_cmd_num(t_lexing *node);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			exec_builtin(t_gen *gen, t_lexing *node);
+
+// qui doc
+void	here_doccer(t_lexing *node, t_lexing *cleaned_data);
 
 // pokemon :)
 typedef struct s_attack

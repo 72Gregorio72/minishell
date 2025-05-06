@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:58:04 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/23 11:16:18 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 09:52:53 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	unset_and_export(t_gen *gen, char *succ, char *curr, t_lexing *node)
 		&& ft_strlen(curr) == ft_strlen("export"))
 	{
 		if (!succ)
-			return (ft_export(&gen->my_env, NULL, &gen->export_env, gen));
-		return (call_export(gen, node->command));
+			return (ft_export(NULL, gen, node, &gen->export_env));
+		return (call_export(gen, node));
 	}
 	else if (ft_strncmp("unset", curr, ft_strlen("unset")) == 0
 		&& ft_strlen(curr) == ft_strlen("unset"))
@@ -43,7 +43,7 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 		return (ft_echo(node, gen, node->outfile));
 	else if (ft_strncmp("env", node->command[0], ft_strlen("env")) == 0
 		&& ft_strlen(node->command[0]) == ft_strlen("env"))
-		return (ft_env(gen->my_env, 0));
+		return (ft_env(gen->my_env, 0, node));
 	else if (ft_strncmp("pwd", node->command[0], ft_strlen("pwd")) == 0
 		&& ft_strlen(node->command[0]) == ft_strlen("pwd"))
 		return (ft_pwd(gen->my_env, node->outfile));

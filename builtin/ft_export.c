@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/04/23 09:16:24 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:33:47 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,29 +88,29 @@ void	add_in_export_env(char ***env, const char *var, int flag)
 	util(i, var, env);
 }
 
-int	ft_export(char ***env, const char *var, char ***export_env, t_gen *gen)
+int	ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env)
 {
 	char	*equal_pos;
 
-	if (!env || !*env)
+	if (!gen->my_env || !*(gen)->my_env)
 		return (0);
 	if (!var)
-		return (ft_env(*export_env, 1), 1);
-	if (ft_isdigit(var[2]))
+		return (ft_env(*export_env, 1, node), 1);
+	if (ft_isdigit(var[0]) || var[0] == '=')
 	{
 		ft_putstr_fd(RED"bash: export: ", 2);
 		ft_putstr_fd(YELLOW"\'", 2);
 		ft_putstr_fd((char *)var, 2);
 		ft_putstr_fd("\'", 2);
 		ft_putstr_fd(RED": not a valid identifier"RESET, 2);
-		return (error_exit(gen, "", 1), 0);
+		return (error_exit(gen, "", 1), 2);
 	}
 	equal_pos = ft_strchr(var, '=');
 	if (!equal_pos)
 		add_in_export_env(export_env, var, 0);
 	else
 	{
-		add_in_env(env, var);
+		add_in_env(&gen->my_env, var);
 		add_in_export_env(export_env, var, 1);
 	}
 	return (1);

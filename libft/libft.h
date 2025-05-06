@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 09:10:21 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:38:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include "get_next_line/get_next_line.h"
+# include "ft_printf/ft_printf.h"
 
 typedef struct s_lexing
 {
