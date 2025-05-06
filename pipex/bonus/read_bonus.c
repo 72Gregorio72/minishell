@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 12:09:53 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:45:55 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,16 @@ void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 void	handle_here_doc(char *limiter, t_lexing *node, int *here_doc_num)
 {
 	int	fd;
+	int	tmp_fd;
 
 	open_temp_file(&fd, *here_doc_num);
 	write_to_temp_file(fd, limiter);
 	close(fd);
-	open_temp_file_for_reading(&node->infile, here_doc_num);
+	tmp_fd = 1;
+	if (!node)
+		open_temp_file_for_reading(&tmp_fd, here_doc_num);
+	else
+		open_temp_file_for_reading(&node->infile, here_doc_num);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)

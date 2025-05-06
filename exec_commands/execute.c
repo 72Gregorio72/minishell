@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 12:06:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:38:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,10 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 				tmp = tmp->next;
 				while (tmp && ft_strncmp(tmp->type, "command", 8))
 					tmp = tmp->next;
+			}
+			else if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19))
+			{
+				handle_here_doc(((t_lexing *)current->next)->value, NULL, &here_doc_num);
 			}
 			if (current->outfile == -1)
 			{

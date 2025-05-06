@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/30 12:24:11 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:54:33 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,22 @@ int	check_here_doc(t_gen *gen, t_lexing *lexed)
 {
 	t_lexing	*tmp;
 	t_lexing	*succ;
+	t_lexing	*node;
 
 	tmp = lexed;
 	while (tmp)
 	{
 		if (tmp->next)
 			succ = tmp->next;
+		if (!ft_strncmp(tmp->type, "here_doc_delimiter", 19)
+			&& succ
+			&& (!ft_strncmp(succ->type, "redirect_output", 16)
+				|| !ft_strncmp(succ->type, "output_append", 14)))
+		{
+			node = ft_lstnew(ft_strdup("cat"), "command", -1);
+			tmp->next = node;
+			node->next = succ;
+		}
 		if (!ft_strncmp(tmp->type, "here_doc", 9)
 			&& (!tmp->next
 				|| ft_strncmp(succ->type, "here_doc_delimiter", 19) != 0))
