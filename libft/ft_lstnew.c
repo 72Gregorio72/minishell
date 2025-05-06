@@ -35,6 +35,7 @@ t_lexing	*ft_lstnew_cleaned(char *value, char *type,
 	d->next = NULL;
 	d->command = command;
 	d->piped = 0;
+	d->prev = NULL;
 	return (d);
 }
 
@@ -58,6 +59,7 @@ t_lexing	*ft_lstnew(char *value, char *type, int strength)
 	d->next = NULL;
 	d->command = NULL;
 	d->piped = 0;
+	d->prev = NULL;
 	return (d);
 }
 

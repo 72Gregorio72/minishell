@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 12:38:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:23:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	*cmd_path;
 	char	**env;
 
+	if (!node->piped)
+		find_red(node, gen);
 	if (node && node->command && node->command[0] && is_builtin(node->command[0]))
 	{
 		if (exec_builtin(gen, node))
@@ -142,7 +144,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 }
 
 int		find_cmd_num(t_lexing *node)
-{
+{	
 	int			cmd_num;
 	t_lexing	*tmp;
 
@@ -237,6 +239,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		}
 		if (pid == 0)
 		{
+			find_red(cmds[i], gen);
 			if (i > 0)
 			{
 				dup2(prev_pipe, STDIN_FILENO);

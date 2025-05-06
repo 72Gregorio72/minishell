@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 12:54:33 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:24:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,19 @@ int	tokenize(char *word, t_lexing **lexed, t_gen *gen)
 	return (1);
 }
 
+void	find_prevs(t_lexing *lexed)
+{
+	t_lexing	*tmp;
+
+	tmp = lexed;
+	while (tmp)
+	{
+		if (tmp->next)
+			tmp->next->prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
 t_lexing	*lexer(char **matrix, t_gen *gen)
 {
 	int			i;
@@ -73,6 +86,7 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 		i++;
 	}
 	find_env_var_and_wild(lexed);
+	find_prevs(lexed);
 	return (lexed);
 }
 
