@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:41:35 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 12:49:51 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:21:32 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ t_lexing	*prechecks(t_lexing *to_expand, t_gen *gen)
 	}
 	if (!quote_handler(gen, tmp_list)
 		|| !check_here_doc(gen, tmp_list)
-		|| !find_red(tmp_list, gen, 0)
 		|| !check_wildcards(gen, tmp_list)
 		|| !check_operators(gen, tmp_list))
 		return (free_matrix(tmp_mat), ft_lstclear(tmp_list, 0), NULL);

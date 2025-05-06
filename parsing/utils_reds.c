@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 11:51:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:11:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,24 @@ int	util_infile(t_lexing *tmp, t_gen *gen, t_lexing *lst)
 	return (1);
 }
 
+t_lexing	*find_prev_redirect(t_lexing *start, t_lexing *end)
+{
+	t_lexing	*tmp;
+
+	tmp = start;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->type, "redirect_output", 16)
+			&& tmp->next && tmp->next == end)
+			return (tmp);
+		if (tmp == end)
+			break ;
+		if (tmp && tmp->next)
+			tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
 {
 	t_lexing	*command;
@@ -56,6 +74,8 @@ int	util_outfile(t_lexing *tmp, t_gen *gen, t_lexing *redirect, t_lexing *lst)
 	redirect = find_next_node(command, "redirect_output");
 	if (is_directory(tmp->value))
 		return (error_exit(gen, "minishell: path is a directory", 1), 0);
+	if (!redirect)
+		redirect = find_prev_redirect(lst, tmp);
 	if (!redirect)
 		command->outfile = open(tmp->value,
 				O_CREAT | O_WRONLY | O_APPEND, 0777);
