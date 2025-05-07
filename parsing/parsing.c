@@ -14,9 +14,26 @@
 
 int	check_prev(t_lexing *node, int *i)
 {
-	if (node && node->prev && node->prev->prev && !ft_strncmp(node->type, "command", 8)
+	if (node && node->prev && node->prev->prev
+		&& !ft_strncmp(node->type, "command", 8)
 		&& !ft_strncmp(node->prev->type, "infile", 7)
 		&& !ft_strncmp(node->prev->prev->type, "redirect_input", 15))
+	{
+		(*i) += 2;
+		return (1);
+	}
+	else if (node && node->prev && node->prev->prev
+		&& !ft_strncmp(node->type, "command", 8)
+		&& !ft_strncmp(node->prev->type, "outfile", 8)
+		&& !ft_strncmp(node->prev->prev->type, "redirect_output", 16))
+	{
+		(*i) += 2;
+		return (1);
+	}
+	else if (node && node->prev && node->prev->prev
+		&& !ft_strncmp(node->type, "command", 8)
+		&& !ft_strncmp(node->prev->type, "outfile", 8)
+		&& !ft_strncmp(node->prev->prev->type, "output_append", 14))
 	{
 		(*i) += 2;
 		return (1);
@@ -179,6 +196,5 @@ int	parsing(t_gen *gen)
 		exec_command(gen);
 	else
 		exec_single_command(gen, tmp);
-	ft_treeclear(gen->root);
-	return (1);
+	return (ft_treeclear(gen->root), 1);
 }

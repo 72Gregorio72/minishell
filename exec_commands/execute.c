@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 16:38:53 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:35:12 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	*cmd_path;
 	char	**env;
 
-	if (!node->piped)
+	if (node && !node->piped)
 	{
 		if (!find_red(node, gen))
 			return ;
 	}
-	if (node && node->command && node->command[0] && is_builtin(node->command[0]))
+	if (node && node->command
+		&& node->command[0] && is_builtin(node->command[0]))
 	{
 		if (exec_builtin(gen, node))
 			gen->exit_status = 0;
@@ -146,8 +147,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	free(cmd_path);
 }
 
-int		find_cmd_num(t_lexing *node)
-{	
+int	find_cmd_num(t_lexing *node)
+{
 	int			cmd_num;
 	t_lexing	*tmp;
 
@@ -192,17 +193,23 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 				ft_putstr_fd("Error opening here_doc file\n", 2);
 				return ;
 			}
-			if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19)
+			if (current->next
+				&& !ft_strncmp(((t_lexing *)current->next)->type,
+					"here_doc_delimiter", 19)
 				&& tmp)
 			{
-				handle_here_doc(((t_lexing *)current->next)->value, tmp, &here_doc_num);
+				handle_here_doc(((t_lexing *)current->next)->value,
+					tmp, &here_doc_num);
 				tmp = tmp->next;
 				while (tmp && ft_strncmp(tmp->type, "command", 8))
 					tmp = tmp->next;
 			}
-			else if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19))
+			else if (current->next
+				&& !ft_strncmp(((t_lexing *)current->next)->type,
+					"here_doc_delimiter", 19))
 			{
-				handle_here_doc(((t_lexing *)current->next)->value, NULL, &here_doc_num);
+				handle_here_doc(((t_lexing *)current->next)->value,
+					NULL, &here_doc_num);
 			}
 			if (current->outfile == -1)
 			{
@@ -223,6 +230,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	int			i, pipe_fd[2];
 	int			prev_pipe = -1;
 	pid_t		pid;
+	int 		flag;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
 	for (i = 0; i < num_cmds; i++)
@@ -242,6 +250,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		}
 		if (pid == 0)
 		{
+			flag = 0;
 			if (find_red(cmds[i], gen) != 0)
 			{
 				if (i > 0)
@@ -261,8 +270,17 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 					close(pipe_fd[1]);
 				}
 				exec_single_command(gen, cmds[i]);
+				flag = 1;
 			}
-			// da fare bene free
+			if (!flag)
+			{
+				ft_treeclear(gen->root);
+				free_matrix(gen->my_env);
+				free_matrix(gen->export_env);
+				ft_lstclear(gen->lexed_data, 0);
+				ft_lstclear(gen->cleaned_data, 1);
+				free_matrix(gen->av);
+			}
 			exit(gen->exit_status);
 		}
 		if (i > 0)

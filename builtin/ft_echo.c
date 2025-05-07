@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:03:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/30 12:44:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:21:11 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@ int	ft_echo(t_lexing *node, t_gen *gen, int fd)
 
 	new_line = 1;
 	i = 1;
-	(void)gen;
 	if (node->command[1] && !ft_strncmp("-n", node->command[1], 2))
 	{
 		new_line = 0;
 		i++;
+		while (node->command[i] && !ft_strncmp("-n", node->command[i], 2))
+			i++;
 	}
 	if (!node->command[1] && new_line)
 		return (write(1, "\n", 1), 1);
@@ -37,5 +38,5 @@ int	ft_echo(t_lexing *node, t_gen *gen, int fd)
 			write(fd, " ", 1);
 		i++;
 	}
-	return (1);
+	return ((void)gen, 1);
 }
