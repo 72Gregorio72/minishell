@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:33:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 10:34:00 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:06:43 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,19 @@ char	*expand(char *str, t_gen *gen)
 		}
 	}
 	return (str);
+}
+
+void	open_redirections(t_lexing *node, t_gen *gen)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->type, "outfile", 8))
+			util_outfile(tmp->value, gen, tmp, 1);
+		else if (!ft_strncmp(tmp->type, "infile", 7))
+			util_infile(tmp->value, gen, tmp);
+		tmp = tmp->next;
+	}
 }
