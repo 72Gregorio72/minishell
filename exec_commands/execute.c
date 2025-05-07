@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 09:35:12 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:23:43 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 	collect_piped_cmds(node->right, cmds, i);
 }
 
-void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
+void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
 	t_lexing	*current;
 	t_lexing	*tmp;
@@ -199,7 +199,7 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 				&& tmp)
 			{
 				handle_here_doc(((t_lexing *)current->next)->value,
-					tmp, &here_doc_num);
+					tmp, &here_doc_num, gen);
 				tmp = tmp->next;
 				while (tmp && ft_strncmp(tmp->type, "command", 8))
 					tmp = tmp->next;
@@ -209,7 +209,7 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 					"here_doc_delimiter", 19))
 			{
 				handle_here_doc(((t_lexing *)current->next)->value,
-					NULL, &here_doc_num);
+					NULL, &here_doc_num, gen);
 			}
 			if (current->outfile == -1)
 			{

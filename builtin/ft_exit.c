@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:45:41 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 09:38:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:50:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	all_num(char *str)
 int	ft_exit(t_gen *gen, t_lexing *node)
 {
 	if (!node->piped)
-		printf("exit\n");
+		ft_printf("exit\n");
 	if (rows_in_mat(node->command) > 2)
 		return (error_exit(gen, "minishell: too many arguments", 1), 0);
 	if (node->command[1] && !all_num(node->command[1])

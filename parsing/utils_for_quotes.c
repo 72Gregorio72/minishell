@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 09:52:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 09:34:34 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:15:37 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	handle_env_variable(t_lexing **n, t_gen *gen, int *p)
 	tmp = build_tmp(gen, &l, &(*n)->value, *p);
 	len_var_expanded = ft_strlen(tmp);
 	after = ft_substr((*n)->value, (*p) + l + 1, ft_strlen((*n)->value));
-	if (!before)
+	if (!after)
 		return (free(before), free(tmp), util_exit(gen));
 	free((*n)->value);
 	(*n)->value = construct_env_var(before, after, tmp);

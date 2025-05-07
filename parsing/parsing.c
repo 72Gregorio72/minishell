@@ -186,7 +186,7 @@ int	parsing(t_gen *gen)
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon(gen);
 	gen->cleaned_data = clean_data(gen);
-	here_doccer(gen->lexed_data, gen->cleaned_data);
+	here_doccer(gen->lexed_data, gen->cleaned_data, gen);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
 	if (ft_lstsize(gen->cleaned_data) != 2)

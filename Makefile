@@ -41,7 +41,8 @@ SRCS		=	main.c \
 				pipex/bonus/get_path_bonus.c \
 				pipex/bonus/processes_bonus.c \
 				pipex/bonus/processes_utils_bonus.c \
-				pipex/bonus/read_bonus.c 
+				pipex/bonus/read_bonus.c \
+				pipex/bonus/pipex_utils.c \
 		
 OBJS		= $(SRCS:.c=.o)
 
