@@ -81,6 +81,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)av;
 	gen.my_env = copy_matrix(env);
+	// cambiare ssh level
 	gen.export_env = copy_matrix(env);
 	gen.cleaned_data = NULL;
 	sort_export(&gen);
