@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 16:43:56 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:47:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	find_red(t_lexing *node, t_gen *gen)
 
 	i = 0;
 	val = -1;
-	while (node->command[i])
+	while (node->command && node->command[i])
 	{
 		if (!ft_strncmp(node->command[i], "<", 1))
 			val = util_infile(node->command[i + 1], gen, node);
