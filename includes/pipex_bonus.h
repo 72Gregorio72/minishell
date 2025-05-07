@@ -62,5 +62,6 @@ void	close_all_pipes(t_data_bonus *data);
 int		ft_pipex(int ac, char **av, char **envp);
 char	*expand(char *str, t_gen *gen);
 void	open_redirections(t_lexing *node, t_gen *gen);
+void	handler_here(int sig);
 
 #endif

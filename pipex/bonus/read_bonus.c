@@ -6,12 +6,13 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 11:06:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:22:00 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 // << lim cat > b | << lim1 grep c
+
 void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 {
 	char	*filename;
@@ -96,15 +97,21 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 
 	while (1)
 	{
-		ft_putstr_fd(GREEN"HEREDOC> "RESET, 1);
-		line = get_next_line(0);
-		if (!line)
+		signal(SIGQUIT, handler_here);
+		signal(SIGINT, handler_here);
+		if (errno == EBADF)
 			break ;
+		line = readline(GREEN"HEREDOC> "RESET);
+		if (!line)
+		{
+			write(1, "\n", 1);
+			break ;
+		}
 		line = expand(line, gen);
 		if (!line)
 			return (safe_free(gen), perror("malloc"), exit(gen->exit_status));
 		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-			&& line[ft_strlen(limiter)] == '\n')
+			&& line[ft_strlen(limiter)] == '\0')
 		{
 			free(line);
 			break ;
@@ -112,5 +119,4 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 		write(fd, line, ft_strlen(line));
 		free(line);
 	}
-	get_next_line(-42);
 }

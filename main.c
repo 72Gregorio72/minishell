@@ -49,10 +49,11 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	char				*line;
 
 	(void)ac;
-	if (isatty(STDIN_FILENO) && sigaction(SIGINT, &sa, NULL) == -1)
-		return (perror("Sigaction error"));
 	while (1)
 	{
+		gen->fd_stdin = dup(0);
+		if (isatty(STDIN_FILENO) && sigaction(SIGINT, &sa, NULL) == -1)
+			return (perror("Sigaction error"));
 		if (isatty(STDIN_FILENO))
 			signal(SIGQUIT, SIG_IGN);
 		util_line(&line);
@@ -63,12 +64,11 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			return (perror("Sigaction error"));
 		gen->av = ft_split_quote(line, ' ');
 		if (!gen->av)
-		{
-			safe_free(gen);
-			exit(gen->exit_status);
-		}
+			return (safe_free(gen), exit(gen->exit_status));
 		gen->lexed_data = lexer(gen->av, gen);
 		init(gen);
+		dup2(gen->fd_stdin, STDIN_FILENO);
+		close(gen->fd_stdin);
 		util_free(gen, line);
 	}
 }

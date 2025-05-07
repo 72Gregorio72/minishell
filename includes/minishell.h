@@ -49,6 +49,7 @@ typedef struct s_tree
 
 typedef struct s_gen
 {
+	int					fd_stdin;
 	char				**my_env;
 	char				**export_env;
 	char				**av;

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:33:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 11:06:43 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:17:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,16 @@ void	open_redirections(t_lexing *node, t_gen *gen)
 		else if (!ft_strncmp(tmp->type, "infile", 7))
 			util_infile(tmp->value, gen, tmp);
 		tmp = tmp->next;
+	}
+}
+
+void	handler_here(int sig)
+{
+	if (sig == SIGQUIT)
+		write(0, "\b\b  \b\b", 6);
+	else if (sig == SIGINT)
+	{
+		rl_done = 1;
+		close(0);
 	}
 }
