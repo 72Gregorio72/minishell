@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 10:36:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:59:41 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,21 @@ void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 	}
 }
 
+void	open_redirections(t_lexing *node, t_gen *gen)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->type, "outfile", 8))
+			util_outfile(tmp->value, gen, tmp, 1);
+		else if (!ft_strncmp(tmp->type, "infile", 7))
+			util_infile(tmp->value, gen, tmp);
+		tmp = tmp->next;
+	}
+}
+
 void	handle_here_doc(char *limiter, t_lexing *node,
 		int *here_doc_num, t_gen *gen)
 {
@@ -42,7 +57,10 @@ void	handle_here_doc(char *limiter, t_lexing *node,
 	close(fd);
 	tmp_fd = 1;
 	if (!node)
+	{
+		open_redirections(gen->lexed_data, gen);
 		open_temp_file_for_reading(&tmp_fd, here_doc_num);
+	}
 	else
 		open_temp_file_for_reading(&node->infile, here_doc_num);
 }
