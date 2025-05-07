@@ -104,6 +104,7 @@ char		*build_tmp(t_gen *gen, int *e, char **value, int p);
 
 // redirections and wildcards
 int			find_red(t_lexing *node, t_gen *gen);
+int			calc_mat_len(t_lexing *node, int *i);
 int			expand_wildcard(t_lexing **node, t_gen *gen);
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
 t_lexing	*find_next_node(t_lexing *start, char *to_find);
@@ -166,7 +167,7 @@ void		exec_single_command(t_gen *gen, t_lexing *node);
 int			exec_builtin(t_gen *gen, t_lexing *node);
 
 // qui doc
-void		here_doccer(t_lexing *node, t_lexing *cleaned_data);
+void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);
 
 // pokemon :)
 typedef struct s_attack

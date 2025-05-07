@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 12:09:53 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:36:22 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,20 @@ void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 	}
 }
 
-void	handle_here_doc(char *limiter, t_lexing *node, int *here_doc_num)
+void	handle_here_doc(char *limiter, t_lexing *node,
+		int *here_doc_num, t_gen *gen)
 {
 	int	fd;
+	int	tmp_fd;
 
 	open_temp_file(&fd, *here_doc_num);
-	write_to_temp_file(fd, limiter);
+	write_to_temp_file(fd, limiter, gen);
 	close(fd);
-	open_temp_file_for_reading(&node->infile, here_doc_num);
+	tmp_fd = 1;
+	if (!node)
+		open_temp_file_for_reading(&tmp_fd, here_doc_num);
+	else
+		open_temp_file_for_reading(&node->infile, here_doc_num);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)
@@ -81,7 +87,7 @@ void	parse_commands(t_data_bonus *data)
 	}
 }
 
-void	write_to_temp_file(int fd, char *limiter)
+void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 {
 	char	*line;
 
@@ -91,6 +97,9 @@ void	write_to_temp_file(int fd, char *limiter)
 		line = get_next_line(0);
 		if (!line)
 			break ;
+		line = expand(line, gen);
+		if (!line)
+			return (safe_free(gen), perror("malloc"), exit(gen->exit_status));
 		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
 			&& line[ft_strlen(limiter)] == '\n')
 		{

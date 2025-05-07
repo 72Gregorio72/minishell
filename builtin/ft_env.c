@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:00:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 10:05:37 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:09:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	ft_env(char **env, int export, t_lexing *node)
 	{
 		while (env[i])
 		{
-			ft_putendl_fd(env[i], 1);
+			ft_putendl_fd(env[i], node->outfile);
 			i++;
 		}
 	}

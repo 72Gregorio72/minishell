@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 16:00:08 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:43:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,34 +67,23 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 
 void	remove_redirections(t_lexing *node)
 {
-	int	i;
-	int	j;
-	int	mat_length;
+	int		i;
+	int		j;
+	int		mat_length;
 	char	**tmp;
 
 	i = 0;
 	j = 0;
-	mat_length = 0;
-	while (node->command[i])
-	{
-		if (ft_strncmp(node->command[i], "<", 1)
-			&& ft_strncmp(node->command[i], ">>", 2)
-			&& ft_strncmp(node->command[i], ">", 1))
-			mat_length++;
-		else
-			i++;
-		i++;
-	}
+	mat_length = calc_mat_len(node, &i);
 	tmp = malloc(sizeof(char *) * (mat_length + 1));
 	if (!tmp)
 		return ;
-	i = 0;
 	while (node->command[i])
 	{
 		if (ft_strncmp(node->command[i], "<", 1)
 			&& ft_strncmp(node->command[i], ">>", 2)
 			&& ft_strncmp(node->command[i], ">", 1))
-				tmp[j++] = ft_strdup(node->command[i]);
+			tmp[j++] = ft_strdup(node->command[i]);
 		else
 			i++;
 		i++;
@@ -120,7 +109,7 @@ int	find_red(t_lexing *node, t_gen *gen)
 			val = util_outfile(node->command[i + 1], gen, node, 2);
 		else if (!ft_strncmp(node->command[i], ">", 1))
 			val = util_outfile(node->command[i + 1], gen, node, 1);
-		if (val == 0)
+		if (val == 2)
 			return (0);
 		i++;
 	}

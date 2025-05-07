@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 15:03:29 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:46:58 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,23 +88,4 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 	find_env_var_and_wild(lexed);
 	find_prevs(lexed);
 	return (lexed);
-}
-
-int	check_here_doc(t_gen *gen, t_lexing *lexed)
-{
-	t_lexing	*tmp;
-	t_lexing	*succ;
-
-	tmp = lexed;
-	while (tmp)
-	{
-		if (tmp->next)
-			succ = tmp->next;
-		if (!ft_strncmp(tmp->type, "here_doc", 9)
-			&& (!tmp->next
-				|| ft_strncmp(succ->type, "here_doc_delimiter", 19) != 0))
-			return (error_exit(gen, "minishell: syntax error", 2), 0);
-		tmp = tmp->next;
-	}
-	return (1);
 }

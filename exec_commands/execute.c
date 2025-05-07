@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 16:03:21 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:23:43 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,13 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	char	*cmd_path;
 	char	**env;
 
-	if (!node->piped)
-		find_red(node, gen);
-	if (node && node->command && node->command[0] && is_builtin(node->command[0]))
+	if (node && !node->piped)
+	{
+		if (!find_red(node, gen))
+			return ;
+	}
+	if (node && node->command
+		&& node->command[0] && is_builtin(node->command[0]))
 	{
 		if (exec_builtin(gen, node))
 			gen->exit_status = 0;
@@ -143,8 +147,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	free(cmd_path);
 }
 
-int		find_cmd_num(t_lexing *node)
-{	
+int	find_cmd_num(t_lexing *node)
+{
 	int			cmd_num;
 	t_lexing	*tmp;
 
@@ -169,7 +173,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 	collect_piped_cmds(node->right, cmds, i);
 }
 
-void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
+void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
 	t_lexing	*current;
 	t_lexing	*tmp;
@@ -189,13 +193,23 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data)
 				ft_putstr_fd("Error opening here_doc file\n", 2);
 				return ;
 			}
-			if (current->next && !ft_strncmp(((t_lexing *)current->next)->type, "here_doc_delimiter", 19)
+			if (current->next
+				&& !ft_strncmp(((t_lexing *)current->next)->type,
+					"here_doc_delimiter", 19)
 				&& tmp)
 			{
-				handle_here_doc(((t_lexing *)current->next)->value, tmp, &here_doc_num);
+				handle_here_doc(((t_lexing *)current->next)->value,
+					tmp, &here_doc_num, gen);
 				tmp = tmp->next;
 				while (tmp && ft_strncmp(tmp->type, "command", 8))
 					tmp = tmp->next;
+			}
+			else if (current->next
+				&& !ft_strncmp(((t_lexing *)current->next)->type,
+					"here_doc_delimiter", 19))
+			{
+				handle_here_doc(((t_lexing *)current->next)->value,
+					NULL, &here_doc_num, gen);
 			}
 			if (current->outfile == -1)
 			{
@@ -216,6 +230,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	int			i, pipe_fd[2];
 	int			prev_pipe = -1;
 	pid_t		pid;
+	int 		flag;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
 	for (i = 0; i < num_cmds; i++)
@@ -235,24 +250,37 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		}
 		if (pid == 0)
 		{
-			find_red(cmds[i], gen);
-			if (i > 0)
+			flag = 0;
+			if (find_red(cmds[i], gen) != 0)
 			{
-				dup2(prev_pipe, STDIN_FILENO);
-				close(prev_pipe);
+				if (i > 0)
+				{
+					dup2(prev_pipe, STDIN_FILENO);
+					close(prev_pipe);
+				}
+				else if (cmds[i]->infile != STDIN_FILENO)
+				{
+					dup2(cmds[i]->infile, STDIN_FILENO);
+					close(cmds[i]->infile);
+				}
+				if (i < num_cmds - 1)
+				{
+					close(pipe_fd[0]);
+					dup2(pipe_fd[1], STDOUT_FILENO);
+					close(pipe_fd[1]);
+				}
+				exec_single_command(gen, cmds[i]);
+				flag = 1;
 			}
-			else if (cmds[i]->infile != STDIN_FILENO)
+			if (!flag)
 			{
-				dup2(cmds[i]->infile, STDIN_FILENO);
-				close(cmds[i]->infile);
+				ft_treeclear(gen->root);
+				free_matrix(gen->my_env);
+				free_matrix(gen->export_env);
+				ft_lstclear(gen->lexed_data, 0);
+				ft_lstclear(gen->cleaned_data, 1);
+				free_matrix(gen->av);
 			}
-			if (i < num_cmds - 1)
-			{
-				close(pipe_fd[0]);
-				dup2(pipe_fd[1], STDOUT_FILENO);
-				close(pipe_fd[1]);
-			}
-			exec_single_command(gen, cmds[i]);
 			exit(gen->exit_status);
 		}
 		if (i > 0)

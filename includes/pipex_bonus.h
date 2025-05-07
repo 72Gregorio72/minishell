@@ -31,6 +31,8 @@
 # define YELLOW "\033[1;33m"
 # define BLUE "\033[1;34m"
 
+typedef struct s_gen	t_gen;
+
 char	*find_path_variable(char **envp);
 char	**split_paths(char *path);
 char	**get_paths(char **envp);
@@ -42,10 +44,11 @@ void	pipex(t_data_bonus *data);
 int		empty_str(char *s);
 void	exit_free(t_data_bonus *data);
 void	open_temp_file_for_reading(int *fd, int *here_doc_num);
-void	handle_here_doc(char *limiter, t_lexing *node, int *here_doc_num);
+void	handle_here_doc(char *limiter, t_lexing *node,
+			int *here_doc_num, t_gen *gen);
 void	open_files(int ac, char **av, t_data_bonus *data);
 void	parse_commands(t_data_bonus *data);
-void	write_to_temp_file(int fd, char *limiter);
+void	write_to_temp_file(int fd, char *limiter, t_gen *gen);
 void	create_pipes(t_data_bonus *data);
 void	wait_for_children(t_data_bonus *data, pid_t *pids);
 void	fork_processes(t_data_bonus *data, pid_t *pids);
@@ -57,5 +60,6 @@ void	initialize_data(t_data_bonus *data, int ac, char **av, char **envp);
 void	open_temp_file(int *fd, int here_doc_num);
 void	close_all_pipes(t_data_bonus *data);
 int		ft_pipex(int ac, char **av, char **envp);
+char	*expand(char *str, t_gen *gen);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 09:52:32 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:27:27 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ int	call_export(t_gen *gen, t_lexing *node)
 			return (0);
 		i++;
 	}
+	if (gen->exit_status != 0)
+		return (0);
 	return (1);
 }
 
