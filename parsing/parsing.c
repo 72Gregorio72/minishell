@@ -194,7 +194,7 @@ int	parsing(t_gen *gen)
 				ft_lstlast(gen->cleaned_data), gen->root);
 	if (find_cmd_num(tmp2) > 1)
 		exec_command(gen);
-	else
+	else if (gen->cleaned_data)
 		exec_single_command(gen, tmp);
 	return (ft_treeclear(gen->root), 1);
 }
