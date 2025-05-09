@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 12:22:00 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 10:47:35 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,7 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 
 	while (1)
 	{
-		signal(SIGQUIT, handler_here);
-		signal(SIGINT, handler_here);
+		util_signal();
 		if (errno == EBADF)
 			break ;
 		line = readline(GREEN"HEREDOC> "RESET);

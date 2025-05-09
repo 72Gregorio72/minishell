@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:33:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 12:17:38 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 10:47:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,10 @@ void	handler_here(int sig)
 		rl_done = 1;
 		close(0);
 	}
+}
+
+void	util_signal(void)
+{
+	signal(SIGQUIT, handler_here);
+	signal(SIGINT, handler_here);
 }
