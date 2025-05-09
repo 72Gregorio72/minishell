@@ -161,6 +161,7 @@ int			check_not_opened(t_lexing *end, t_lexing *head);
 int			check_close(t_lexing *node, t_lexing *succ);
 int			check_redirect(t_lexing *node);
 int			check_after_close(char *word, int *i);
+int			checks_unset_export(const char *str);
 
 // exec
 void		exec_command(t_gen *gen);
