@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:41:35 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 16:23:44 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:08:53 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,20 @@ t_lexing	*prechecks(t_lexing *to_expand, t_gen *gen)
 	return (tmp_list);
 }
 
+void	position(t_lexing *prev, t_lexing *tmp_list, t_gen *gen)
+{
+	if (prev)
+	{
+		prev->next = tmp_list;
+		tmp_list->prev = prev;
+	}
+	else
+	{
+		gen->lexed_data = tmp_list;
+		tmp_list->prev = NULL;
+	}
+}
+
 int	loop_expand(t_gen *gen)
 {
 	t_lexing	*to_expand;
@@ -85,10 +99,7 @@ int	loop_expand(t_gen *gen)
 		prev = find_prev_node(to_expand, gen->lexed_data);
 		last = ft_lstlast(tmp_list);
 		last->next = to_expand->next;
-		if (prev)
-			prev->next = tmp_list;
-		else
-			gen->lexed_data = tmp_list;
+		position(prev, tmp_list, gen);
 		ft_lstdelone(to_expand);
 		to_expand = check_continue(gen->lexed_data);
 	}

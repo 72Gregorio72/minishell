@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 12:28:58 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/30 12:55:43 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:41:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,20 @@ int	check_files(t_gen *gen, t_lexing *lexed)
 		tmp = tmp->next;
 	}
 	return (1);
+}
+
+int	check_after(t_lexing *node)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	if (!ft_strncmp(tmp->type, "close_parenthesis", 18))
+		tmp = tmp->next;
+	while (tmp && !check_end(tmp))
+	{
+		if (check_redirect(tmp))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }

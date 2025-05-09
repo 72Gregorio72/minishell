@@ -96,7 +96,7 @@ char	**get_command(t_lexing *node)
 			command[i] = ft_strdup(tmp->value);
 			i++;
 		}
-		else
+		else if (!check_after(tmp))
 			break ;
 		tmp = tmp->next;
 	}
@@ -130,6 +130,7 @@ t_lexing	*clean_data(t_gen *gen)
 	t_lexing	*tmp;
 	t_lexing	*head;
 	t_lexing	*new_node;
+	int			i;
 
 	tmp = gen->lexed_data;
 	head = NULL;
@@ -161,7 +162,7 @@ t_lexing	*clean_data(t_gen *gen)
 	{
 		if (new_node->command)
 		{
-			int i = 0;
+			i = 0;
 			while (new_node->command[i])
 				i++;
 		}
