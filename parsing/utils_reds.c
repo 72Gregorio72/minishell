@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 11:06:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 11:45:04 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	util_infile(char *filename, t_gen *gen, t_lexing *node)
 	{
 		node->infile = open(filename, O_RDONLY);
 		if (node->infile < 0)
-			return (safe_free(gen), perror("open error"), exit(1), 0);
+			return (error_exit(gen, "minishell: open error", 1), 2);
 	}
 	else
 		return (error_exit(gen, "minishell: no such file or directory", 1), 2);
@@ -47,7 +47,7 @@ int	util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag)
 		node->outfile = open(filename,
 				O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (node->outfile < 0)
-		return (safe_free(gen), perror("open error"), exit(1), 0);
+		return (error_exit(gen, "minishell: open error", 1), 2);
 	return (1);
 }
 

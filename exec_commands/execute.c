@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 12:20:49 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/09 11:48:56 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,14 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		if (node->infile != STDIN_FILENO)
 		{
 			dup2(node->infile, STDIN_FILENO);
-			close(node->infile);
+			if (node->infile != -1)
+				close(node->infile);
 		}
 		if (node->outfile != STDOUT_FILENO)
 		{
 			dup2(node->outfile, STDOUT_FILENO);
-			close(node->outfile);
+			if (node->outfile != -1)
+				close(node->outfile);
 		}
 		execve(cmd_path, node->command, env);
 		ft_putstr_fd("execve error\n", 2);
