@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 09:00:56 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 10:21:07 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,34 @@ void	print_list(t_lexing *lst)
 		printf("type: %s\n", tmp->type);
 		printf("--------------------\n");
 		tmp = tmp->next;
+	}
+}
+
+void	change_shlvl(char ***env)
+{
+	int		i;
+	char	*equal;
+	int		res;
+	char	*new_value;
+	char	*new_var;
+
+	i = -1;
+	while ((*env)[++i])
+	{
+		if (!ft_strncmp("SHLVL=", (*env)[i], 6))
+		{
+			equal = ft_strchr((*env)[i], '=');
+			if (equal && *(equal + 1))
+				res = ft_atoi(equal + 1);
+			else
+				res = 0;
+			res++;
+			new_value = ft_itoa(res);
+			new_var = ft_strjoin("SHLVL=", new_value);
+			free((*env)[i]);
+			(*env)[i] = new_var;
+			free(new_value);
+			break ;
+		}
 	}
 }

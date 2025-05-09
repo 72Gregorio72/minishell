@@ -124,6 +124,7 @@ void		util_free_env_var(char *before, char *tmp, char *after);
 int			util_infile(char *filename, t_gen *gen, t_lexing *node);
 int			util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag);
 void		util_exit(t_gen *gen);
+void		change_shlvl(char ***env);
 
 // ctrl
 void		ctrl_c(int new_line);
