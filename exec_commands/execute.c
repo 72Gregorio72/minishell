@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 10:23:43 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:20:49 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,8 +231,11 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	int			prev_pipe = -1;
 	pid_t		pid;
 	int 		flag;
+	t_lexing	*last_cmd;
+	pid_t		last_pid;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
+	last_cmd = cmds[num_cmds - 1];
 	for (i = 0; i < num_cmds; i++)
 	{
 		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)
@@ -242,6 +245,8 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 			return ;
 		}
 		pid = fork();
+		if (!ft_strncmp(cmds[i]->value, last_cmd->value, ft_strlen(last_cmd->value)))
+			last_pid = pid;
 		if (pid == -1)
 		{
 			ft_putstr_fd("fork error\n", 2);
@@ -294,8 +299,8 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	for (i = 0; i < num_cmds; i++)
 	{
 		int status;
-		wait(&status);
-		if (i == num_cmds - 1 && WIFEXITED(status))
+		pid_t pid = wait(&status);
+		if (pid == last_pid && WIFEXITED(status))
 			gen->exit_status = WEXITSTATUS(status);
 	}
 }
