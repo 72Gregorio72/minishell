@@ -71,7 +71,7 @@ int			ft_export(const char *var, t_gen *gen,
 				t_lexing *node, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
-void		call_unset(char **command, t_gen *gen);
+int			call_unset(char **command, t_gen *gen);
 int			call_export(t_gen *gen, t_lexing *node);
 
 // parsing

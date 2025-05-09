@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:58:04 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 09:52:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/09 09:07:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ int	unset_and_export(t_gen *gen, char *succ, char *curr, t_lexing *node)
 		{
 			rl_on_new_line();
 			rl_replace_line("", 0);
+			return (1);
 		}
 		else
-			call_unset(node->command, gen);
-		return (1);
+			return (call_unset(node->command, gen));
 	}
 	return (0);
 }

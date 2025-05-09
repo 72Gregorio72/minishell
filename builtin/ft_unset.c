@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 09:27:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 09:06:34 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+static int	checks_unset(const char *str, t_gen *gen)
+{
+	if (ft_isdigit(str[0])
+		|| ft_strchr(str, '=') != NULL)
+	{
+		ft_putstr_fd(RED"minishell: unset: ", 2);
+		ft_putstr_fd(YELLOW"\'", 2);
+		ft_putstr_fd((char *)str, 2);
+		ft_putstr_fd("\'", 2);
+		ft_putstr_fd(RED": not a valid identifier"RESET, 2);
+		error_exit(gen, "", 1);
+		return (0);
+	}
+	return (1);
+}
 
 void	ft_unset_export(char ***env, const char *var)
 {
@@ -71,17 +87,25 @@ void	ft_unset(char ***env, const char *var)
 	}
 }
 
-void	call_unset(char **command, t_gen *gen)
+int	call_unset(char **command, t_gen *gen)
 {
 	int	i;
 
 	i = 1;
 	while (command[i])
 	{
+		if (!checks_unset(command[i], gen))
+		{
+			i++;
+			continue ;
+		}
 		ft_unset(&gen->my_env, command[i]);
 		ft_unset_export(&gen->export_env, command[i]);
 		i++;
 	}
+	if (gen->exit_status != 0)
+		return (0);
+	return (1);
 }
 
 int	call_export(t_gen *gen, t_lexing *node)
