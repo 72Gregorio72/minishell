@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 08:59:13 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:56:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 void	util_args(t_lexing *tmp)
 {
-	if (!ft_strncmp(tmp->type, "command", 8))
+	if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
+		&& !ft_strncmp(tmp->next->type, "command", 8))
+		tmp->next->type = ft_strdup("here_doc_delimiter");
+	else if (!ft_strncmp(tmp->type, "command", 8))
 	{
 		if (tmp->value[0] == '-')
 			tmp->type = ft_strdup("option");

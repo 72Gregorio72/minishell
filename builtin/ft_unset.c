@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 09:27:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 11:31:26 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+int	checks_unset_export(const char *str)
+{
+	int	i;
+
+	if (ft_isdigit(str[0]))
+		return (0);
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if (str[i] != '_' && !ft_isalnum(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	ft_unset_export(char ***env, const char *var)
 {
@@ -71,17 +87,31 @@ void	ft_unset(char ***env, const char *var)
 	}
 }
 
-void	call_unset(char **command, t_gen *gen)
+int	call_unset(char **command, t_gen *gen)
 {
 	int	i;
 
 	i = 1;
 	while (command[i])
 	{
+		if (!checks_unset_export(command[i]))
+		{
+			ft_putstr_fd(RED"minishell: unset: ", 2);
+			ft_putstr_fd(YELLOW"\'", 2);
+			ft_putstr_fd((char *)command[i], 2);
+			ft_putstr_fd("\'", 2);
+			ft_putstr_fd(RED": not a valid identifier"RESET, 2);
+			error_exit(gen, "", 1);
+			i++;
+			continue ;
+		}
 		ft_unset(&gen->my_env, command[i]);
 		ft_unset_export(&gen->export_env, command[i]);
 		i++;
 	}
+	if (gen->exit_status != 0)
+		return (0);
+	return (1);
 }
 
 int	call_export(t_gen *gen, t_lexing *node)
@@ -99,28 +129,3 @@ int	call_export(t_gen *gen, t_lexing *node)
 		return (0);
 	return (1);
 }
-
-/* int main() {
-	char **envp = malloc(4 * sizeof(char *));
-	envp[0] = strdup("PATH=/usr/bin");
-	envp[1] = strdup("HOME=/home/user");
-	envp[2] = strdup("SHELL=/bin/bash");
-	envp[3] = NULL;
-
-	printf("### ENV iniziale ###\n");
-	print_env(envp);
-	printf("\n### Exporting VAR=test ###\n");
-	my_export(&envp, "VAR", "test");
-	print_env(envp);
-	printf("\n### Updating PATH ###\n");
-	my_export(&envp, "PATH", "/usr/local/bin");
-	print_env(envp);
-	printf("\n### Unsetting HOME ###\n");
-	my_unset(&envp, "HOME");
-	print_env(envp);
-	for (int i = 0; envp[i] != NULL; i++) {
-		free(envp[i]);
-	}
-	free(envp);
-	return 0;
-} */

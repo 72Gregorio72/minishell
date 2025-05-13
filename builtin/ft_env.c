@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:00:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 09:09:46 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 09:31:39 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ int	ft_env(char **env, int export, t_lexing *node)
 		{
 			write(node->outfile, "declare -x ", 11);
 			print_env(env[i], node->outfile);
-			write(node->outfile, "\"\n", 2);
+			if (ft_strchr(env[i], '=') != NULL)
+				write(node->outfile, "\"", 2);
+			write(node->outfile, "\n", 2);
 			i++;
 		}
 		return (1);

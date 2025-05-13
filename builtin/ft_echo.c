@@ -6,11 +6,30 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:03:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/07 09:21:11 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:10:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	check_flag(char *str)
+{
+	int	i;
+	int	res;
+
+	i = 1;
+	if (str[0] && str[0] == '-')
+		res = 1;
+	else
+		res = 0;
+	while (str && str[0] && str[i])
+	{
+		if (res && str[i] != 'n')
+			res = 0;
+		i++;
+	}
+	return (res);
+}
 
 int	ft_echo(t_lexing *node, t_gen *gen, int fd)
 {
@@ -19,11 +38,11 @@ int	ft_echo(t_lexing *node, t_gen *gen, int fd)
 
 	new_line = 1;
 	i = 1;
-	if (node->command[1] && !ft_strncmp("-n", node->command[1], 2))
+	if (node->command[1] && check_flag(node->command[1]))
 	{
 		new_line = 0;
 		i++;
-		while (node->command[i] && !ft_strncmp("-n", node->command[i], 2))
+		while (node->command[i] && check_flag(node->command[i]))
 			i++;
 	}
 	if (!node->command[1] && new_line)

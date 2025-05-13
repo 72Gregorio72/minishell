@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   read_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/07 10:59:41 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:32:55 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 // << lim cat > b | << lim1 grep c
+
 void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 {
 	char	*filename;
@@ -28,21 +29,6 @@ void	open_temp_file_for_reading(int *fd, int *here_doc_num)
 		printf(RED"Error opening temporary file for reading: %s"RESET"\n",
 			strerror(errno));
 		exit(1);
-	}
-}
-
-void	open_redirections(t_lexing *node, t_gen *gen)
-{
-	t_lexing	*tmp;
-
-	tmp = node;
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->type, "outfile", 8))
-			util_outfile(tmp->value, gen, tmp, 1);
-		else if (!ft_strncmp(tmp->type, "infile", 7))
-			util_infile(tmp->value, gen, tmp);
-		tmp = tmp->next;
 	}
 }
 
@@ -63,6 +49,8 @@ void	handle_here_doc(char *limiter, t_lexing *node,
 	}
 	else
 		open_temp_file_for_reading(&node->infile, here_doc_num);
+	if (tmp_fd != 1)
+		close(tmp_fd);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)
@@ -111,10 +99,15 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 
 	while (1)
 	{
-		ft_putstr_fd(GREEN"HEREDOC> "RESET, 1);
-		line = get_next_line(0);
-		if (!line)
+		util_signal();
+		if (errno == EBADF)
 			break ;
+		line = readline(GREEN"HEREDOC> "RESET);
+		if (!line)
+		{
+			write(1, "minishell: warning: here-doc delimited by EOF\n", 47);
+			break ;
+		}
 		line = expand(line, gen);
 		if (!line)
 			return (safe_free(gen), perror("malloc"), exit(gen->exit_status));
@@ -127,5 +120,4 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 		write(fd, line, ft_strlen(line));
 		free(line);
 	}
-	get_next_line(-42);
 }

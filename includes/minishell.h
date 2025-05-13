@@ -49,6 +49,7 @@ typedef struct s_tree
 
 typedef struct s_gen
 {
+	int					fd_stdin;
 	char				**my_env;
 	char				**export_env;
 	char				**av;
@@ -70,7 +71,7 @@ int			ft_export(const char *var, t_gen *gen,
 				t_lexing *node, char ***export_env);
 void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
-void		call_unset(char **command, t_gen *gen);
+int			call_unset(char **command, t_gen *gen);
 int			call_export(t_gen *gen, t_lexing *node);
 
 // parsing
@@ -123,6 +124,7 @@ void		util_free_env_var(char *before, char *tmp, char *after);
 int			util_infile(char *filename, t_gen *gen, t_lexing *node);
 int			util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag);
 void		util_exit(t_gen *gen);
+void		change_shlvl(char ***env);
 
 // ctrl
 void		ctrl_c(int new_line);
@@ -159,6 +161,10 @@ int			check_not_opened(t_lexing *end, t_lexing *head);
 int			check_close(t_lexing *node, t_lexing *succ);
 int			check_redirect(t_lexing *node);
 int			check_after_close(char *word, int *i);
+int			checks_unset_export(const char *str);
+int			check_end(t_lexing *tmp);
+int			check_after(t_lexing *node);
+int			check_reds_in_parenth(t_lexing *node);
 
 // exec
 void		exec_command(t_gen *gen);

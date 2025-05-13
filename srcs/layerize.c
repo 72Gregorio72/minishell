@@ -70,7 +70,7 @@ int	check_parenthesis(t_lexing *lst, t_gen *gen)
 			return (0);
 		if (!ft_strncmp(tmp->type, "open_parenthesis", 17))
 		{
-			if (!unclosed_parenth(succ))
+			if (!unclosed_parenth(succ) || !check_reds_in_parenth(tmp))
 				return (error_exit(gen, "minishell: syntax error", 2), 0);
 			if ((check_not_command(succ)
 					|| !ft_strncmp(succ->type, "argument", 9)

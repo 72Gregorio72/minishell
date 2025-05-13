@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:42 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/15 11:12:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/09 11:50:23 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void	ft_lstdelone(t_lexing *lst)
 		free(lst->type);
 	if (lst->command)
 		free_matrix(lst->command);
-	if (lst->outfile != 1)
+	if (lst->outfile != 1 && lst->outfile != -1)
 		close(lst->outfile);
-	if (lst->infile != 0)
+	if (lst->infile != 0 && lst->infile != -1)
 		close(lst->infile);
 	free(lst);
 }
@@ -67,9 +67,9 @@ void	ft_lstdelone_clean(t_lexing *lst)
 	free(lst->type);
 	if (lst->command)
 		free_matrix(lst->command);
-	if (lst->outfile != 1)
+	if (lst->outfile != 1 && lst->outfile != -1)
 		close(lst->outfile);
-	if (lst->infile != 0)
+	if (lst->infile != 0 && lst->infile != -1)
 		close(lst->infile);
 	free(lst);
 }
