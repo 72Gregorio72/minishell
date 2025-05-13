@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/09 10:47:35 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:32:55 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	handle_here_doc(char *limiter, t_lexing *node,
 	}
 	else
 		open_temp_file_for_reading(&node->infile, here_doc_num);
+	if (tmp_fd != 1)
+		close(tmp_fd);
 }
 
 void	open_files(int ac, char **av, t_data_bonus *data)
@@ -103,14 +105,14 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 		line = readline(GREEN"HEREDOC> "RESET);
 		if (!line)
 		{
-			write(1, "\n", 1);
+			write(1, "minishell: warning: here-doc delimited by EOF\n", 47);
 			break ;
 		}
 		line = expand(line, gen);
 		if (!line)
 			return (safe_free(gen), perror("malloc"), exit(gen->exit_status));
 		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-			&& line[ft_strlen(limiter)] == '\0')
+			&& line[ft_strlen(limiter)] == '\n')
 		{
 			free(line);
 			break ;
