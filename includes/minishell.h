@@ -164,6 +164,7 @@ int			check_after_close(char *word, int *i);
 int			checks_unset_export(const char *str);
 int			check_end(t_lexing *tmp);
 int			check_after(t_lexing *node);
+int			check_reds_in_parenth(t_lexing *node);
 
 // exec
 void		exec_command(t_gen *gen);

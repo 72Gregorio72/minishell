@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/09 11:48:56 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:12:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	{
 		cmd_path = ft_strdup(node->value);
 	}
-	if (access(cmd_path, F_OK) == -1)
+	if (access(cmd_path, F_OK | X_OK) == -1)
 	{
 		ft_putstr_fd(RED"Command ", 2);
 		ft_putstr_fd(YELLOW"\"", 2);
@@ -126,9 +126,21 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 				close(node->outfile);
 		}
 		execve(cmd_path, node->command, env);
-		ft_putstr_fd("execve error\n", 2);
+		ft_putstr_fd(RED"Command ", 2);
+		ft_putstr_fd(YELLOW"\"", 2);
+		ft_putstr_fd(node->value, 2);
+		ft_putstr_fd("\"", 2);
+		ft_putstr_fd(RED" not found\n"RESET, 2);
+		gen->exit_status = 127;
 		free_matrix(env);
-		exit(1);
+		ft_treeclear(gen->root);
+		free_matrix(gen->my_env);
+		free_matrix(gen->export_env);
+		ft_lstclear(gen->lexed_data, 0);
+		ft_lstclear(gen->cleaned_data, 1);
+		free_matrix(gen->av);
+		free(cmd_path);
+		exit(gen->exit_status);
 	}
 	else
 	{
