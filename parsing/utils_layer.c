@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_layer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:44:49 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/13 09:33:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:07:51 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,25 @@ int	checks_layer(t_lexing *tmp, t_lexing *succ, t_gen *gen, t_lexing *lst)
 
 int	check_reds_in_parenth(t_lexing *node)
 {
-	t_lexing	*tmp;
-
-	tmp = node;
-	while (tmp && ft_strncmp(tmp->type, "close_parenthesis", 18))
-	{
-		if (tmp->next && (!ft_strncmp(tmp->type, "redirect_output", 16)
-				|| !ft_strncmp(tmp->type, "output_append", 14))
-			&& !ft_strncmp(tmp->next->type, "outfile", 8))
-			return (0);
-		else if (tmp->next && !ft_strncmp(tmp->type, "here_doc", 9)
-			&& !ft_strncmp(tmp->next->type, "here_doc_delimiter", 19))
-			return (0);
-		else if (tmp->next && !ft_strncmp(tmp->type, "redirect_input", 15)
-			&& !ft_strncmp(tmp->next->type, "infile", 7))
-			return (0);
-		tmp = tmp->next;
-	}
-	return (1);
+    t_lexing    *tmp;
+    tmp = node;
+	tmp = tmp->next;
+    if (tmp->next && (!ft_strncmp(tmp->type, "redirect_output", 16)
+            || !ft_strncmp(tmp->type, "output_append", 14))
+        && !ft_strncmp(tmp->next->type, "outfile", 8)
+        && tmp->next->next
+        && !ft_strncmp(tmp->next->next->type, "close_parenthesis", 18))
+        return (0);
+    else if (tmp->next && !ft_strncmp(tmp->type, "here_doc", 9)
+        && !ft_strncmp(tmp->next->type, "here_doc_delimiter", 19)
+        && tmp->next->next
+        && !ft_strncmp(tmp->next->next->type, "close_parenthesis", 18))
+        return (0);
+    else if (tmp->next && !ft_strncmp(tmp->type, "redirect_input", 15)
+        && !ft_strncmp(tmp->next->type, "infile", 7)
+        && tmp->next->next
+        && !ft_strncmp(tmp->next->next->type, "close_parenthesis", 18))
+        return (0);
+    else
+        return (1);
 }

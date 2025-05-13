@@ -146,6 +146,7 @@ void		ft_treeclear(t_tree *tree);
 t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last);
 t_tree		*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *tree);
 void		print_binary_tree(t_tree *node, int depth);
+void		exec_tree(t_gen *gen, t_tree *root);
 
 // checks
 int			check_all_upper(char *word);

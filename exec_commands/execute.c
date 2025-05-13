@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/13 09:12:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:04:02 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,9 +182,9 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 	if (!node)
 		return ;
 	collect_piped_cmds(node->left, cmds, i);
-	if (node->data && ft_strncmp(node->data->type, "command", 7) == 0)
-		cmds[(*i)++] = node->data;
 	collect_piped_cmds(node->right, cmds, i);
+	if (node->data && node->data->piped && !ft_strncmp(node->data->type, "command", 8))
+		cmds[(*i)++] = node->data;
 }
 
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
@@ -249,6 +249,20 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	pid_t		last_pid;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
+	if (subroot->left && !ft_strncmp(subroot->left->data->type, "and_operator", 13)
+		&& !ft_strncmp(subroot->left->data->type, "or_operator", 12))
+	{
+		exec_tree(gen, subroot->left);
+		if (gen->exit_status != 0)
+			return ;
+	}
+	if (subroot->right && !ft_strncmp(subroot->right->data->type, "and_operator", 13)
+		&& !ft_strncmp(subroot->right->data->type, "or_operator", 12))
+	{
+		exec_tree(gen, subroot->right);
+		if (gen->exit_status != 0)
+			return ;
+	}
 	last_cmd = cmds[num_cmds - 1];
 	for (i = 0; i < num_cmds; i++)
 	{
@@ -346,21 +360,40 @@ void	exec_tree(t_gen *gen, t_tree *root)
 }
 //((echo 1 && echo 2) && (echo 3 || echo 4)) || (echo 5 && echo 6)
 
-void	flag_piped(t_tree *node)
-{
-	t_tree	*tmp;
+/* if (root->right && (!ft_strncmp(root->right->data->type, "and_operator", 13)
+|| !ft_strncmp(root->right->data->type, "or_operator", 12)))
+exec_tree(gen, root->right);
+if (root->left && (!ft_strncmp(root->left->data->type, "and_operator", 13)
+|| !ft_strncmp(root->left->data->type, "or_operator", 12)))
+exec_tree(gen, root->left);
+echo 1 | echo 2 | echo 3 | ( echo 4 && echo 5)
+*/
 
+void	mark_all_commands_piped(t_tree *node)
+{
 	if (!node)
 		return ;
-	tmp = node;
-	if (ft_strncmp(tmp->data->type, "pipe", 4) == 0)
+	if (!ft_strncmp(node->data->type, "command", 7))
+		node->data->piped = 1;
+	mark_all_commands_piped(node->left);
+	mark_all_commands_piped(node->right);
+}
+
+void	flag_piped(t_tree *node)
+{
+	if (!node)
+		return ;
+
+	if (!ft_strncmp(node->data->type, "pipe", 4))
 	{
-		tmp->data->piped = 1;
-		if (tmp->right)
-			tmp->right->data->piped = 1;
-		if (tmp->left)
-			tmp->left->data->piped = 1;
+		// Marcare il figlio sinistro solo se è un comando diretto
+		if (node->left && !ft_strncmp(node->left->data->type, "command", 7))
+			node->left->data->piped = 1;
+
+		// Marcare TUTTI i comandi nel sottoalbero destro
+		mark_all_commands_piped(node->right);
 	}
+
 	flag_piped(node->left);
 	flag_piped(node->right);
 }
@@ -381,6 +414,7 @@ void	exec_command(t_gen *gen)
 {
 	init_piped(gen->root);
 	flag_piped(gen->root);
+	print_binary_tree(gen->root, 0);
 	exec_tree(gen, gen->root);
 	ft_treeclear(gen->root);
 	gen->root = NULL;
