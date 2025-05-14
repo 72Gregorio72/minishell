@@ -14,6 +14,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define _DEFAULT_SOURCE
+# define _XOPEN_SOURCE 700
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -76,7 +79,8 @@ int			call_export(t_gen *gen, t_lexing *node);
 int			find_equal(char *var, char **export_env);
 void		convert_plus_equal_to_equal(char *str);
 void		add_in_env(char ***env, const char *var, int append);
-void		add_in_export_env(char ***env, const char *var, int flag, int append);
+void		add_in_export_env(char ***env, const char *var,
+				int flag, int append);
 
 // parsing
 int			parsing(t_gen *gen);
