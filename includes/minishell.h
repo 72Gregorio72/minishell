@@ -165,6 +165,7 @@ int			checks_unset_export(const char *str, int export);
 int			check_end(t_lexing *tmp);
 int			check_after(t_lexing *node);
 int			check_reds_in_parenth(t_lexing *node);
+int			check_pipes_in_parenth(t_lexing *node);
 
 // exec
 void		exec_command(t_gen *gen);

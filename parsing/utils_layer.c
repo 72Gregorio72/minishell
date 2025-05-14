@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:44:49 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/13 16:09:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:48:04 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,22 @@ int	check_reds_in_parenth(t_lexing *node)
 		return (0);
 	else
 		return (1);
+}
+
+int	check_pipes_in_parenth(t_lexing *node)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	if (!ft_strncmp(tmp->prev->type, "pipe", 4))
+	{
+		while (tmp && ft_strncmp(tmp->type, "close_parenthesis", 18))
+		{
+			if (!ft_strncmp(tmp->type, "and_operator", 13)
+				|| !ft_strncmp(tmp->type, "or", 12))
+				return (0);
+			tmp = tmp->next;
+		}
+	}
+	return (1);
 }
