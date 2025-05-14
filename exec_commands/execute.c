@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/13 16:04:02 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:56:24 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,9 +214,12 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 			{
 				handle_here_doc(((t_lexing *)current->next)->value,
 					tmp, &here_doc_num, gen);
-				tmp = tmp->next;
-				while (tmp && ft_strncmp(tmp->type, "command", 8))
+				if (current->next->next && ft_strncmp(current->next->next->type, "here_doc", 9))
+				{
 					tmp = tmp->next;
+					while (tmp && ft_strncmp(tmp->type, "command", 8))
+						tmp = tmp->next;
+				}
 			}
 			else if (current->next
 				&& !ft_strncmp(((t_lexing *)current->next)->type,
@@ -414,7 +417,6 @@ void	exec_command(t_gen *gen)
 {
 	init_piped(gen->root);
 	flag_piped(gen->root);
-	print_binary_tree(gen->root, 0);
 	exec_tree(gen, gen->root);
 	ft_treeclear(gen->root);
 	gen->root = NULL;
