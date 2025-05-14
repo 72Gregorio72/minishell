@@ -58,6 +58,7 @@ typedef struct s_gen
 	t_lexing			*lexed_data;
 	t_lexing			*cleaned_data;
 	int					*fds;
+	t_lexing			*last_cmd;
 	struct sigaction	sa;
 }				t_gen;
 
@@ -177,6 +178,13 @@ int			check_end(t_lexing *tmp);
 int			check_after(t_lexing *node);
 int			check_reds_in_parenth(t_lexing *node);
 
+typedef struct s_data
+{
+	int		i;
+	int		num_cmd;
+	int		prev_pipe;
+}	t_data;
+
 // exec
 void		exec_command(t_gen *gen);
 int			find_cmd_num(t_lexing *node);
@@ -196,6 +204,26 @@ void		wait_and_cleanup(t_gen *gen, t_lexing *node,
 				char *cmd_path, char **env);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			find_cmd_num(t_lexing *node);
+void		collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i);
+void		update_tmp_pointer(t_lexing **tmp, t_lexing *current);
+void		process_here_doc_node(t_lexing *current, t_lexing **tmp,
+				int *here_doc_num, t_gen *gen);
+void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);
+int			check_and_execute_subtree(t_gen *gen, t_tree *subtree);
+void		handle_child_io(t_lexing *cmd, t_data *data,
+				int pipe_fd[2]);
+void		child_exec(t_gen *gen, t_lexing *cmd, t_data *data, int pipe_fd[2]);
+int			setup_and_fork_child(t_gen *gen, t_lexing **cmds,
+				t_data *data, pid_t *last_pid);
+void		wait_for_piped_children(t_gen *gen, int num_cmds, pid_t last_pid);
+int			prepare_piped_execution(t_gen *gen, t_tree *subroot,
+				t_lexing **cmds, int *num_cmds);
+int			execute_piped_loop(t_gen *gen, t_lexing **cmds,
+				int num_cmds, pid_t *last_pid);
+void		exec_piped_commands(t_gen *gen, t_tree *subroot);
+void		exec_tree(t_gen *gen, t_tree *root);
+void		mark_all_commands_piped(t_tree *node);
+void		flag_piped(t_tree *node);
 
 // qui doc
 void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);

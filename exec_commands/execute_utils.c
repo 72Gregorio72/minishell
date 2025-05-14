@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:39:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 12:39:46 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:15:04 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	cleanup_on_exit(t_gen *gen)
 	ft_lstclear(gen->lexed_data, 0);
 	ft_lstclear(gen->cleaned_data, 1);
 	free_matrix(gen->av);
+	close(gen->fd_stdin);
 }
 
 int	handle_builtin(t_gen *gen, t_lexing *node)
@@ -75,6 +76,7 @@ void	handle_command_not_found(t_gen *gen, char *cmd_path,
 	gen->exit_status = 127;
 	free(cmd_path);
 	free_matrix(env);
+	close(gen->fd_stdin);
 }
 
 void	child_process_logic(t_gen *gen, t_lexing *node,
@@ -102,5 +104,6 @@ void	child_process_logic(t_gen *gen, t_lexing *node,
 	free_matrix(env);
 	cleanup_on_exit(gen);
 	free(cmd_path);
+	close(gen->fd_stdin);
 	exit(gen->exit_status);
 }

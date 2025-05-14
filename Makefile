@@ -37,6 +37,9 @@ SRCS		=	main.c \
 				exec_commands/execute.c \
 				exec_commands/execute_utils.c \
 				exec_commands/execute_utils2.c \
+				exec_commands/execute_utils3.c \
+				exec_commands/execute_utils4.c \
+				exec_commands/execute_utils5.c \
 				pipex/bonus/pipex_bonus.c \
 				pipex/bonus/pipex_utils_bonus.c \
 				pipex/bonus/get_path_bonus.c \
