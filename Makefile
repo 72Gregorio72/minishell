@@ -35,6 +35,7 @@ SRCS		=	main.c \
 				builtin/ft_cd.c \
 				builtin/ft_export.c \
 				builtin/ft_unset.c \
+				builtin/util_builtin.c \
 				exec_commands/execute.c \
 				pipex/bonus/pipex_bonus.c \
 				pipex/bonus/pipex_utils_bonus.c \

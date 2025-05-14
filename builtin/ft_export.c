@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 10:39:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:54:40 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	util(int i, const char *var, char ***env)
 	(*env)[i + 1] = NULL;
 }
 
-void	add_in_env(char ***env, const char *var)
+void	add_in_env(char ***env, const char *var, int append)
 {
 	int		i;
 	int		equal_pos;
@@ -55,15 +55,20 @@ void	add_in_env(char ***env, const char *var)
 		equal_pos = find_char_pos((*env)[i], "=", 0);
 		if (ft_strncmp((*env)[i], var, equal_pos) == 0)
 		{
-			free((*env)[i]);
-			(*env)[i] = ft_strdup(var);
+			if (append)
+				ft_join(env, i, var, equal_pos);
+			else
+			{
+				free((*env)[i]);
+				(*env)[i] = ft_strdup(var);
+			}
 			return ;
 		}
 	}
 	util(i, var, env);
 }
 
-void	add_in_export_env(char ***env, const char *var, int flag)
+void	add_in_export_env(char ***env, const char *var, int flag, int append)
 {
 	int		i;
 	int		e_pos;
@@ -78,9 +83,11 @@ void	add_in_export_env(char ***env, const char *var, int flag)
 			|| ft_strncmp((*env)[i], var, e_pos) == 0)
 		{
 			if (flag)
+				norm_add_exp_env(env, i, var, append);
+			else if (append)
 			{
-				free((*env)[i]);
-				(*env)[i] = ft_strdup(var);
+				ft_join(env, i, "=", -1);
+				ft_join(env, i, var, var_pos);
 			}
 			return ;
 		}
@@ -88,75 +95,10 @@ void	add_in_export_env(char ***env, const char *var, int flag)
 	util(i, var, env);
 }
 
-/*int	check_exists(char **env, char *var_name)
-{
-	int	i;
-	int	equal_pos;
-
-	i = 0;
-	while (env[i])
-	{
-		equal_pos = find_char_pos(env[i], "=", 0);
-		if (!ft_strncmp(env[i], var_name, equal_pos))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void	convert_plus_equal_to_equal(char *str)
-{
-	char	*pos;
-
-	pos = ft_strnstr(str, "+=", ft_strlen(str));
-	if (pos != NULL)
-		ft_memmove(pos, pos + 1, ft_strlen(pos));
-}
-
-void	append_to_envs(char ***env, char ***export_env, char *var)
-{
-	int		i;
-	int		equal_pos;
-	char	*var_pos;
-	char	*tmp;
-
-	i = 0;
-	var_pos = ft_strchr(var, '=');
-	var_pos++;
-	while ((*env)[i])
-	{
-		equal_pos = find_char_pos((*env)[i], "=", 0);
-		if (ft_strncmp((*env)[i], var, equal_pos) == 0)
-		{
-			tmp = ft_strdup((*env)[i]);
-			free((*env)[i]);
-			(*env)[i] = ft_strjoin(tmp, var_pos);
-			free(tmp);
-			return ;
-		}
-		i++;
-	}
-	i = 0;
-	while ((*export_env)[i])
-	{
-		equal_pos = find_char_pos((*export_env)[i], "=", 0);
-		if (equal_pos == -1)
-			equal_pos = ft_strlen((*export_env)[i]);
-		if (ft_strncmp((*export_env)[i], var, equal_pos) == 0)
-		{
-			tmp = ft_strdup((*export_env)[i]);
-			free((*export_env)[i]);
-			(*export_env)[i] = ft_strjoin(tmp, var_pos);
-			free(tmp);
-			return ;
-		}
-		i++;
-	}
-} */
-
 int	ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env)
 {
 	int	equal_pos;
+	int	append;
 
 	if (!var)
 		return (ft_env(*export_env, 1, node), 1);
@@ -170,19 +112,12 @@ int	ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env)
 		return (error_exit(gen, "", 1), 2);
 	}
 	equal_pos = find_char_pos((char *)var, "=", 0);
-	if (equal_pos == -1)
-		add_in_export_env(export_env, var, 0);
-	else
+	append = 0;
+	if (equal_pos != -1 && var[equal_pos - 1] && var[equal_pos - 1] == '+')
 	{
-		add_in_env(&gen->my_env, var);
-		add_in_export_env(export_env, var, 1);
+		convert_plus_equal_to_equal((char *)var);
+		append = 1;
 	}
+	do_export(gen, equal_pos, append, var);
 	return (1);
 }
-
-/* 	if (equal_pos != -1 && var[equal_pos - 1] && var[equal_pos - 1] == '+'
-		&& !check_exists(gen->export_env, (char *)var)
-		&& !check_exists(gen->my_env, (char *)var))
-		append(&gen->export_env, &gen->my_env, (char *)var);
-	else if (equal_pos != -1 && var[equal_pos - 1] && var[equal_pos - 1] == '+')
-		remove_plus((char *)var); */

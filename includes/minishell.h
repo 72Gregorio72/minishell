@@ -73,6 +73,10 @@ void		ft_unset(char ***envp, const char *var);
 void		ft_unset_export(char ***envp, const char *var);
 int			call_unset(char **command, t_gen *gen);
 int			call_export(t_gen *gen, t_lexing *node);
+int			find_equal(char *var, char **export_env);
+void		convert_plus_equal_to_equal(char *str);
+void		add_in_env(char ***env, const char *var, int append);
+void		add_in_export_env(char ***env, const char *var, int flag, int append);
 
 // parsing
 int			parsing(t_gen *gen);
@@ -125,6 +129,9 @@ int			util_infile(char *filename, t_gen *gen, t_lexing *node);
 int			util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag);
 void		util_exit(t_gen *gen);
 void		change_shlvl(char ***env);
+void		norm_add_exp_env(char ***env, int i, const char *var, int append);
+void		ft_join(char ***env, int i, const char *var, int pos);
+void		do_export(t_gen *gen, int equal_pos, int append, const char *var);
 
 // ctrl
 void		ctrl_c(int new_line);
