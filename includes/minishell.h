@@ -218,19 +218,3 @@ t_attack	create_attack(char *name, int damage, char *type);
 void		ft_pokemon(t_gen *gen);
 
 #endif
-
-/*
-Lexing: prendere la linea di input e salvare i vari elementi in una lista
-i cui nodi saranno le parole a cui viene assegnato un identificatore
-https://gist.github.com/VideoCarp/d7cec2195a7de370d850aead62fa09cd
-*/
-
-/*
-EXIT STATUS
-130 per ctrl-c
-131 per ctrl-\
-0 riuscito
-1 fallito 
-127 comando non trovato
-2 syntax error
-tenere quello dell'ultimo comando*/
