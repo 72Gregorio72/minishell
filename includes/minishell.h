@@ -14,9 +14,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define _DEFAULT_SOURCE
-# define _XOPEN_SOURCE 700
-
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
