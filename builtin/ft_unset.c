@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/09 11:31:26 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/13 15:46:10 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int	checks_unset_export(const char *str)
+int	checks_unset_export(const char *str, int export)
 {
 	int	i;
 
@@ -25,6 +25,12 @@ int	checks_unset_export(const char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 	{
+		if (export
+			&& str[i + 1] && str[i] == '+' && str[i + 1] == '=')
+		{
+			i++;
+			continue ;
+		}
 		if (str[i] != '_' && !ft_isalnum(str[i]))
 			return (0);
 		i++;
@@ -94,7 +100,7 @@ int	call_unset(char **command, t_gen *gen)
 	i = 1;
 	while (command[i])
 	{
-		if (!checks_unset_export(command[i]))
+		if (!checks_unset_export(command[i], 0))
 		{
 			ft_putstr_fd(RED"minishell: unset: ", 2);
 			ft_putstr_fd(YELLOW"\'", 2);
