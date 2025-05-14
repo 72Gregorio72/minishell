@@ -1,7 +1,6 @@
 NAME		= minishell
 
 SRCS		=	main.c \
-				ft_pokemon.c \
 				srcs/free.c \
 				srcs/util.c \
 				srcs/ctrl.c \
@@ -36,6 +35,8 @@ SRCS		=	main.c \
 				builtin/ft_export.c \
 				builtin/ft_unset.c \
 				exec_commands/execute.c \
+				exec_commands/execute_utils.c \
+				exec_commands/execute_utils2.c \
 				pipex/bonus/pipex_bonus.c \
 				pipex/bonus/pipex_utils_bonus.c \
 				pipex/bonus/get_path_bonus.c \
@@ -43,6 +44,8 @@ SRCS		=	main.c \
 				pipex/bonus/processes_utils_bonus.c \
 				pipex/bonus/read_bonus.c \
 				pipex/bonus/pipex_utils.c \
+				parsing/parsing_utils.c \
+				parsing/parsing_utils2.c \
 		
 OBJS		= $(SRCS:.c=.o)
 
@@ -81,16 +84,6 @@ fclean: clean
 	@$(RM) $(NAME)
 	@echo Cleaning $(NAME)...
 	@$(RM) $(NAME_BONUS)
-
-pokemon:
-	@if [ ! -d "pokemonData" ]; then \
-		echo "Cloning pokemonData repository..."; \
-		git clone https://github.com/72Gregorio72/pokemonData.git; \
-	else \
-		echo "Updating pokemonData repository..."; \
-		cd pokemonData && git pull; \
-	fi
-
 
 re: fclean all
 
