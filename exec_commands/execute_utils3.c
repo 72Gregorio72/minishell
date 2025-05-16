@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 14:23:42 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:43:55 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 		return ;
 	collect_piped_cmds(node->left, cmds, i);
 	collect_piped_cmds(node->right, cmds, i);
+	printf("node->data->value: %s\n", node->data->value);
 	if (node->data && node->data->piped
 		&& !ft_strncmp(node->data->type, "command", 8))
 		cmds[(*i)++] = node->data;

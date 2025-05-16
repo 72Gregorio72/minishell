@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:27:36 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 12:29:17 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:40:24 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int	is_valid_command_type(const char *type)
 	return (!ft_strncmp(type, "argument", 9)
 		|| !ft_strncmp(type, "option", 7)
 		|| !ft_strncmp(type, "command", 8)
-		|| !ft_strncmp(type, "output_append", 14)
-		|| !ft_strncmp(type, "redirect_input", 15)
-		|| !ft_strncmp(type, "redirect_output", 16)
+		// || !ft_strncmp(type, "output_append", 14)
+		// || !ft_strncmp(type, "redirect_input", 15)
+		// || !ft_strncmp(type, "redirect_output", 16)
 		|| !ft_strncmp(type, "outfile", 8)
 		|| !ft_strncmp(type, "infile", 7));
 }
