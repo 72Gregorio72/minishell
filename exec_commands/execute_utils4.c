@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils4.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:59:16 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 15:01:23 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:26:06 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_child_io(t_lexing *cmd, t_data *data,
+/* void	handle_child_io(t_lexing *cmd, t_data *data,
 			int pipe_fd[2])
 {
 	if (data->i > 0)
@@ -111,4 +111,4 @@ int	prepare_piped_execution(t_gen *gen, t_tree *subroot,
 	if (!check_and_execute_subtree(gen, subroot->right))
 		return (0);
 	return (1);
-}
+} */

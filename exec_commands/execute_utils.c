@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:39:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 11:10:22 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:26:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_builtin(char *command)
+/* int	is_builtin(char *command)
 {
 	if (ft_strncmp(command, "cd", ft_strlen("cd")) == 0
 		&& ft_strlen(command) == ft_strlen("cd"))
@@ -107,3 +107,4 @@ void	child_process_logic(t_gen *gen, t_lexing *node,
 	close(gen->fd_stdin);
 	exit(gen->exit_status);
 }
+ */

@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 11:43:55 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:26:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
+/* void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 {
 	if (!node)
 		return ;
 	collect_piped_cmds(node->left, cmds, i);
 	collect_piped_cmds(node->right, cmds, i);
-	printf("node->data->value: %s\n", node->data->value);
 	if (node->data && node->data->piped
 		&& !ft_strncmp(node->data->type, "command", 8))
 		cmds[(*i)++] = node->data;
@@ -92,4 +91,4 @@ int	check_and_execute_subtree(t_gen *gen, t_tree *subtree)
 			return (0);
 	}
 	return (1);
-}
+} */

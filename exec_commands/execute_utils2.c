@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:41:55 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 11:13:21 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:26:35 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	init_exec_data(t_gen *gen, t_lexing *node, char ***env, char **cmd_path)
+/* int	init_exec_data(t_gen *gen, t_lexing *node, char ***env, char **cmd_path)
 {
 	*env = copy_matrix(gen->my_env);
 	if (!node || !node->value)
@@ -90,4 +90,4 @@ int	find_cmd_num(t_lexing *node)
 		tmp = tmp->next;
 	}
 	return (cmd_num);
-}
+} */

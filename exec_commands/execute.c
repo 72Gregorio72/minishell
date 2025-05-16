@@ -3,25 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/16 11:22:57 by vcastald         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/14 11:56:24 by gpicchio         ###   ########.fr       */
->>>>>>> parent of 716867c... bhoooooooooooooo
+/*   Updated: 2025/05/16 15:39:42 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-<<<<<<< HEAD
-int	prepare_command_execution(t_gen *gen, t_lexing *node,
-	char **cmd_path, char ***env)
-{
-	int	ok;
-=======
 int	is_builtin(char *command)
 {
 	if (ft_strncmp(command, "cd", ft_strlen("cd")) == 0
@@ -192,10 +182,41 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
 	if (!node)
 		return ;
 	collect_piped_cmds(node->left, cmds, i);
-	collect_piped_cmds(node->right, cmds, i);
-	if (node->data && node->data->piped && !ft_strncmp(node->data->type, "command", 8))
+	if (node->data && ft_strncmp(node->data->type, "command", 7) == 0)
 		cmds[(*i)++] = node->data;
+	collect_piped_cmds(node->right, cmds, i);
 }
+
+int	check_here_doc_command(char **command)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (command[i])
+	{
+		if (!ft_strncmp(command[i], "<<", 2))
+		{
+			if (!command[i + 1])
+				return (-1);
+
+			free(command[i]);
+			free(command[i + 1]);
+
+			j = i;
+			while (command[j + 2])
+			{
+				command[j] = command[j + 2];
+				j++;
+			}
+			command[j] = NULL;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
@@ -210,8 +231,17 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 	here_doc_num = 0;
 	while (current)
 	{
-		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
+		print_list(tmp);
+		if (current->type && !ft_strncmp(current->type, "here_doc", 9) && tmp)
 		{
+			while (tmp)
+			{
+				if (tmp->command && check_here_doc_command(tmp->command))
+				{
+					break ;
+				}
+				tmp = tmp->next;
+			}
 			if (current->infile == -1)
 			{
 				ft_putstr_fd("Error opening here_doc file\n", 2);
@@ -224,7 +254,8 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 			{
 				handle_here_doc(((t_lexing *)current->next)->value,
 					tmp, &here_doc_num, gen);
-				if (current->next->next && ft_strncmp(current->next->next->type, "here_doc", 9))
+				if (current->next->next
+					&& ft_strncmp(current->next->next->type, "here_doc", 9))
 				{
 					tmp = tmp->next;
 					while (tmp && ft_strncmp(tmp->type, "command", 8))
@@ -260,24 +291,92 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	int 		flag;
 	t_lexing	*last_cmd;
 	pid_t		last_pid;
->>>>>>> parent of 716867c... bhoooooooooooooo
 
-	if (node && !node->piped)
+	collect_piped_cmds(subroot, cmds, &num_cmds);
+	for (i = 0; i < num_cmds; i++)
 	{
-		if (!find_red(node, gen))
-			return (0);
+		ft_putstr_fd("Command: ", 1);
+		ft_putstr_fd(cmds[i]->value, 1);
+		ft_putstr_fd("\n", 1);
 	}
-	if (node->outfile != STDOUT_FILENO)
+	last_cmd = cmds[num_cmds - 1];
+	for (i = 0; i < num_cmds; i++)
 	{
-		dup2(node->outfile, STDOUT_FILENO);
-		close(node->outfile);
+		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)
+		{
+			ft_putstr_fd("pipe error\n", 2);
+			gen->exit_status = 1;
+			return ;
+		}
+		pid = fork();
+		if (!ft_strncmp(cmds[i]->value, last_cmd->value, ft_strlen(last_cmd->value)))
+			last_pid = pid;
+		if (pid == -1)
+		{
+			ft_putstr_fd("fork error\n", 2);
+			gen->exit_status = 1;
+			return ;
+		}
+		if (pid == 0)
+		{
+			flag = 0;
+			if (find_red(cmds[i], gen) != 0)
+			{
+				if (i > 0)
+				{
+					dup2(prev_pipe, STDIN_FILENO);
+					close(prev_pipe);
+				}
+				else if (cmds[i]->infile != STDIN_FILENO)
+				{
+					dup2(cmds[i]->infile, STDIN_FILENO);
+					close(cmds[i]->infile);
+				}
+				if (i < num_cmds - 1)
+				{
+					close(pipe_fd[0]);
+					dup2(pipe_fd[1], STDOUT_FILENO);
+					close(pipe_fd[1]);
+				}
+				exec_single_command(gen, cmds[i]);
+				flag = 1;
+			}
+			if (!flag)
+			{
+				ft_treeclear(gen->root);
+				free_matrix(gen->my_env);
+				free_matrix(gen->export_env);
+				ft_lstclear(gen->lexed_data, 0);
+				ft_lstclear(gen->cleaned_data, 1);
+				free_matrix(gen->av);
+			}
+			exit(gen->exit_status);
+		}
+		if (i > 0)
+			close(prev_pipe);
+		if (i < num_cmds - 1)
+		{
+			close(pipe_fd[1]);
+			prev_pipe = pipe_fd[0];
+		}
 	}
-<<<<<<< HEAD
-	if (handle_builtin(gen, node))
-		return (0);
-	ok = init_exec_data(gen, node, env, cmd_path);
-	return (ok);
-=======
+	for (i = 0; i < num_cmds; i++)
+	{
+		int status;
+		pid_t pid = wait(&status);
+		if (pid == last_pid && WIFEXITED(status))
+			gen->exit_status = WEXITSTATUS(status);
+	}
+}
+
+void	exec_tree(t_gen *gen, t_tree *root)
+{
+	if (!root)
+		return ;
+	if (ft_strncmp(root->data->type, "pipe", 4) == 0)
+	{
+		exec_piped_commands(gen, root);
+	}
 	else if (ft_strncmp(root->data->type, "command", 8) == 0)
 	{
 		exec_single_command(gen, root->data);
@@ -297,43 +396,23 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 }
 //((echo 1 && echo 2) && (echo 3 || echo 4)) || (echo 5 && echo 6)
 
-/* if (root->right && (!ft_strncmp(root->right->data->type, "and_operator", 13)
-|| !ft_strncmp(root->right->data->type, "or_operator", 12)))
-exec_tree(gen, root->right);
-if (root->left && (!ft_strncmp(root->left->data->type, "and_operator", 13)
-|| !ft_strncmp(root->left->data->type, "or_operator", 12)))
-exec_tree(gen, root->left);
-echo 1 | echo 2 | echo 3 | ( echo 4 && echo 5)
-*/
-
-void	mark_all_commands_piped(t_tree *node)
-{
-	if (!node)
-		return ;
-	if (!ft_strncmp(node->data->type, "command", 7))
-		node->data->piped = 1;
-	mark_all_commands_piped(node->left);
-	mark_all_commands_piped(node->right);
-}
-
 void	flag_piped(t_tree *node)
 {
+	t_tree	*tmp;
+
 	if (!node)
 		return ;
-
-	if (!ft_strncmp(node->data->type, "pipe", 4))
+	tmp = node;
+	if (ft_strncmp(tmp->data->type, "pipe", 4) == 0)
 	{
-		// Marcare il figlio sinistro solo se è un comando diretto
-		if (node->left && !ft_strncmp(node->left->data->type, "command", 7))
-			node->left->data->piped = 1;
-
-		// Marcare TUTTI i comandi nel sottoalbero destro
-		mark_all_commands_piped(node->right);
+		tmp->data->piped = 1;
+		if (tmp->right)
+			tmp->right->data->piped = 1;
+		if (tmp->left)
+			tmp->left->data->piped = 1;
 	}
-
 	flag_piped(node->left);
 	flag_piped(node->right);
->>>>>>> parent of 716867c... bhoooooooooooooo
 }
 
 void	init_piped(t_tree *node)

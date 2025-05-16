@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils5.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:01:45 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 15:02:21 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:25:59 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/* #include "minishell.h"
 
 int	execute_piped_loop(t_gen *gen, t_lexing **cmds,
 	int num_cmds, pid_t *last_pid)
@@ -99,4 +99,4 @@ void	flag_piped(t_tree *node)
 	}
 	flag_piped(node->left);
 	flag_piped(node->right);
-}
+} */

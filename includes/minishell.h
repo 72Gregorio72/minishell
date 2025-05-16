@@ -93,6 +93,16 @@ void		find_env_var_and_wild(t_lexing *lexed);
 void		find_args(t_lexing *lexed);
 int			layerize(t_gen *gen, t_lexing *lexed);
 int			loop_expand(t_gen *gen);
+int			check_prev(t_lexing *node, int *i);
+int			is_valid_command_type(const char *type);
+int			count_command_elements(t_lexing *node, int *found);
+void		fill_command_prefix(char **command, t_lexing *node, int *i);
+void		fill_command_args(char **command, t_lexing *tmp, int *i);
+char		**get_command(t_lexing *node);
+char		**ft_strdup_matrix(char **matrix);
+int			check_lexed(t_lexing *tmp);
+t_lexing	*filter_lexed_data(t_lexing *lexed_data);
+void		process_command_nodes(t_lexing *head);
 
 // quotes
 void		check_quotes(int *i, t_lexing **lexed, char *word);
@@ -193,7 +203,6 @@ void		exec_command(t_gen *gen);
 int			find_cmd_num(t_lexing *node);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			exec_builtin(t_gen *gen, t_lexing *node);
-<<<<<<< HEAD
 int			is_builtin(char *command);
 void		cleanup_on_exit(t_gen *gen);
 int			handle_builtin(t_gen *gen, t_lexing *node);
@@ -230,40 +239,39 @@ void		mark_all_commands_piped(t_tree *node);
 void		flag_piped(t_tree *node);
 int			prepare_command_execution(t_gen *gen, t_lexing *node,
 				char **cmd_path, char ***env);
-=======
->>>>>>> parent of 716867c... bhoooooooooooooo
 
 // qui doc
 void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);
 
-// pokemon :)
-typedef struct s_attack
-{
-	char	*name;
-	int		damage;
-	char	*type;
-	int		id;
-}	t_attack;
+// // pokemon :)
+// typedef struct s_attack
+// {
+// 	char	*name;
+// 	int		damage;
+// 	char	*type;
+// 	int		id;
+// }	t_attack;
 
-typedef struct s_pokemon
-{
-	char		*name;
-	int			id;
-	int			health;
-	int			max_health;
-	t_attack	attack1;
-	t_attack	attack2;
-	t_attack	attack3;
-	t_attack	attack4;
-	int			defense;
-	int			attack;
-	int			speed;
-	char		*type;
-	char		*ascii_path;
-}	t_pokemon;
+// typedef struct s_pokemon
+// {
+// 	char		*name;
+// 	int			id;
+// 	int			health;
+// 	int			max_health;
+// 	t_attack	attack1;
+// 	t_attack	attack2;
+// 	t_attack	attack3;
+// 	t_attack	attack4;
+// 	int			defense;
+// 	int			attack;
+// 	int			speed;
+// 	char		*type;
+// 	char		*ascii_path;
+// }	t_pokemon;
 
-t_pokemon	*ft_create_pokemon(char *name, int health, int defense, int speed);
-t_attack	create_attack(char *name, int damage, char *type);
-void		ft_pokemon(t_gen *gen);
+// t_pokemon	*ft_create_pokemon(char *name, int health,
+//int defense, int speed);
+// t_attack	create_attack(char *name, int damage, char *type);
+// void		ft_pokemon(t_gen *gen);
 
 #endif
