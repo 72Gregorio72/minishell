@@ -6,10 +6,9 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 15:25:42 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:07:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -207,37 +206,6 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 	collect_piped_cmds(node->right, cmds, i, gen);
 }
 
-int	check_here_doc_command(char **command)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (command[i])
-	{
-		if (!ft_strncmp(command[i], "<<", 2))
-		{
-			if (!command[i + 1])
-				return (-1);
-
-			free(command[i]);
-			free(command[i + 1]);
-
-			j = i;
-			while (command[j + 2])
-			{
-				command[j] = command[j + 2];
-				j++;
-			}
-			command[j] = NULL;
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
 	t_lexing	*current;
@@ -251,16 +219,8 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 	here_doc_num = 0;
 	while (current)
 	{
-		if (current->type && !ft_strncmp(current->type, "here_doc", 9) && tmp)
+		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
 		{
-			while (tmp)
-			{
-				if (tmp->command && check_here_doc_command(tmp->command))
-				{
-					break ;
-				}
-				tmp = tmp->next;
-			}
 			if (current->infile == -1)
 			{
 				ft_putstr_fd("Error opening here_doc file\n", 2);
@@ -273,14 +233,9 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 			{
 				handle_here_doc(((t_lexing *)current->next)->value,
 					tmp, &here_doc_num, gen);
-				//print_list(tmp);
-				if (current->next->next
-					&& ft_strncmp(current->next->next->type, "here_doc", 9))
-				{
+				tmp = tmp->next;
+				while (tmp && ft_strncmp(tmp->type, "command", 8))
 					tmp = tmp->next;
-					while (tmp && ft_strncmp(tmp->type, "command", 8))
-						tmp = tmp->next;
-				}
 			}
 			else if (current->next
 				&& !ft_strncmp(((t_lexing *)current->next)->type,
