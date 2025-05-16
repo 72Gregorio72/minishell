@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:25:19 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:07:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,19 +172,38 @@ int	find_cmd_num(t_lexing *node)
 	{
 		if (!ft_strncmp(tmp->type, "command", 7))
 			cmd_num++;
+		if (tmp->next && tmp->next->next
+			&& !ft_strncmp(tmp->type, "pipe", 4)
+			&& check_redirect(tmp->next)
+			&& (!ft_strncmp(tmp->next->next->type, "outfile", 8)
+				|| !ft_strncmp(tmp->next->next->type, "infile", 7))
+			&& ((tmp->next->next->next
+					&& !ft_strncmp(tmp->next->next->next->type, "pipe", 4))
+				|| !tmp->next->next->next))
+			cmd_num++;
 		tmp = tmp->next;
 	}
 	return (cmd_num);
 }
 
-void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
+void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 {
+	int	val;
+
 	if (!node)
 		return ;
-	collect_piped_cmds(node->left, cmds, i);
+	collect_piped_cmds(node->left, cmds, i, gen);
+	if (node->data->command
+		&& (!ft_strncmp(node->data->command[0], ">", 1)
+			|| !ft_strncmp(node->data->command[0], "<", 1))
+		&& node->data->command[1] && !node->data->command[2])
+	{
+		val = find_red(node->data, gen);
+		return ;
+	}
 	if (node->data && ft_strncmp(node->data->type, "command", 7) == 0)
 		cmds[(*i)++] = node->data;
-	collect_piped_cmds(node->right, cmds, i);
+	collect_piped_cmds(node->right, cmds, i, gen);
 }
 
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
@@ -248,7 +267,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	t_lexing	*last_cmd;
 	pid_t		last_pid;
 
-	collect_piped_cmds(subroot, cmds, &num_cmds);
+	collect_piped_cmds(subroot, cmds, &num_cmds, gen);
 	last_cmd = cmds[num_cmds - 1];
 	for (i = 0; i < num_cmds; i++)
 	{

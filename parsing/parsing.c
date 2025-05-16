@@ -12,6 +12,51 @@
 
 #include "minishell.h"
 
+t_lexing	*filter_lexed_data(t_lexing *lexed_data)
+{
+	t_lexing	*tmp;
+	t_lexing	*head;
+	t_lexing	*new_node;
+
+	tmp = lexed_data;
+	head = NULL;
+	while (tmp)
+	{
+		if (check_lexed(tmp))
+		{
+			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
+					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
+			new_node->outfile = tmp->outfile;
+			new_node->infile = tmp->infile;
+			new_node->layer = tmp->layer;
+			new_node->expanded = tmp->expanded;
+			if (!new_node)
+				return (NULL);
+			ft_lstadd_back(&head, new_node);
+		}
+		tmp = tmp->next;
+	}
+	return (head);
+}
+
+void	process_command_nodes(t_lexing *head)
+{
+	t_lexing	*new_node;
+	int			i;
+
+	new_node = head;
+	while (new_node)
+	{
+		if (new_node->command)
+		{
+			i = 0;
+			while (new_node->command[i])
+				i++;
+		}
+		new_node = new_node->next;
+	}
+}
+
 t_lexing	*clean_data(t_gen *gen)
 {
 	t_lexing	*head;

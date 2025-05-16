@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 09:21:57 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:14:14 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,26 +82,26 @@ void	find_env_var_and_wild(t_lexing *lexed)
 int	find_files(t_lexing *lexed, t_gen *gen)
 {
 	t_lexing	*tmp;
-	t_lexing	*succ;
 
 	tmp = lexed;
-	succ = lexed;
 	while (tmp)
 	{
-		if (tmp->next)
-			succ = tmp->next;
 		if ((!ft_strncmp("output_append", tmp->type, 14)
 				|| !ft_strncmp("redirect_output", tmp->type, 16)))
 		{
-			if (!ft_strncmp("command", succ->type, 8))
-				succ->type = ft_strdup("outfile");
-			else if (ft_strncmp("command", succ->type, 8) != 0 || !tmp->next)
+			if (tmp->next && !ft_strncmp("command", tmp->next->type, 8))
+				tmp->next->type = ft_strdup("outfile");
+			else if (!tmp->next
+				|| ft_strncmp("command", tmp->next->type, 8) != 0)
 				return (error_exit(gen, "minishell: syntax error", 2), 0);
 		}
 		else if (!ft_strncmp("redirect_input", tmp->type, 15))
 		{
-			if (!ft_strncmp("command", succ->type, 9))
-				succ->type = ft_strdup("infile");
+			if (tmp->next && !ft_strncmp("command", tmp->next->type, 9))
+				tmp->next->type = ft_strdup("infile");
+			else if (!tmp->next
+				|| ft_strncmp("command", tmp->next->type, 8) != 0)
+				return (error_exit(gen, "minishell: syntax error", 2), 0);
 		}
 		tmp = tmp->next;
 	}

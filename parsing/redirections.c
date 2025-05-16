@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/14 15:35:51 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:33:40 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,8 @@ int	find_red(t_lexing *node, t_gen *gen)
 	}
 	if (val != -1)
 		remove_redirections(node);
+	i = 0;
+	if (!calc_mat_len(node, &i))
+		return (0);
 	return (1);
 }

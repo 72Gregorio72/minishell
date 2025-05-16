@@ -217,7 +217,8 @@ void		wait_and_cleanup(t_gen *gen, t_lexing *node,
 				char *cmd_path, char **env);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			find_cmd_num(t_lexing *node);
-void		collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i);
+void		collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i,
+				t_gen *gen);
 void		update_tmp_pointer(t_lexing **tmp, t_lexing *current);
 void		process_here_doc_node(t_lexing *current, t_lexing **tmp,
 				int *here_doc_num, t_gen *gen);
