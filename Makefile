@@ -25,6 +25,7 @@ SRCS		=	main.c \
 				parsing/wildcards.c \
 				parsing/utils_reds.c \
 				parsing/expand.c \
+				parsing/realloc_wilds.c \
 				binary_tree/tree_functions.c \
 				binary_tree/tree.c \
 				builtin/ft_echo.c \
@@ -34,6 +35,7 @@ SRCS		=	main.c \
 				builtin/ft_cd.c \
 				builtin/ft_export.c \
 				builtin/ft_unset.c \
+				builtin/util_builtin.c \
 				exec_commands/execute.c \
 				exec_commands/execute_utils.c \
 				exec_commands/execute_utils2.c \

@@ -34,7 +34,7 @@ int	parsing(t_gen *gen)
 		|| !check_wildcards(gen, gen->lexed_data)
 		|| !check_operators(gen, gen->lexed_data))
 		return (0);
-	if (!loop_expand(gen))
+	if (!loop_expand(gen) || !loop_expand_wilds(gen))
 		return (0);
 	gen->cleaned_data = clean_data(gen);
 	here_doccer(gen->lexed_data, gen->cleaned_data, gen);

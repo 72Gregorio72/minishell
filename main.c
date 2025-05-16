@@ -81,14 +81,19 @@ int	main(int ac, char **av, char **env)
 
 	(void)av;
 	gen.my_env = copy_matrix(env);
+	if (!gen.my_env)
+		exit(1);
 	gen.export_env = copy_matrix(env);
+	if (!gen.export_env)
+	{
+		free_matrix(gen.my_env);
+		exit(1);
+	}
 	change_shlvl(&gen.my_env);
 	change_shlvl(&gen.export_env);
 	gen.cleaned_data = NULL;
 	sort_export(&gen);
 	gen.exit_status = 0;
-	if (!gen.my_env)
-		exit(1);
 	sa.sa_sigaction = handler;
 	sa.sa_flags = SA_RESTART | SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);

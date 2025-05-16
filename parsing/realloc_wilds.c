@@ -1,59 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   realloc_wilds.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/30 12:41:35 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 09:18:07 by vcastald         ###   ########.fr       */
+/*   Created: 2025/05/16 09:16:39 by vcastald          #+#    #+#             */
+/*   Updated: 2025/05/16 11:25:05 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_lexing	*check_continue(t_lexing *lexed, int flag)
+static void	util_args(t_lexing *tmp)
 {
-	t_lexing	*tmp;
-
-	tmp = lexed;
-	if (flag)
+	if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
+		&& !ft_strncmp(tmp->next->type, "command", 8))
+		tmp->next->type = ft_strdup("here_doc_delimiter");
+	else if (!ft_strncmp(tmp->type, "command", 8))
 	{
-		while (tmp)
-		{
-			if (tmp->env_variable && !ft_strncmp(tmp->type, "command", 8)
-				&& tmp->expanded)
-				return (tmp);
-			tmp = tmp->next;
-		}
+		if (tmp->value[0] == '-')
+			tmp->type = ft_strdup("option");
+		else
+			tmp->type = ft_strdup("argument");
 	}
-	else
-	{
-		while (tmp)
-		{
-			if (tmp->wildcard)
-				return (tmp);
-			tmp = tmp->next;
-		}
-	}
-	return (NULL);
 }
 
-t_lexing	*find_prev_node(t_lexing *end, t_lexing *start)
+static void	new_find_args(t_lexing *lst)
 {
 	t_lexing	*tmp;
+	t_lexing	*succ;
 
-	tmp = start;
+	tmp = lst;
+	succ = NULL;
 	while (tmp)
 	{
-		if (tmp->next == end)
-			return (tmp);
-		tmp = tmp->next;
+		if (tmp->next)
+			succ = tmp->next;
+		if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
+			&& !ft_strncmp(succ->type, "command", 8))
+			succ->type = ft_strdup("here_doc_delimiter");
+		else if (!ft_strncmp(tmp->type, "command", 8))
+		{
+			while (tmp && !check_not_command(tmp))
+			{
+				util_args(tmp);
+				tmp = tmp->next;
+			}
+		}
+		if (tmp)
+			tmp = tmp->next;
 	}
-	return (NULL);
 }
 
-t_lexing	*prechecks(t_lexing *to_expand, t_gen *gen)
+static t_lexing	*prechecks_wilds(t_lexing *to_expand, t_gen *gen)
 {
 	t_lexing	*tmp_list;
 	char		**tmp_mat;
@@ -68,7 +68,7 @@ t_lexing	*prechecks(t_lexing *to_expand, t_gen *gen)
 	if (check_files(gen, tmp_list)
 		&& find_files(tmp_list, gen))
 	{
-		find_args(tmp_list);
+		new_find_args(tmp_list);
 		if (!layerize(gen, tmp_list))
 			return (free_matrix(tmp_mat), ft_lstclear(tmp_list, 0), NULL);
 	}
@@ -80,31 +80,17 @@ t_lexing	*prechecks(t_lexing *to_expand, t_gen *gen)
 	return (free_matrix(tmp_mat), tmp_list);
 }
 
-void	position(t_lexing *prev, t_lexing *tmp_list, t_gen *gen)
-{
-	if (prev)
-	{
-		prev->next = tmp_list;
-		tmp_list->prev = prev;
-	}
-	else
-	{
-		gen->lexed_data = tmp_list;
-		tmp_list->prev = NULL;
-	}
-}
-
-int	loop_expand(t_gen *gen)
+int	loop_expand_wilds(t_gen *gen)
 {
 	t_lexing	*to_expand;
 	t_lexing	*tmp_list;
 	t_lexing	*prev;
 	t_lexing	*last;
 
-	to_expand = check_continue(gen->lexed_data, 1);
+	to_expand = check_continue(gen->lexed_data, 0);
 	while (to_expand != NULL)
 	{
-		tmp_list = prechecks(to_expand, gen);
+		tmp_list = prechecks_wilds(to_expand, gen);
 		if (!tmp_list)
 			return (0);
 		prev = find_prev_node(to_expand, gen->lexed_data);
@@ -112,7 +98,7 @@ int	loop_expand(t_gen *gen)
 		last->next = to_expand->next;
 		position(prev, tmp_list, gen);
 		ft_lstdelone(to_expand);
-		to_expand = check_continue(gen->lexed_data, 1);
+		to_expand = check_continue(gen->lexed_data, 0);
 	}
 	return (1);
 }
