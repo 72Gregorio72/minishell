@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:18:34 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:43:34 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ char	**get_command(t_lexing *node)
 			|| !ft_strncmp(tmp->type, "redirect_input", 15)
 			|| !ft_strncmp(tmp->type, "redirect_output", 16)
 			|| !ft_strncmp(tmp->type, "outfile", 8)
-			|| !ft_strncmp(tmp->type, "infile", 7))
+			|| !ft_strncmp(tmp->type, "infile", 7)
+			|| !ft_strncmp(tmp->type, "here_doc_delimiter", 19)
+			|| !ft_strncmp(tmp->type, "here_doc", 9))
 			i++;
 		tmp = tmp->next;
 	}
@@ -84,7 +86,9 @@ char	**get_command(t_lexing *node)
 			|| !ft_strncmp(tmp->type, "redirect_input", 15)
 			|| !ft_strncmp(tmp->type, "redirect_output", 16)
 			|| !ft_strncmp(tmp->type, "outfile", 8)
-			|| !ft_strncmp(tmp->type, "infile", 7))
+			|| !ft_strncmp(tmp->type, "infile", 7)
+			|| !ft_strncmp(tmp->type, "here_doc_delimiter", 19)
+			|| !ft_strncmp(tmp->type, "here_doc", 9))
 		{
 			command[i] = ft_strdup(tmp->value);
 			i++;
