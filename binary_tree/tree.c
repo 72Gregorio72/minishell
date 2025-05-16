@@ -45,7 +45,7 @@ void	print_binary_tree(t_tree *node, int depth)
 		printf("🌲");
 		while (node->data->command[i])
 		{
-			printf(" %s", node->data->command[i]);
+			printf(" %s   %d", node->data->command[i], node->data->piped);
 			i++;
 		}
 		printf("\n");
