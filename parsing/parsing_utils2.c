@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 11:39:28 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:57:03 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	check_lexed(t_lexing *tmp)
 		&& ft_strncmp(tmp->type, "option", 7)
 		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
 		&& ft_strncmp(tmp->type, "close_parenthesis", 18)
-		//&& !check_redirect(tmp)
+		&& !check_redirect(tmp)
 		&& ft_strncmp(tmp->type, "infile", 7)
 		&& ft_strncmp(tmp->type, "outfile", 8)
 		&& ft_strncmp(tmp->type, "here_doc_delimiter", 19))
@@ -83,9 +83,6 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
-			char **command = get_command(tmp);
-			for (int i = 0; command && command[i]; i++)
-				printf("Command[%d]: %s\n", i, command[i]);
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
 			new_node->layer = tmp->layer;
