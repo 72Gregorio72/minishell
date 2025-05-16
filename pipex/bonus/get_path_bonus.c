@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:02:30 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/03/25 13:58:13 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:09:19 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*find_path_variable(char **envp)
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i] + 5);
+			return (ft_strdup(envp[i] + 5));
 		i++;
 	}
 	return (NULL);
@@ -54,6 +54,8 @@ char	**get_paths(char **envp)
 	path = find_path_variable(envp);
 	if (!path)
 		return (NULL);
+	if (!envp)
+		return (NULL);
 	return (split_paths(path));
 }
 
@@ -71,12 +73,14 @@ char	*search_paths(char *cmd, char **paths)
 		free(temp);
 		if (access(full_path, X_OK) == 0)
 		{
+			free(paths[0]);
 			free(paths);
 			return (full_path);
 		}
 		free(full_path);
 		i++;
 	}
+	free(paths[0]);
 	free(paths);
 	return (NULL);
 }

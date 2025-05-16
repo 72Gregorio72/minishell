@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:41:55 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/14 12:42:12 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:13:21 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,8 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	int		pid;
 	char	*cmd_path;
 	char	**env;
-	int		ok;
 
-	if (node && !node->piped)
-	{
-		if (!find_red(node, gen))
-			return ;
-	}
-	if (handle_builtin(gen, node))
-		return ;
-	ok = init_exec_data(gen, node, &env, &cmd_path);
-	if (!ok)
+	if (!prepare_command_execution(gen, node, &cmd_path, &env))
 		return ;
 	pid = safe_fork(gen);
 	if (pid == -1)

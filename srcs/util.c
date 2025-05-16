@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/09 14:03:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:21:47 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	print_list(t_lexing *lst)
 	while (tmp)
 	{
 		printf("value: %s\n", tmp->value);
-		printf("type: %s\n", tmp->type);
+		printf("outfile: %d\n", tmp->outfile);
 		printf("--------------------\n");
 		tmp = tmp->next;
 	}

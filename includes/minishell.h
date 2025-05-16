@@ -224,6 +224,8 @@ void		exec_piped_commands(t_gen *gen, t_tree *subroot);
 void		exec_tree(t_gen *gen, t_tree *root);
 void		mark_all_commands_piped(t_tree *node);
 void		flag_piped(t_tree *node);
+int			prepare_command_execution(t_gen *gen, t_lexing *node,
+				char **cmd_path, char ***env);
 
 // qui doc
 void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);
