@@ -115,6 +115,8 @@ int			expand_wildcard(t_lexing **node, t_gen *gen);
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
 t_lexing	*find_next_node(t_lexing *start, char *to_find);
 void		sort_value(t_lexing **node, t_gen *gen);
+void		position(t_lexing *prev, t_lexing *tmp_list, t_gen *gen);
+int			loop_expand_wilds(t_gen *gen);
 
 // utils
 void		free_matrix(char **av);
@@ -133,6 +135,7 @@ void		change_shlvl(char ***env);
 void		norm_add_exp_env(char ***env, int i, const char *var, int append);
 void		ft_join(char ***env, int i, const char *var, int pos);
 void		do_export(t_gen *gen, int equal_pos, int append, const char *var);
+t_lexing	*find_prev_node(t_lexing *end, t_lexing *start);
 
 // ctrl
 void		ctrl_c(int new_line);
@@ -174,6 +177,7 @@ int			check_end(t_lexing *tmp);
 int			check_after(t_lexing *node);
 int			check_reds_in_parenth(t_lexing *node);
 int			check_pipes_in_parenth(t_lexing *node);
+t_lexing	*check_continue(t_lexing *lexed, int flag);
 
 // exec
 void		exec_command(t_gen *gen);

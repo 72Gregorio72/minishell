@@ -182,7 +182,7 @@ int	parsing(t_gen *gen)
 		|| !check_wildcards(gen, gen->lexed_data)
 		|| !check_operators(gen, gen->lexed_data))
 		return (0);
-	if (!loop_expand(gen))
+	if (!loop_expand(gen) || !loop_expand_wilds(gen))
 		return (0);
 	if (!ft_strncmp(gen->lexed_data->value, "poke", 4))
 		ft_pokemon(gen);

@@ -6,13 +6,13 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/13 09:56:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/16 09:21:57 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	util_args(t_lexing *tmp)
+static void	util_args(t_lexing *tmp)
 {
 	if (!ft_strncmp(tmp->type, "here_doc", 9) && tmp->next
 		&& !ft_strncmp(tmp->next->type, "command", 8))
