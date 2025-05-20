@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 14:40:36 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:29:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,8 @@ void	print_list(t_lexing *lst)
 	tmp = lst;
 	while (tmp)
 	{
-/* 		printf("value: %s\n", tmp->value);
-		printf("outfile: %d\n", tmp->outfile); */
-		for (int i = 0; tmp->command[i]; i++)
-			printf("command: %s\n", tmp->command[i]);
+		printf("value: %s\n", tmp->value);
+		printf("outfile: %d\n", tmp->outfile);
 		printf("--------------------\n");
 		tmp = tmp->next;
 	}

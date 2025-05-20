@@ -126,8 +126,10 @@ int			expand_wildcard(t_lexing **node, t_gen *gen);
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
 t_lexing	*find_next_node(t_lexing *start, char *to_find);
 void		sort_value(t_lexing **node, t_gen *gen);
-void		position(t_lexing *prev, t_lexing *tmp_list, t_gen *gen);
+void		position(t_lexing *prev, t_lexing *tmp_list,
+				t_gen *gen, t_lexing *to_expand);
 int			loop_expand_wilds(t_gen *gen);
+void		util_expand(t_lexing **to_free_head, t_lexing *to_expand);
 
 // utils
 void		free_matrix(char **av);

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:41:35 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 09:18:07 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:29:18 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,17 @@ t_lexing	*prechecks(t_lexing *to_expand, t_gen *gen)
 	return (free_matrix(tmp_mat), tmp_list);
 }
 
-void	position(t_lexing *prev, t_lexing *tmp_list, t_gen *gen)
+void	util_expand(t_lexing **to_free_head, t_lexing *to_expand)
 {
-	if (prev)
-	{
-		prev->next = tmp_list;
-		tmp_list->prev = prev;
-	}
+	t_lexing	*to_free_next;
+
+	if (!(*to_free_head))
+		*to_free_head = to_expand;
 	else
 	{
-		gen->lexed_data = tmp_list;
-		tmp_list->prev = NULL;
+		to_free_next = ft_lstlast(*to_free_head);
+		to_free_next->next = to_expand;
+		to_expand->prev = to_free_next;
 	}
 }
 
@@ -100,19 +100,24 @@ int	loop_expand(t_gen *gen)
 	t_lexing	*tmp_list;
 	t_lexing	*prev;
 	t_lexing	*last;
+	t_lexing	*to_free_head;
 
+	to_free_head = NULL;
 	to_expand = check_continue(gen->lexed_data, 1);
 	while (to_expand != NULL)
 	{
 		tmp_list = prechecks(to_expand, gen);
 		if (!tmp_list)
-			return (0);
+			return (ft_lstclear(to_free_head, 0), 0);
 		prev = find_prev_node(to_expand, gen->lexed_data);
 		last = ft_lstlast(tmp_list);
 		last->next = to_expand->next;
-		position(prev, tmp_list, gen);
-		ft_lstdelone(to_expand);
+		if (to_expand->next)
+			to_expand->next->prev = last;
+		position(prev, tmp_list, gen, to_expand);
+		util_expand(&to_free_head, to_expand);
 		to_expand = check_continue(gen->lexed_data, 1);
 	}
+	ft_lstclear(to_free_head, 0);
 	return (1);
 }
