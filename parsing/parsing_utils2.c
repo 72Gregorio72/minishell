@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 15:55:18 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:33:14 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	stop_check(t_lexing *tmp)
 
 int	check_prev_here_doc(t_lexing *tmp, int *i)
 {
-	while (tmp && stop_check(tmp))
+	while (tmp && !stop_check(tmp))
 	{
 		if (!ft_strncmp(tmp->type, "here_doc", 9))
 		{
@@ -87,8 +87,8 @@ char	**get_command(t_lexing *node)
 			|| !ft_strncmp(tmp->type, "redirect_output", 16)
 			|| !ft_strncmp(tmp->type, "outfile", 8)
 			|| !ft_strncmp(tmp->type, "infile", 7)
-			|| !ft_strncmp(tmp->type, "here_doc_delimiter", 19)
-			|| !ft_strncmp(tmp->type, "here_doc", 9))
+			|| (!ft_strncmp(tmp->type, "here_doc_delimiter", 19) && !here_doced)
+			|| (!ft_strncmp(tmp->type, "here_doc", 9) && !here_doced))
 			i++;
 		tmp = tmp->next;
 	}
@@ -101,20 +101,25 @@ char	**get_command(t_lexing *node)
 	i = 0;
 	if (found)
 	{
-		command[i] = ft_strdup(tmp->prev->prev->value);
-		i++;
-		command[i] = ft_strdup(tmp->prev->value);
-		i++;
-	}
-	if (here_doced)
-	{
-		command[i] = ft_strdup(tmp->prev->prev->value);
-		i++;
-		command[i] = ft_strdup(tmp->prev->value);
-		i++;
+		while (tmp && tmp->prev && tmp->prev->prev)
+		{
+			if (!ft_strncmp(tmp->prev->type, "outfile", 8)
+				|| !ft_strncmp(tmp->prev->type, "infile", 7))
+			{
+				command[i] = ft_strdup(tmp->prev->prev->value);
+				i++;
+				command[i] = ft_strdup(tmp->prev->value);
+				i++;
+				break ;
+			}
+			tmp = tmp->prev;
+		}
 	}
 	while (tmp)
 	{
+		if (!here_doced && (!ft_strncmp(tmp->type, "here_doc_delimiter", 19)
+			|| !ft_strncmp(tmp->type, "here_doc", 9)))
+			here_doced = 1;
 		if (!ft_strncmp(tmp->type, "argument", 9)
 			|| !ft_strncmp(tmp->type, "option", 7)
 			|| !ft_strncmp(tmp->type, "command", 8)
@@ -122,9 +127,7 @@ char	**get_command(t_lexing *node)
 			|| !ft_strncmp(tmp->type, "redirect_input", 15)
 			|| !ft_strncmp(tmp->type, "redirect_output", 16)
 			|| !ft_strncmp(tmp->type, "outfile", 8)
-			|| !ft_strncmp(tmp->type, "infile", 7)
-			|| !ft_strncmp(tmp->type, "here_doc_delimiter", 19)
-			|| !ft_strncmp(tmp->type, "here_doc", 9))
+			|| !ft_strncmp(tmp->type, "infile", 7))
 		{
 			command[i] = ft_strdup(tmp->value);
 			i++;
@@ -132,6 +135,23 @@ char	**get_command(t_lexing *node)
 		else if (!check_after(tmp))
 			break ;
 		tmp = tmp->next;
+	}
+	tmp = ft_lstlast(node);
+	if (here_doced)
+	{
+		printf("tmp->value: %s\n", tmp->value);
+		while (tmp && tmp->prev)
+		{
+			if (!ft_strncmp(tmp->type, "here_doc_delimiter", 19))
+			{
+				command[i] = ft_strdup(tmp->prev->value);
+				i++;
+				command[i] = ft_strdup(tmp->value);
+				i++;
+				break ;
+			}
+			tmp = tmp->prev;
+		}
 	}
 	command[i] = NULL;
 	return (command);
@@ -186,6 +206,12 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
+			char **command = get_command(tmp);
+			if (command && command[0])
+			{
+				for (int i = 0; command[i]; i++)
+					printf("Command[%d]: %s\n", i, command[i]);
+			}
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
 			new_node->layer = tmp->layer;

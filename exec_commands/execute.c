@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 15:39:42 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:06:01 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,6 @@ int	check_here_doc_command(char **command)
 
 			free(command[i]);
 			free(command[i + 1]);
-
 			j = i;
 			while (command[j + 2])
 			{
@@ -231,8 +230,10 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 	here_doc_num = 0;
 	while (current)
 	{
-		print_list(tmp);
-		if (current->type && !ft_strncmp(current->type, "here_doc", 9) && tmp)
+		// printf("current->type: %s\n", current->type);
+		// if (tmp)
+		// 	printf("tmp->value: %s\n", tmp->value);
+		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
 		{
 			while (tmp)
 			{
@@ -293,12 +294,6 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	pid_t		last_pid;
 
 	collect_piped_cmds(subroot, cmds, &num_cmds);
-	for (i = 0; i < num_cmds; i++)
-	{
-		ft_putstr_fd("Command: ", 1);
-		ft_putstr_fd(cmds[i]->value, 1);
-		ft_putstr_fd("\n", 1);
-	}
 	last_cmd = cmds[num_cmds - 1];
 	for (i = 0; i < num_cmds; i++)
 	{

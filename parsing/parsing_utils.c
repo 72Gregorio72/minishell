@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:27:36 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:18:22 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:15:22 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,33 @@
 
 int	check_prev(t_lexing *node, int *i)
 {
-	if (node && node->prev && node->prev->prev
-		&& !ft_strncmp(node->type, "command", 8)
-		&& !ft_strncmp(node->prev->type, "infile", 7)
-		&& !ft_strncmp(node->prev->prev->type, "redirect_input", 15))
+	t_lexing	*tmp;
+
+	tmp = node;
+	while (tmp && tmp->prev)
 	{
-		(*i) += 2;
-		return (1);
-	}
-	else if (node && node->prev && node->prev->prev
-		&& !ft_strncmp(node->type, "command", 8)
-		&& !ft_strncmp(node->prev->type, "outfile", 8)
-		&& !ft_strncmp(node->prev->prev->type, "redirect_output", 16))
-	{
-		(*i) += 2;
-		return (1);
-	}
-	else if (node && node->prev && node->prev->prev
-		&& !ft_strncmp(node->type, "command", 8)
-		&& !ft_strncmp(node->prev->type, "outfile", 8)
-		&& !ft_strncmp(node->prev->prev->type, "output_append", 14))
-	{
-		(*i) += 2;
-		return (1);
+		if (tmp && tmp->prev && tmp->prev->prev
+			&& !ft_strncmp(tmp->prev->type, "infile", 7)
+			&& !ft_strncmp(tmp->prev->prev->type, "redirect_input", 15))
+		{
+			(*i) += 2;
+			return (1);
+		}
+		else if (tmp && tmp->prev && tmp->prev->prev
+			&& !ft_strncmp(tmp->prev->type, "outfile", 8)
+			&& !ft_strncmp(tmp->prev->prev->type, "redirect_output", 16))
+		{
+			(*i) += 2;
+			return (1);
+		}
+		else if (tmp && tmp->prev && tmp->prev->prev
+			&& !ft_strncmp(tmp->prev->type, "outfile", 8)
+			&& !ft_strncmp(tmp->prev->prev->type, "output_append", 14))
+		{
+			(*i) += 2;
+			return (1);
+		}
+		tmp = tmp->prev;
 	}
 	return (0);
 }
