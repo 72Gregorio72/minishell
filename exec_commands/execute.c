@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 13:06:01 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:33:29 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,67 +217,123 @@ int	check_here_doc_command(char **command)
 }
 
 
+// void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
+// {
+// 	t_lexing	*current;
+// 	t_lexing	*tmp;
+// 	int			found;
+// 	int			here_doc_num;
+
+// 	found = 0;
+// 	current = node;
+// 	tmp = cleaned_data;
+// 	here_doc_num = 0;
+// 	while (current)
+// 	{
+// 		// printf("current->type: %s\n", current->type);
+// 		// if (tmp)
+// 		// 	printf("tmp->value: %s\n", tmp->value);
+// 		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
+// 		{
+// 			while (tmp)
+// 			{
+// 				if (tmp->command && check_here_doc_command(tmp->command))
+// 				{
+// 					break ;
+// 				}
+// 				tmp = tmp->next;
+// 			}
+// 			if (current->infile == -1)
+// 			{
+// 				ft_putstr_fd("Error opening here_doc file\n", 2);
+// 				return ;
+// 			}
+// 			if (current->next
+// 				&& !ft_strncmp(((t_lexing *)current->next)->type,
+// 					"here_doc_delimiter", 19)
+// 				&& tmp)
+// 			{
+// 				handle_here_doc(((t_lexing *)current->next)->value,
+// 					tmp, &here_doc_num, gen);
+// 				if (current->next->next
+// 					&& ft_strncmp(current->next->next->type, "here_doc", 9))
+// 				{
+// 					tmp = tmp->next;
+// 					while (tmp && ft_strncmp(tmp->type, "command", 8))
+// 						tmp = tmp->next;
+// 				}
+// 			}
+// 			else if (current->next
+// 				&& !ft_strncmp(((t_lexing *)current->next)->type,
+// 					"here_doc_delimiter", 19))
+// 			{
+// 				handle_here_doc(((t_lexing *)current->next)->value,
+// 					NULL, &here_doc_num, gen);
+// 			}
+// 			if (current->outfile == -1)
+// 			{
+// 				ft_putstr_fd("Error opening output file\n", 2);
+// 				close(current->infile);
+// 				return ;
+// 			}
+// 			found = 1;
+// 		}
+// 		current = current->next;
+// 	}
+// }
+
+int	check_other_doc(t_lexing *node)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	while (tmp && !stop_check(tmp))
+	{
+		if (!ft_strncmp(tmp->type, "here_doc", 9))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *here_doc_num)
+{
+	int			found;
+
+	found = 0;
+	if (current->next && check_other_doc(current->next))
+		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
+	else if (current->next)
+	{
+		if ((*cleaned_data)->command)
+			check_here_doc_command((*cleaned_data)->command);
+		handle_here_doc(current->next->value, (*cleaned_data),
+			here_doc_num, gen);
+		if ((*cleaned_data)->next)
+		{
+			(*cleaned_data) = (*cleaned_data)->next;
+			while ((*cleaned_data)
+				&& ft_strncmp((*cleaned_data)->type, "command", 8))
+			{
+				(*cleaned_data) = (*cleaned_data)->next;
+			}
+		}
+	}
+}
+
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
 	t_lexing	*current;
 	t_lexing	*tmp;
-	int			found;
 	int			here_doc_num;
 
-	found = 0;
 	current = node;
 	tmp = cleaned_data;
 	here_doc_num = 0;
 	while (current)
 	{
-		// printf("current->type: %s\n", current->type);
-		// if (tmp)
-		// 	printf("tmp->value: %s\n", tmp->value);
 		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
-		{
-			while (tmp)
-			{
-				if (tmp->command && check_here_doc_command(tmp->command))
-				{
-					break ;
-				}
-				tmp = tmp->next;
-			}
-			if (current->infile == -1)
-			{
-				ft_putstr_fd("Error opening here_doc file\n", 2);
-				return ;
-			}
-			if (current->next
-				&& !ft_strncmp(((t_lexing *)current->next)->type,
-					"here_doc_delimiter", 19)
-				&& tmp)
-			{
-				handle_here_doc(((t_lexing *)current->next)->value,
-					tmp, &here_doc_num, gen);
-				if (current->next->next
-					&& ft_strncmp(current->next->next->type, "here_doc", 9))
-				{
-					tmp = tmp->next;
-					while (tmp && ft_strncmp(tmp->type, "command", 8))
-						tmp = tmp->next;
-				}
-			}
-			else if (current->next
-				&& !ft_strncmp(((t_lexing *)current->next)->type,
-					"here_doc_delimiter", 19))
-			{
-				handle_here_doc(((t_lexing *)current->next)->value,
-					NULL, &here_doc_num, gen);
-			}
-			if (current->outfile == -1)
-			{
-				ft_putstr_fd("Error opening output file\n", 2);
-				close(current->infile);
-				return ;
-			}
-			found = 1;
-		}
+			check_open(current, &tmp, gen, &here_doc_num);
 		current = current->next;
 	}
 }

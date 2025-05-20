@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/14 15:35:51 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:34:07 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ int	find_red(t_lexing *node, t_gen *gen)
 	val = -1;
 	while (node->command && node->command[i])
 	{
-		if (!ft_strncmp(node->command[i], "<", 1))
+		if (!ft_strncmp(node->command[i], "<", 1)
+			&& ft_strlen(node->command[i]) == 1)
 			val = util_infile(node->command[i + 1], gen, node);
 		else if (!ft_strncmp(node->command[i], ">>", 2))
 			val = util_outfile(node->command[i + 1], gen, node, 2);

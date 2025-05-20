@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:27:36 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 13:15:22 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:12:46 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_prev(t_lexing *node, int *i)
 	t_lexing	*tmp;
 
 	tmp = node;
-	while (tmp && tmp->prev)
+	while (tmp && tmp->prev && !stop_check(tmp))
 	{
 		if (tmp && tmp->prev && tmp->prev->prev
 			&& !ft_strncmp(tmp->prev->type, "infile", 7)

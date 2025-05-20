@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 13:33:14 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:15:36 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	**get_command(t_lexing *node)
 	i = 0;
 	if (found)
 	{
-		while (tmp && tmp->prev && tmp->prev->prev)
+		while (tmp && tmp->prev && tmp->prev->prev && !stop_check(tmp))
 		{
 			if (!ft_strncmp(tmp->prev->type, "outfile", 8)
 				|| !ft_strncmp(tmp->prev->type, "infile", 7))
@@ -110,15 +110,15 @@ char	**get_command(t_lexing *node)
 				i++;
 				command[i] = ft_strdup(tmp->prev->value);
 				i++;
-				break ;
 			}
 			tmp = tmp->prev;
 		}
 	}
+	tmp = node;
 	while (tmp)
 	{
 		if (!here_doced && (!ft_strncmp(tmp->type, "here_doc_delimiter", 19)
-			|| !ft_strncmp(tmp->type, "here_doc", 9)))
+				|| !ft_strncmp(tmp->type, "here_doc", 9)))
 			here_doced = 1;
 		if (!ft_strncmp(tmp->type, "argument", 9)
 			|| !ft_strncmp(tmp->type, "option", 7)
@@ -136,10 +136,15 @@ char	**get_command(t_lexing *node)
 			break ;
 		tmp = tmp->next;
 	}
-	tmp = ft_lstlast(node);
+	tmp = node;
+	while(tmp && !stop_check(tmp))
+	{
+		if (!tmp->next)
+			break ;
+		tmp = tmp->next;
+	}
 	if (here_doced)
 	{
-		printf("tmp->value: %s\n", tmp->value);
 		while (tmp && tmp->prev)
 		{
 			if (!ft_strncmp(tmp->type, "here_doc_delimiter", 19))
@@ -206,12 +211,13 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
-			char **command = get_command(tmp);
-			if (command && command[0])
-			{
-				for (int i = 0; command[i]; i++)
-					printf("Command[%d]: %s\n", i, command[i]);
-			}
+			// char **command = get_command(tmp);
+			// if (command && command[0])
+			// {
+			// 	for (int i = 0; command[i]; i++)
+			// 		printf("Command[%d]: %s\n", i, command[i]);
+			// 	printf("--------------------------\n");
+			// }
 			new_node->outfile = tmp->outfile;
 			new_node->infile = tmp->infile;
 			new_node->layer = tmp->layer;
