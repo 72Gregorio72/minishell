@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:41:35 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/20 10:29:18 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:16:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_lexing	*check_continue(t_lexing *lexed, int flag)
 	{
 		while (tmp)
 		{
-			if (tmp->wildcard)
+			if (tmp->wildcard && tmp->expanded)
 				return (tmp);
 			tmp = tmp->next;
 		}

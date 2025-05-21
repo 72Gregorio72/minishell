@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 12:49:27 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/29 10:01:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:18:28 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	construct_val(t_lexing **node, struct dirent **entry, int add_space,
 		return (safe_free(gen), exit(1));
 	free((*node)->value);
 	(*node)->value = tmp2;
+	(*node)->expanded = 1;
 }
 
 int	match_wildcard(const char *str, const char *pattern)
@@ -92,6 +93,7 @@ int	expand_wildcard(t_lexing **node, t_gen *gen)
 	{
 		free((*node)->value);
 		(*node)->value = ft_strdup(tmp);
+		(*node)->expanded = 0;
 	}
 	sort_value(node, gen);
 	return (closedir(dir), free(tmp), 1);
