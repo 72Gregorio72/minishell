@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 10:59:02 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:19:53 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ void	print_list(t_lexing *lst)
 	while (tmp)
 	{
 		printf("value: %s\n", tmp->value);
-		printf("outfile: %d\n", tmp->outfile);
-		printf("infile: %d\n", tmp->infile);
+		printf("type: %s\n", tmp->type);
 		if (tmp->command)
 		{
 			int k = 0;

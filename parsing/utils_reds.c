@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 13:16:52 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:42:55 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	calc_mat_len(t_lexing *node, int *i)
 
 	*i = 0;
 	mat_length = 0;
-	while (node && node->command[*i])
+	while (node && node->command && node->command[*i])
 	{
 		if (ft_strncmp(node->command[*i], "<", 1)
 			&& ft_strncmp(node->command[*i], ">>", 2)

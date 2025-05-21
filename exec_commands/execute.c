@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 13:21:20 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:21:53 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,11 +167,10 @@ int	find_cmd_num(t_lexing *node)
 	tmp = node;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->type, "command", 7))
+		if (!ft_strncmp(tmp->type, "command", 7) || check_redirect(tmp))
 			cmd_num++;
 		if (tmp->next && tmp->next->next
 			&& !ft_strncmp(tmp->type, "pipe", 4)
-			&& check_redirect(tmp->next)
 			&& (!ft_strncmp(tmp->next->next->type, "outfile", 8)
 				|| !ft_strncmp(tmp->next->next->type, "infile", 7))
 			&& ((tmp->next->next->next
@@ -198,7 +197,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 		val = find_red(node->data, gen);
 		return ;
 	}
-	if (node->data && ft_strncmp(node->data->type, "command", 7) == 0)
+	if (node->data && !ft_strncmp(node->data->type, "command", 7))
 		cmds[(*i)++] = node->data;
 	collect_piped_cmds(node->right, cmds, i, gen);
 }
@@ -267,6 +266,8 @@ void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *her
 			}
 		}
 	}
+	else if (!(*cleaned_data))
+		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
 }
 
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
