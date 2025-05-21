@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+int	check_output(t_lexing *node)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	if (!check_redirect(node))
+		return (1);
+	while (tmp && !stop_check(tmp))
+	{
+		if (!ft_strncmp(tmp->type, "command", 8))
+			return (0);
+		tmp = tmp->next;
+	}
+	tmp = node;
+	while (tmp && !stop_check(tmp))
+	{
+		if (!ft_strncmp(tmp->type, "command", 8))
+			return (0);
+		tmp = tmp->prev;
+	}
+	return (1);
+}
+
 t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 {
 	t_lexing	*tmp;
@@ -22,7 +45,7 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 	head = NULL;
 	while (tmp)
 	{
-		if (check_lexed(tmp))
+		if (check_lexed(tmp) && check_output(tmp))
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));

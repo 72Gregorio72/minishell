@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_layer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:44:49 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 09:20:28 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:58:46 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	check_pipes_in_parenth(t_lexing *node)
 	t_lexing	*tmp;
 
 	tmp = node;
+	if (tmp->prev && !ft_strncmp(tmp->prev->type, "pipe", 4))
 	if (tmp->prev && !ft_strncmp(tmp->prev->type, "pipe", 4))
 	{
 		while (tmp && ft_strncmp(tmp->type, "close_parenthesis", 18))

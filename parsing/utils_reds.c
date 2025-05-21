@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_reds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/13 09:53:35 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:16:52 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,20 @@ int	is_directory(char *path)
 	return (S_ISDIR(path_stat.st_mode));
 }
 
-int	util_infile(char *filename, t_gen *gen, t_lexing *node)
+int	util_infile(char *filename, t_gen *gen, t_lexing *node, char *last_in)
 {
+	int		fd;
+
+	fd = 0;
 	if (is_directory(filename))
 		return (error_exit(gen, "minishell: path is a directory", 1), 2);
 	if (!access(filename, F_OK))
 	{
-		node->infile = open(filename, O_RDONLY);
-		if (node->infile < 0)
+		if (!ft_strcmp(filename, last_in))
+			node->infile = open(filename, O_RDONLY);
+		else
+			fd = open(filename, O_RDONLY);
+		if (node && (node->infile < 0 || fd < 0))
 			return (error_exit(gen, "minishell: open error", 1), 2);
 	}
 	else
@@ -55,8 +61,9 @@ int	calc_mat_len(t_lexing *node, int *i)
 {
 	int	mat_length;
 
+	*i = 0;
 	mat_length = 0;
-	while (node->command[*i])
+	while (node && node->command[*i])
 	{
 		if (ft_strncmp(node->command[*i], "<", 1)
 			&& ft_strncmp(node->command[*i], ">>", 2)

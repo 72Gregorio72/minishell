@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:27:36 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 10:01:47 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:03:04 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,28 @@
 
 int	check_prev(t_lexing *node, int *i)
 {
-	if (node && node->prev && node->prev->prev
-		&& !ft_strncmp(node->type, "command", 8)
-		&& !ft_strncmp(node->prev->type, "infile", 7)
-		&& !ft_strncmp(node->prev->prev->type, "redirect_input", 15))
+	t_lexing	*tmp;
+	int			found;
+
+	if (!node->prev)
+		return (0);
+	tmp = node->prev;
+	found = 0;
+	while (tmp && !stop_check(tmp))
 	{
-		(*i) += 2;
-		return (1);
+		if (!ft_strncmp(tmp->type, "infile", 7))
+		{
+			(*i) += 2;
+			found = 1;
+		}
+		if (!ft_strncmp(tmp->type, "outfile", 8))
+		{
+			(*i) += 2;
+			found = 1;
+		}
+		tmp = tmp->prev;
 	}
-	else if (node && node->prev && node->prev->prev
-		&& !ft_strncmp(node->type, "command", 8)
-		&& !ft_strncmp(node->prev->type, "outfile", 8)
-		&& !ft_strncmp(node->prev->prev->type, "redirect_output", 16))
-	{
-		(*i) += 2;
-		return (1);
-	}
-	else if (node && node->prev && node->prev->prev
-		&& !ft_strncmp(node->type, "command", 8)
-		&& !ft_strncmp(node->prev->type, "outfile", 8)
-		&& !ft_strncmp(node->prev->prev->type, "output_append", 14))
-	{
-		(*i) += 2;
-		return (1);
-	}
-	return (0);
+	return (found);
 }
 
 int	is_valid_command_type(const char *type)

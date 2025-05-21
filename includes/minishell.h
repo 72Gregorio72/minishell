@@ -141,7 +141,8 @@ int			find_char_pos(char *s, char *chars, int start);
 int			ft_swap(char **s1, char **s2);
 void		sort_export(t_gen *gen);
 void		util_free_env_var(char *before, char *tmp, char *after);
-int			util_infile(char *filename, t_gen *gen, t_lexing *node);
+int			util_infile(char *filename, t_gen *gen,
+				t_lexing *node, char *last_in);
 int			util_outfile(char *filename, t_gen *gen, t_lexing *node, int flag);
 void		util_exit(t_gen *gen);
 void		change_shlvl(char ***env);
@@ -149,6 +150,7 @@ void		norm_add_exp_env(char ***env, int i, const char *var, int append);
 void		ft_join(char ***env, int i, const char *var, int pos);
 void		do_export(t_gen *gen, int equal_pos, int append, const char *var);
 t_lexing	*find_prev_node(t_lexing *end, t_lexing *start);
+int			stop_check(t_lexing *tmp);
 
 // ctrl
 void		ctrl_c(int new_line);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 15:07:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:21:20 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ int	is_builtin(char *command)
 		return (1);
 	else if (ft_strncmp(command, "pwd", ft_strlen("pwd")) == 0
 		&& ft_strlen(command) == ft_strlen("pwd"))
-		return (1);
-	else if (ft_strncmp(command, "poke", ft_strlen("poke")) == 0
-		&& ft_strlen(command) == ft_strlen("poke"))
 		return (1);
 	return (0);
 }
@@ -206,52 +203,85 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 	collect_piped_cmds(node->right, cmds, i, gen);
 }
 
+int	check_here_doc_command(char **command)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (command[i])
+	{
+		if (!ft_strncmp(command[i], "<<", 2))
+		{
+			if (!command[i + 1])
+				return (-1);
+
+			free(command[i]);
+			free(command[i + 1]);
+			j = i;
+			while (command[j + 2])
+			{
+				command[j] = command[j + 2];
+				j++;
+			}
+			command[j] = NULL;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	check_other_doc(t_lexing *node)
+{
+	t_lexing	*tmp;
+
+	tmp = node;
+	while (tmp && !stop_check(tmp))
+	{
+		if (!ft_strncmp(tmp->type, "here_doc", 9))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *here_doc_num)
+{
+	int			found;
+
+	found = 0;
+	if (current->next && check_other_doc(current->next))
+		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
+	else if (current && current->next && (*cleaned_data))
+	{
+		handle_here_doc(current->next->value, (*cleaned_data),
+			here_doc_num, gen);
+		if ((*cleaned_data) && (*cleaned_data)->next)
+		{
+			(*cleaned_data) = (*cleaned_data)->next;
+			while ((*cleaned_data)
+				&& ft_strncmp((*cleaned_data)->type, "command", 8))
+			{
+				(*cleaned_data) = (*cleaned_data)->next;
+			}
+		}
+	}
+}
+
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
 	t_lexing	*current;
 	t_lexing	*tmp;
-	int			found;
 	int			here_doc_num;
 
-	found = 0;
 	current = node;
 	tmp = cleaned_data;
 	here_doc_num = 0;
 	while (current)
 	{
 		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
-		{
-			if (current->infile == -1)
-			{
-				ft_putstr_fd("Error opening here_doc file\n", 2);
-				return ;
-			}
-			if (current->next
-				&& !ft_strncmp(((t_lexing *)current->next)->type,
-					"here_doc_delimiter", 19)
-				&& tmp)
-			{
-				handle_here_doc(((t_lexing *)current->next)->value,
-					tmp, &here_doc_num, gen);
-				tmp = tmp->next;
-				while (tmp && ft_strncmp(tmp->type, "command", 8))
-					tmp = tmp->next;
-			}
-			else if (current->next
-				&& !ft_strncmp(((t_lexing *)current->next)->type,
-					"here_doc_delimiter", 19))
-			{
-				handle_here_doc(((t_lexing *)current->next)->value,
-					NULL, &here_doc_num, gen);
-			}
-			if (current->outfile == -1)
-			{
-				ft_putstr_fd("Error opening output file\n", 2);
-				close(current->infile);
-				return ;
-			}
-			found = 1;
-		}
+			check_open(current, &tmp, gen, &here_doc_num);
 		current = current->next;
 	}
 }
