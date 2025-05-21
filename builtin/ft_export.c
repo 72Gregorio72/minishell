@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 09:12:21 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:57:58 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ int	ft_export(const char *var, t_gen *gen, t_lexing *node, char ***export_env)
 	}
 	equal_pos = find_char_pos((char *)var, "=", 0);
 	append = 0;
-	if (equal_pos != -1 && var[equal_pos]
-		&& var[equal_pos - 1] && var[equal_pos - 1] == '+')
+	if (equal_pos != -1 && var && var[equal_pos]
+		&& equal_pos > 0 && var[equal_pos - 1] == '+')
 	{
 		convert_plus_equal_to_equal((char *)var);
 		append = 1;
