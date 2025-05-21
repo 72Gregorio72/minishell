@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 13:14:35 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:20:30 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,10 @@ void	remove_redirections(t_lexing *node)
 		return ;
 	while (node->command[i])
 	{
-		if (ft_strncmp(node->command[i], "<", 1)
+		if (ft_strncmp(node->command[i], "<<", 2)
+			&& ft_strncmp(node->command[i], "<", 1)
 			&& ft_strncmp(node->command[i], ">>", 2)
-			&& ft_strncmp(node->command[i], ">", 1)
-			&& ft_strncmp(node->command[i], "<<", 2))
+			&& ft_strncmp(node->command[i], ">", 1))
 			tmp[j++] = ft_strdup(node->command[i]);
 		else
 			i++;
@@ -95,7 +95,7 @@ void	remove_redirections(t_lexing *node)
 	free_matrix(tmp);
 }
 
-char	*find_last_in(t_lexing *node)
+char	*find_last_in(t_lexing *node, int *val)
 {
 	char		*last_in;
 	int			i;
@@ -108,6 +108,7 @@ char	*find_last_in(t_lexing *node)
 		{
 			free(last_in);
 			last_in = ft_strdup(node->command[i]);
+			*val = 1;
 		}
 		else if (!ft_strncmp(node->command[i], "<", 1)
 			&& ft_strlen(node->command[i]) == 1)
@@ -128,7 +129,7 @@ int	find_red(t_lexing *node, t_gen *gen)
 
 	i = 0;
 	val = -1;
-	last_in = find_last_in(node);
+	last_in = find_last_in(node, &val);
 	while (node && node->command && node->command[i])
 	{
 		if (!ft_strncmp(node->command[i], "<", 1)

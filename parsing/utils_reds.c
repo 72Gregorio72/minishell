@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:06:09 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 13:07:40 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:16:52 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	util_infile(char *filename, t_gen *gen, t_lexing *node, char *last_in)
 		return (error_exit(gen, "minishell: path is a directory", 1), 2);
 	if (!access(filename, F_OK))
 	{
-		printf(RED"last_in: %s\n"RESET, last_in);
 		if (!ft_strcmp(filename, last_in))
 			node->infile = open(filename, O_RDONLY);
 		else

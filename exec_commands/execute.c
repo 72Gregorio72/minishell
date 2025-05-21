@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 13:01:25 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:21:20 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ int	is_builtin(char *command)
 		return (1);
 	else if (ft_strncmp(command, "pwd", ft_strlen("pwd")) == 0
 		&& ft_strlen(command) == ft_strlen("pwd"))
-		return (1);
-	else if (ft_strncmp(command, "poke", ft_strlen("poke")) == 0
-		&& ft_strlen(command) == ft_strlen("poke"))
 		return (1);
 	return (0);
 }
