@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:27:36 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 10:57:11 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:03:04 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,27 @@
 int	check_prev(t_lexing *node, int *i)
 {
 	t_lexing	*tmp;
+	int			found;
 
-	tmp = node;
-	while (tmp && tmp->prev && !stop_check(tmp))
+	if (!node->prev)
+		return (0);
+	tmp = node->prev;
+	found = 0;
+	while (tmp && !stop_check(tmp))
 	{
-		if (tmp && tmp->prev && tmp->prev->prev
-			&& !ft_strncmp(tmp->prev->type, "infile", 7)
-			&& !ft_strncmp(tmp->prev->prev->type, "redirect_input", 15))
+		if (!ft_strncmp(tmp->type, "infile", 7))
 		{
 			(*i) += 2;
-			return (1);
+			found = 1;
 		}
-		else if (tmp && tmp->prev && tmp->prev->prev
-			&& !ft_strncmp(tmp->prev->type, "outfile", 8)
-			&& !ft_strncmp(tmp->prev->prev->type, "redirect_output", 16))
+		if (!ft_strncmp(tmp->type, "outfile", 8))
 		{
 			(*i) += 2;
-			return (1);
-		}
-		else if (tmp && tmp->prev && tmp->prev->prev
-			&& !ft_strncmp(tmp->prev->type, "outfile", 8)
-			&& !ft_strncmp(tmp->prev->prev->type, "output_append", 14))
-		{
-			(*i) += 2;
-			return (1);
+			found = 1;
 		}
 		tmp = tmp->prev;
 	}
-	return (0);
+	return (found);
 }
 
 int	is_valid_command_type(const char *type)

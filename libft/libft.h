@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:26:23 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 10:56:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:47:53 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));
 int			free_final(char **final, int row);
 int			quote_split(char const *str, int *i, int *start, int *quote_status);
+int			ft_strcmp(const char *s1, const char *s2);
 
 t_lexing	*ft_lstnew(char *value, char *type, int strength);
 void		ft_lstadd_front(t_lexing **lst, t_lexing *new);

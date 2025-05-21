@@ -73,7 +73,7 @@ $(NAME): $(OBJS)
 %.o: %.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-vall: all clean
+vale: all clean
 	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readLine.supp ./$(NAME)
 
 vall_plus : all clean

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:33:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/13 10:10:10 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:54:25 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	open_redirections(t_lexing *node, t_gen *gen)
 		if (!ft_strncmp(tmp->type, "outfile", 8))
 			util_outfile(tmp->value, gen, tmp, 1);
 		else if (!ft_strncmp(tmp->type, "infile", 7))
-			util_infile(tmp->value, gen, tmp);
+			util_infile(tmp->value, gen, tmp, tmp->value);
 		tmp = tmp->next;
 	}
 }

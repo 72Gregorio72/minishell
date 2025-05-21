@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 10:58:01 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:14:35 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void	remove_redirections(t_lexing *node)
 	{
 		if (ft_strncmp(node->command[i], "<", 1)
 			&& ft_strncmp(node->command[i], ">>", 2)
-			&& ft_strncmp(node->command[i], ">", 1))
+			&& ft_strncmp(node->command[i], ">", 1)
+			&& ft_strncmp(node->command[i], "<<", 2))
 			tmp[j++] = ft_strdup(node->command[i]);
 		else
 			i++;
@@ -94,30 +95,56 @@ void	remove_redirections(t_lexing *node)
 	free_matrix(tmp);
 }
 
+char	*find_last_in(t_lexing *node)
+{
+	char		*last_in;
+	int			i;
+
+	i = 0;
+	last_in = NULL;
+	while (node && node->command && node->command[i])
+	{
+		if (!ft_strncmp(node->command[i], "<<", 2))
+		{
+			free(last_in);
+			last_in = ft_strdup(node->command[i]);
+		}
+		else if (!ft_strncmp(node->command[i], "<", 1)
+			&& ft_strlen(node->command[i]) == 1)
+		{
+			free(last_in);
+			last_in = ft_strdup(node->command[i + 1]);
+		}
+		i++;
+	}
+	return (last_in);
+}
+
 int	find_red(t_lexing *node, t_gen *gen)
 {
-	int	i;
-	int	val;
+	int		i;
+	int		val;
+	char	*last_in;
 
 	i = 0;
 	val = -1;
-	while (node->command && node->command[i])
+	last_in = find_last_in(node);
+	while (node && node->command && node->command[i])
 	{
 		if (!ft_strncmp(node->command[i], "<", 1)
 			&& ft_strlen(node->command[i]) == 1)
-			val = util_infile(node->command[i + 1], gen, node);
+			val = util_infile(node->command[i + 1], gen, node, last_in);
 		else if (!ft_strncmp(node->command[i], ">>", 2))
 			val = util_outfile(node->command[i + 1], gen, node, 2);
 		else if (!ft_strncmp(node->command[i], ">", 1))
 			val = util_outfile(node->command[i + 1], gen, node, 1);
 		if (val == 2)
-			return (0);
+			return (free(last_in), 0);
 		i++;
 	}
 	if (val != -1)
 		remove_redirections(node);
-	i = 0;
 	if (!calc_mat_len(node, &i))
-		return (0);
-	return (1);
+		return (free(last_in), 0);
+	return (free(last_in), 1);
 }
