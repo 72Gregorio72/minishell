@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 16:33:29 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:49:22 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,13 +303,13 @@ void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *her
 	found = 0;
 	if (current->next && check_other_doc(current->next))
 		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
-	else if (current->next)
+	else if (current && current->next && (*cleaned_data))
 	{
-		if ((*cleaned_data)->command)
+		if ((*cleaned_data) && (*cleaned_data)->command)
 			check_here_doc_command((*cleaned_data)->command);
 		handle_here_doc(current->next->value, (*cleaned_data),
 			here_doc_num, gen);
-		if ((*cleaned_data)->next)
+		if ((*cleaned_data) && (*cleaned_data)->next)
 		{
 			(*cleaned_data) = (*cleaned_data)->next;
 			while ((*cleaned_data)
