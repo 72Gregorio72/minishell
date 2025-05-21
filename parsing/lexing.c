@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 10:43:19 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/06 16:46:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/20 09:23:08 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ t_lexing	*lexer(char **matrix, t_gen *gen)
 
 	i = 0;
 	lexed = NULL;
-	(void)gen;
 	while (matrix[i])
 	{
 		if (!tokenize(matrix[i], &lexed, gen))

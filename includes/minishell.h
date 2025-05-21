@@ -126,8 +126,10 @@ int			expand_wildcard(t_lexing **node, t_gen *gen);
 t_lexing	*find_prev_command(t_lexing *start, t_lexing *end);
 t_lexing	*find_next_node(t_lexing *start, char *to_find);
 void		sort_value(t_lexing **node, t_gen *gen);
-void		position(t_lexing *prev, t_lexing *tmp_list, t_gen *gen);
+void		position(t_lexing *prev, t_lexing *tmp_list,
+				t_gen *gen, t_lexing *to_expand);
 int			loop_expand_wilds(t_gen *gen);
+void		util_expand(t_lexing **to_free_head, t_lexing *to_expand);
 
 // utils
 void		free_matrix(char **av);
@@ -218,7 +220,8 @@ void		wait_and_cleanup(t_gen *gen, t_lexing *node,
 				char *cmd_path, char **env);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			find_cmd_num(t_lexing *node);
-void		collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i);
+void		collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i,
+				t_gen *gen);
 void		update_tmp_pointer(t_lexing **tmp, t_lexing *current);
 void		process_here_doc_node(t_lexing *current, t_lexing **tmp,
 				int *here_doc_num, t_gen *gen);

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/07 10:42:45 by vcastald          #+#    #+#             */
-/*   Updated: 2025/04/09 12:28:24 by vcastald         ###   ########.fr       */
+/*   Created: 2025/05/21 10:21:10 by vcastald          #+#    #+#             */
+/*   Updated: 2025/05/21 10:21:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//gpicchio king
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;

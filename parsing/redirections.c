@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 09:19:44 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/20 16:34:07 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:58:01 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,8 @@ int	find_red(t_lexing *node, t_gen *gen)
 	}
 	if (val != -1)
 		remove_redirections(node);
+	i = 0;
+	if (!calc_mat_len(node, &i))
+		return (0);
 	return (1);
 }

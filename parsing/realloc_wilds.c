@@ -6,11 +6,31 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 09:16:39 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 11:25:05 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:33:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	position(t_lexing *prev, t_lexing *tmp_list,
+	t_gen *gen, t_lexing *to_expand)
+{
+	if (prev)
+	{
+		prev->next = tmp_list;
+		tmp_list->prev = prev;
+	}
+	else
+	{
+		gen->lexed_data = tmp_list;
+		tmp_list->prev = NULL;
+	}
+	if (to_expand)
+	{
+		to_expand->next = NULL;
+		to_expand->prev = NULL;
+	}
+}
 
 static void	util_args(t_lexing *tmp)
 {
@@ -86,7 +106,9 @@ int	loop_expand_wilds(t_gen *gen)
 	t_lexing	*tmp_list;
 	t_lexing	*prev;
 	t_lexing	*last;
+	t_lexing	*to_free_head;
 
+	to_free_head = NULL;
 	to_expand = check_continue(gen->lexed_data, 0);
 	while (to_expand != NULL)
 	{
@@ -96,8 +118,10 @@ int	loop_expand_wilds(t_gen *gen)
 		prev = find_prev_node(to_expand, gen->lexed_data);
 		last = ft_lstlast(tmp_list);
 		last->next = to_expand->next;
-		position(prev, tmp_list, gen);
-		ft_lstdelone(to_expand);
+		if (to_expand->next)
+			to_expand->next->prev = last;
+		position(prev, tmp_list, gen, to_expand);
+		util_expand(&to_free_head, to_expand);
 		to_expand = check_continue(gen->lexed_data, 0);
 	}
 	return (1);
