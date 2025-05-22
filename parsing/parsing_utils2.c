@@ -6,7 +6,7 @@
 /*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 13:14:08 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:08:48 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,6 @@ int	check_lexed(t_lexing *tmp)
 		&& ft_strncmp(tmp->type, "option", 7)
 		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
 		&& ft_strncmp(tmp->type, "close_parenthesis", 18)
-		&& ft_strncmp(tmp->type, "here_doc", 9)
 		&& ft_strncmp(tmp->type, "infile", 7)
 		&& ft_strncmp(tmp->type, "outfile", 8)
 		&& ft_strncmp(tmp->type, "here_doc_delimiter", 19))
