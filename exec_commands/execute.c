@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 16:21:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:05:43 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,9 +167,15 @@ int	find_cmd_num(t_lexing *node)
 	tmp = node;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->type, "command", 7) || check_redirect(tmp))
+		if (check_redirect(tmp))
+		{
 			cmd_num++;
-		if (tmp->next && tmp->next->next
+			while (tmp && !stop_check(tmp))
+				tmp = tmp->next;
+		}
+		if (tmp && (!ft_strncmp(tmp->type, "command", 8) || check_redirect(tmp)))
+			cmd_num++;
+		if (tmp && tmp->next && tmp->next->next
 			&& !ft_strncmp(tmp->type, "pipe", 4)
 			&& (!ft_strncmp(tmp->next->next->type, "outfile", 8)
 				|| !ft_strncmp(tmp->next->next->type, "infile", 7))
@@ -177,15 +183,14 @@ int	find_cmd_num(t_lexing *node)
 					&& !ft_strncmp(tmp->next->next->next->type, "pipe", 4))
 				|| !tmp->next->next->next))
 			cmd_num++;
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
 	return (cmd_num);
 }
 
 void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 {
-	int	val;
-
 	if (!node)
 		return ;
 	collect_piped_cmds(node->left, cmds, i, gen);
@@ -194,7 +199,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 			|| !ft_strncmp(node->data->command[0], "<", 1))
 		&& node->data->command[1] && !node->data->command[2])
 	{
-		val = find_red(node->data, gen);
+		find_red(node->data, gen);
 		return ;
 	}
 	if (node->data && !ft_strncmp(node->data->type, "command", 7))
@@ -247,9 +252,6 @@ int	check_other_doc(t_lexing *node)
 
 void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *here_doc_num)
 {
-	int			found;
-
-	found = 0;
 	if (current->next && check_other_doc(current->next))
 		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
 	else if (current && current->next && (*cleaned_data))
