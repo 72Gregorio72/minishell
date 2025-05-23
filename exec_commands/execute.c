@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 16:21:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:44:17 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,9 @@ int check_no_comm_after(t_lexing *start)
 	t_lexing	*tmp;
 
 	tmp = start;
-	while (tmp)
+	if (stop_check(tmp))
+		tmp = tmp->next;
+	while (tmp && !stop_check(tmp))
 	{
 		if (!ft_strncmp(tmp->type, "command", 8))
 			return (0);
@@ -175,30 +177,23 @@ int check_no_comm_after(t_lexing *start)
 int	find_cmd_num(t_lexing *node)
 {
 	int			cmd_num;
-	t_lexing	*tmp;
+	t_lexing	*tp;
 
 	cmd_num = 0;
-	tmp = node;
-	while (tmp)
+	tp = node;
+	while (tp)
 	{
-		if (check_redirect(tmp) && check_no_comm_after(tmp))
+		if ((stop_check(tp) || check_redirect(tp)) && check_no_comm_after(tp))
 		{
 			cmd_num++;
-			while (tmp && !stop_check(tmp))
-				tmp = tmp->next;
+			tp = tp->next;
+			while (tp && !stop_check(tp))
+				tp = tp->next;
 		}
-		if (tmp && (!ft_strncmp(tmp->type, "command", 8) || check_redirect(tmp)))
+		if (tp && (!ft_strncmp(tp->type, "command", 8)))
 			cmd_num++;
-		if (tmp && tmp->next && tmp->next->next
-			&& !ft_strncmp(tmp->type, "pipe", 4)
-			&& (!ft_strncmp(tmp->next->next->type, "outfile", 8)
-				|| !ft_strncmp(tmp->next->next->type, "infile", 7))
-			&& ((tmp->next->next->next
-					&& !ft_strncmp(tmp->next->next->next->type, "pipe", 4))
-				|| !tmp->next->next->next))
-			cmd_num++;
-		if (tmp)
-			tmp = tmp->next;
+		if (tp)
+			tp = tp->next;
 	}
 	return (cmd_num);
 }
