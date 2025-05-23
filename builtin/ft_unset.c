@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:37:47 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/20 10:31:19 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:59:19 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	checks_unset_export(const char *str, int export)
 {
 	int	i;
 
-	if (ft_isdigit(str[0]))
+	if (ft_isdigit(str[0]) || str[0] == '=')
 		return (0);
 	i = 0;
 	while (str[i] && str[i] != '=')
