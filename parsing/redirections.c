@@ -65,36 +65,6 @@ t_lexing	*find_prev_command(t_lexing *start, t_lexing *end)
 	return (NULL);
 }
 
-void	remove_redirections(t_lexing *node)
-{
-	int		i;
-	int		j;
-	int		mat_length;
-	char	**tmp;
-
-	i = 0;
-	j = 0;
-	mat_length = calc_mat_len(node, &i);
-	tmp = malloc(sizeof(char *) * (mat_length + 1));
-	if (!tmp)
-		return ;
-	while (node->command[i])
-	{
-		if (ft_strncmp(node->command[i], "<<", 2)
-			&& ft_strncmp(node->command[i], "<", 1)
-			&& ft_strncmp(node->command[i], ">>", 2)
-			&& ft_strncmp(node->command[i], ">", 1))
-			tmp[j++] = ft_strdup(node->command[i]);
-		else
-			i++;
-		i++;
-	}
-	tmp[j] = NULL;
-	free_matrix(node->command);
-	node->command = copy_matrix(tmp);
-	free_matrix(tmp);
-}
-
 char	*find_last_in(t_lexing *node, int *val)
 {
 	char		*last_in;

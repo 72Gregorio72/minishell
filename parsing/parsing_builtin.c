@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 09:58:04 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/09 09:07:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:51:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,36 @@ int	exec_builtin(t_gen *gen, t_lexing *node)
 		return (unset_and_export(gen, node->command[1],
 				node->command[0], node));
 	return (1);
+}
+
+int	check_lexed(t_lexing *tmp)
+{
+	if (ft_strncmp(tmp->type, "argument", 9)
+		&& ft_strncmp(tmp->type, "option", 7)
+		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
+		&& ft_strncmp(tmp->type, "close_parenthesis", 18)
+		&& ft_strncmp(tmp->type, "infile", 7)
+		&& ft_strncmp(tmp->type, "outfile", 8)
+		&& ft_strncmp(tmp->type, "here_doc_delimiter", 19))
+		return (1);
+	return (0);
+}
+
+int	stop_check(t_lexing *tmp)
+{
+	if (!ft_strncmp(tmp->type, "pipe", 4)
+		|| !ft_strncmp(tmp->type, "and_operator", 13)
+		|| !ft_strncmp(tmp->type, "or_operator", 12)
+		|| !ft_strncmp(tmp->type, "close_parenthesis", 18)
+		|| !ft_strncmp(tmp->type, "open_parenthesis", 17))
+		return (1);
+	return (0);
+}
+
+void	util_filter_lexed_data(t_lexing **new_node, t_lexing **tmp)
+{
+	(*new_node)->outfile = (*tmp)->outfile;
+	(*new_node)->infile = (*tmp)->infile;
+	(*new_node)->layer = (*tmp)->layer;
+	(*new_node)->expanded = (*tmp)->expanded;
 }

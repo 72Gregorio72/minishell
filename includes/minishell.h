@@ -79,6 +79,7 @@ void		convert_plus_equal_to_equal(char *str);
 void		add_in_env(char ***env, const char *var, int append);
 void		add_in_export_env(char ***env, const char *var,
 				int flag, int append);
+int			is_builtin(char *command);
 
 // parsing
 int			parsing(t_gen *gen);
@@ -130,6 +131,7 @@ void		position(t_lexing *prev, t_lexing *tmp_list,
 				t_gen *gen, t_lexing *to_expand);
 int			loop_expand_wilds(t_gen *gen);
 void		util_expand(t_lexing **to_free_head, t_lexing *to_expand);
+void		remove_redirections(t_lexing *node);
 
 // utils
 void		free_matrix(char **av);
@@ -152,6 +154,7 @@ void		do_export(t_gen *gen, int equal_pos, int append, const char *var);
 t_lexing	*find_prev_node(t_lexing *end, t_lexing *start);
 int			stop_check(t_lexing *tmp);
 int			env_var_len(char *key_env);
+void		util_filter_lexed_data(t_lexing **new_node, t_lexing **tmp);
 
 // ctrl
 void		ctrl_c(int new_line);
@@ -195,6 +198,7 @@ int			check_after(t_lexing *node);
 int			check_reds_in_parenth(t_lexing *node);
 int			check_pipes_in_parenth(t_lexing *node);
 t_lexing	*check_continue(t_lexing *lexed, int flag);
+int 		check_no_comm_after(t_lexing *start);
 
 typedef struct s_data
 {
@@ -205,46 +209,19 @@ typedef struct s_data
 
 // exec
 void		exec_command(t_gen *gen);
-int			find_cmd_num(t_lexing *node);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			exec_builtin(t_gen *gen, t_lexing *node);
 int			is_builtin(char *command);
-void		cleanup_on_exit(t_gen *gen);
-int			handle_builtin(t_gen *gen, t_lexing *node);
-void		handle_command_not_found(t_gen *gen, char *cmd_path,
-				char *value, char **env);
-void		child_process_logic(t_gen *gen, t_lexing *node,
-				char *cmd_path, char **env);
-int			init_exec_data(t_gen *gen, t_lexing *node,
-				char ***env, char **cmd_path);
-int			safe_fork(t_gen *gen);
-void		wait_and_cleanup(t_gen *gen, t_lexing *node,
-				char *cmd_path, char **env);
 void		exec_single_command(t_gen *gen, t_lexing *node);
 int			find_cmd_num(t_lexing *node);
-void		collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i,
-				t_gen *gen);
-void		update_tmp_pointer(t_lexing **tmp, t_lexing *current);
-void		process_here_doc_node(t_lexing *current, t_lexing **tmp,
-				int *here_doc_num, t_gen *gen);
-void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);
-int			check_and_execute_subtree(t_gen *gen, t_tree *subtree);
-void		handle_child_io(t_lexing *cmd, t_data *data,
-				int pipe_fd[2]);
-void		child_exec(t_gen *gen, t_lexing *cmd, t_data *data, int pipe_fd[2]);
-int			setup_and_fork_child(t_gen *gen, t_lexing **cmds,
-				t_data *data, pid_t *last_pid);
-void		wait_for_piped_children(t_gen *gen, int num_cmds, pid_t last_pid);
-int			prepare_piped_execution(t_gen *gen, t_tree *subroot,
-				t_lexing **cmds, int *num_cmds);
-int			execute_piped_loop(t_gen *gen, t_lexing **cmds,
-				int num_cmds, pid_t *last_pid);
-void		exec_piped_commands(t_gen *gen, t_tree *subroot);
+void		collect_piped_cmds(t_tree *node, t_lexing **cmds,
+				int *i, t_gen *gen);
+int			check_here_doc_command(char **command);
 void		exec_tree(t_gen *gen, t_tree *root);
-void		mark_all_commands_piped(t_tree *node);
 void		flag_piped(t_tree *node);
-int			prepare_command_execution(t_gen *gen, t_lexing *node,
-				char **cmd_path, char ***env);
+void		init_piped(t_tree *node);
+void		exec_command(t_gen *gen);
+void		exec_piped_commands(t_gen *gen, t_tree *subroot);
 
 // qui doc
 void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);

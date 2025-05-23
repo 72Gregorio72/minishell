@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 12:39:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:26:44 by vcastald         ###   ########.fr       */
+/*   Created: 2025/05/23 15:59:52 by vcastald          #+#    #+#             */
+/*   Updated: 2025/05/23 16:23:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* int	is_builtin(char *command)
+int	is_builtin(char *command)
 {
 	if (ft_strncmp(command, "cd", ft_strlen("cd")) == 0
 		&& ft_strlen(command) == ft_strlen("cd"))
@@ -38,73 +38,90 @@
 	return (0);
 }
 
-void	cleanup_on_exit(t_gen *gen)
+int check_no_comm_after(t_lexing *start)
 {
-	ft_treeclear(gen->root);
-	free_matrix(gen->my_env);
-	free_matrix(gen->export_env);
-	ft_lstclear(gen->lexed_data, 0);
-	ft_lstclear(gen->cleaned_data, 1);
-	free_matrix(gen->av);
-	close(gen->fd_stdin);
+	t_lexing	*tmp;
+
+	tmp = start;
+	if (stop_check(tmp))
+		tmp = tmp->next;
+	while (tmp && !stop_check(tmp))
+	{
+		if (!ft_strncmp(tmp->type, "command", 8))
+			return (0);
+		tmp = tmp->next;
+	}
+	return (1);
 }
 
-int	handle_builtin(t_gen *gen, t_lexing *node)
+int	find_cmd_num(t_lexing *node)
 {
-	if (node && node->command && node->command[0]
-		&& is_builtin(node->command[0]))
+	int			cmd_num;
+	t_lexing	*tp;
+
+	cmd_num = 0;
+	tp = node;
+	while (tp)
 	{
-		if (exec_builtin(gen, node))
-			gen->exit_status = 0;
-		else if (gen->exit_status != 1)
-			gen->exit_status = 127;
-		if (node->piped)
-			cleanup_on_exit(gen);
-		return (1);
+		if ((stop_check(tp) || check_redirect(tp)) && check_no_comm_after(tp))
+		{
+			cmd_num++;
+			tp = tp->next;
+			while (tp && !stop_check(tp))
+				tp = tp->next;
+		}
+		if (tp && (!ft_strncmp(tp->type, "command", 8)))
+			cmd_num++;
+		if (tp)
+			tp = tp->next;
+	}
+	return (cmd_num);
+}
+
+void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
+{
+	if (!node)
+		return ;
+	collect_piped_cmds(node->left, cmds, i, gen);
+	if (node->data && (!ft_strncmp(node->data->type, "command", 7)
+			|| check_redirect(node->data)))
+		cmds[(*i)++] = node->data;
+	if (node->data->command && node->data->command[0]
+		&& (!ft_strncmp(node->data->command[0], ">", 1)
+			|| !ft_strncmp(node->data->command[0], "<", 1))
+		&& node->data->command[1] && !node->data->command[2])
+	{
+		find_red(node->data, gen);
+		return ;
+	}
+	collect_piped_cmds(node->right, cmds, i, gen);
+}
+
+int	check_here_doc_command(char **command)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (command[i])
+	{
+		if (!ft_strncmp(command[i], "<<", 2))
+		{
+			if (!command[i + 1])
+				return (-1);
+
+			free(command[i]);
+			free(command[i + 1]);
+			j = i;
+			while (command[j + 2])
+			{
+				command[j] = command[j + 2];
+				j++;
+			}
+			command[j] = NULL;
+			return (1);
+		}
+		i++;
 	}
 	return (0);
 }
-
-void	handle_command_not_found(t_gen *gen, char *cmd_path,
-	char *value, char **env)
-{
-	ft_putstr_fd(RED"Command ", 2);
-	ft_putstr_fd(YELLOW"\"", 2);
-	ft_putstr_fd(value, 2);
-	ft_putstr_fd("\"", 2);
-	ft_putstr_fd(RED" not found\n"RESET, 2);
-	gen->exit_status = 127;
-	free(cmd_path);
-	free_matrix(env);
-	close(gen->fd_stdin);
-}
-
-void	child_process_logic(t_gen *gen, t_lexing *node,
-	char *cmd_path, char **env)
-{
-	if (node->infile != STDIN_FILENO)
-	{
-		dup2(node->infile, STDIN_FILENO);
-		if (node->infile != -1)
-			close(node->infile);
-	}
-	if (node->outfile != STDOUT_FILENO)
-	{
-		dup2(node->outfile, STDOUT_FILENO);
-		if (node->outfile != -1)
-			close(node->outfile);
-	}
-	execve(cmd_path, node->command, env);
-	ft_putstr_fd(RED"Command ", 2);
-	ft_putstr_fd(YELLOW"\"", 2);
-	ft_putstr_fd(node->value, 2);
-	ft_putstr_fd("\"", 2);
-	ft_putstr_fd(RED" not found\n"RESET, 2);
-	gen->exit_status = 127;
-	free_matrix(env);
-	cleanup_on_exit(gen);
-	free(cmd_path);
-	close(gen->fd_stdin);
-	exit(gen->exit_status);
-}
- */

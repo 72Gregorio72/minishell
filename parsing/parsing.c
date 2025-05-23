@@ -49,14 +49,12 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
 					ft_strdup(tmp->type), tmp->strength, get_command(tmp));
-			new_node->outfile = tmp->outfile;
-			new_node->infile = tmp->infile;
-			new_node->layer = tmp->layer;
-			new_node->expanded = tmp->expanded;
+			util_filter_lexed_data(&new_node, &tmp);
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
-			while (tmp && tmp->next && !stop_check(tmp->next) && !stop_check(tmp))
+			while (tmp && tmp->next
+					&& !stop_check(tmp->next) && !stop_check(tmp))
 				tmp = tmp->next;
 		}
 		if (tmp)

@@ -6,89 +6,75 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:17:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:26:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 16:07:31 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i)
+void	exec_tree(t_gen *gen, t_tree *root)
 {
+	if (!root)
+		return ;
+	if (ft_strncmp(root->data->type, "pipe", 4) == 0)
+	{
+		exec_piped_commands(gen, root);
+	}
+	else if (ft_strncmp(root->data->type, "command", 8) == 0)
+	{
+		exec_single_command(gen, root->data);
+	}
+	else if (ft_strncmp(root->data->type, "or_operator", 12) == 0)
+	{
+		exec_tree(gen, root->left);
+		if (gen->exit_status != 0)
+			exec_tree(gen, root->right);
+	}
+	else if (ft_strncmp(root->data->type, "and_operator", 13) == 0)
+	{
+		exec_tree(gen, root->left);
+		if (gen->exit_status == 0)
+			exec_tree(gen, root->right);
+	}
+}
+//((echo 1 && echo 2) && (echo 3 || echo 4)) || (echo 5 && echo 6)
+
+void	flag_piped(t_tree *node)
+{
+	t_tree	*tmp;
+
 	if (!node)
 		return ;
-	collect_piped_cmds(node->left, cmds, i);
-	collect_piped_cmds(node->right, cmds, i);
-	if (node->data && node->data->piped
-		&& !ft_strncmp(node->data->type, "command", 8))
-		cmds[(*i)++] = node->data;
+	tmp = node;
+	if (ft_strncmp(tmp->data->type, "pipe", 4) == 0)
+	{
+		tmp->data->piped = 1;
+		if (tmp->right)
+			tmp->right->data->piped = 1;
+		if (tmp->left)
+			tmp->left->data->piped = 1;
+	}
+	flag_piped(node->left);
+	flag_piped(node->right);
 }
 
-void	update_tmp_pointer(t_lexing **tmp, t_lexing *current)
+void	init_piped(t_tree *node)
 {
-	if (current->next->next
-		&& ft_strncmp(current->next->next->type, "here_doc", 9))
-	{
-		*tmp = (*tmp)->next;
-		while (*tmp && ft_strncmp((*tmp)->type, "command", 8))
-			*tmp = (*tmp)->next;
-	}
+	t_tree	*tmp;
+
+	if (!node)
+		return ;
+	tmp = node;
+	tmp->data->piped = 0;
+	init_piped(node->left);
+	init_piped(node->right);
 }
 
-void	process_here_doc_node(t_lexing *current, t_lexing **tmp,
-			int *here_doc_num, t_gen *gen)
+void	exec_command(t_gen *gen)
 {
-	int	is_valid_type;
-
-	is_valid_type = current->next
-		&& !ft_strncmp(current->next->type, "here_doc_delimiter", 19);
-	if (is_valid_type && *tmp)
-	{
-		handle_here_doc(current->next->value, *tmp, here_doc_num, gen);
-		update_tmp_pointer(tmp, current);
-	}
-	else if (is_valid_type)
-	{
-		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
-	}
+	init_piped(gen->root);
+	flag_piped(gen->root);
+	exec_tree(gen, gen->root);
+	ft_treeclear(gen->root);
+	gen->root = NULL;
 }
-
-void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
-{
-	t_lexing	*current;
-	t_lexing	*tmp;
-	int			here_doc_num;
-
-	current = node;
-	tmp = cleaned_data;
-	here_doc_num = 0;
-	while (current)
-	{
-		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
-		{
-			if (current->infile == -1)
-				return (ft_putstr_fd("Error opening here_doc file\n", 2));
-			process_here_doc_node(current, &tmp, &here_doc_num, gen);
-			if (current->outfile == -1)
-			{
-				ft_putstr_fd("Error opening output file\n", 2);
-				close(current->infile);
-				return ;
-			}
-		}
-		current = current->next;
-	}
-}
-
-int	check_and_execute_subtree(t_gen *gen, t_tree *subtree)
-{
-	if (!subtree)
-		return (1);
-	if ((!ft_strncmp(subtree->data->type, "and_operator", 13)
-			|| !ft_strncmp(subtree->data->type, "or_operator", 12)))
-	{
-		exec_tree(gen, subtree);
-		if (gen->exit_status != 0)
-			return (0);
-	}
-	return (1);
-} */

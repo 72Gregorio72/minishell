@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 16:08:48 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:47:48 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	stop_check(t_lexing *tmp)
-{
-	if (!ft_strncmp(tmp->type, "pipe", 4)
-		|| !ft_strncmp(tmp->type, "and_operator", 13)
-		|| !ft_strncmp(tmp->type, "or_operator", 12)
-		|| !ft_strncmp(tmp->type, "close_parenthesis", 18)
-		|| !ft_strncmp(tmp->type, "open_parenthesis", 17))
-		return (1);
-	return (0);
-}
 
 int	check_prev_here_doc(t_lexing *tmp, int *i)
 {
@@ -111,17 +100,4 @@ char	**ft_strdup_matrix(char **matrix)
 	}
 	new_matrix[i] = NULL;
 	return (new_matrix);
-}
-
-int	check_lexed(t_lexing *tmp)
-{
-	if (ft_strncmp(tmp->type, "argument", 9)
-		&& ft_strncmp(tmp->type, "option", 7)
-		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
-		&& ft_strncmp(tmp->type, "close_parenthesis", 18)
-		&& ft_strncmp(tmp->type, "infile", 7)
-		&& ft_strncmp(tmp->type, "outfile", 8)
-		&& ft_strncmp(tmp->type, "here_doc_delimiter", 19))
-		return (1);
-	return (0);
 }

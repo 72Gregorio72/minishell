@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 09:16:39 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/20 10:33:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:45:26 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,5 +124,6 @@ int	loop_expand_wilds(t_gen *gen)
 		util_expand(&to_free_head, to_expand);
 		to_expand = check_continue(gen->lexed_data, 0);
 	}
+	ft_lstclear(to_free_head, 0);
 	return (1);
 }

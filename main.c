@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:21:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 16:01:04 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:58:45 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	}
 }
 
-//gpicchio king
+//vcastald king
 int	main(int ac, char **av, char **env)
 {
 	struct sigaction	sa;
