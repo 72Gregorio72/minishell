@@ -151,6 +151,7 @@ void		ft_join(char ***env, int i, const char *var, int pos);
 void		do_export(t_gen *gen, int equal_pos, int append, const char *var);
 t_lexing	*find_prev_node(t_lexing *end, t_lexing *start);
 int			stop_check(t_lexing *tmp);
+int			env_var_len(char *key_env);
 
 // ctrl
 void		ctrl_c(int new_line);

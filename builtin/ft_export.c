@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/23 11:29:28 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:49:37 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,6 @@ void	util(int i, const char *var, char ***env)
 	(*env)[i + 1] = NULL;
 }
 
-/*int	compare_vars(char *key_env, char *var)
-{
-	int	i;
-
-	while (key_env[i])
-}*/
-
 void	add_in_env(char ***env, const char *var, int append)
 {
 	int		i;
@@ -59,8 +52,9 @@ void	add_in_env(char ***env, const char *var, int append)
 	i = -1;
 	while ((*env)[++i] != NULL)
 	{
-		equal_pos = find_char_pos((*env)[i], "=", 0);
-		if (ft_strncmp((*env)[i], var, equal_pos) == 0)
+		equal_pos = env_var_len((*env)[i]);
+		if (ft_strncmp((*env)[i], var, equal_pos) == 0
+			&& (int)env_var_len((*env)[i]) == env_var_len((char *)var))
 		{
 			if (append)
 				ft_join(env, i, var, equal_pos);
@@ -84,13 +78,10 @@ void	add_in_export_env(char ***env, const char *var, int flag, int append)
 	i = -1;
 	while ((*env)[++i] != NULL)
 	{
-		e_pos = find_char_pos((*env)[i], "=", 0);
+		e_pos = env_var_len((*env)[i]);
 		var_pos = find_char_pos((char *)var, "=", 0);
-		printf("env[i]: %s\n", (*env)[i]);
-		printf("e_pos: %d\n", e_pos);
-		printf("var_pos: %d\n", var_pos);
-		if (ft_strncmp((*env)[i], var, var_pos) == 0
-			|| ft_strncmp((*env)[i], var, e_pos) == 0)
+		if (ft_strncmp((*env)[i], var, e_pos) == 0
+			&& (int)env_var_len((*env)[i]) == env_var_len((char *)var))
 		{
 			if (flag)
 				norm_add_exp_env(env, i, var, append);
@@ -101,7 +92,6 @@ void	add_in_export_env(char ***env, const char *var, int flag, int append)
 			}
 			return ;
 		}
-		printf("--------------------\n");
 	}
 	util(i, var, env);
 }

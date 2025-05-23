@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:00:02 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/09 09:31:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:49:42 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,16 @@ void	print_env(char *str, int fd)
 		}
 		i++;
 	}
+}
+
+int	env_var_len(char *key_env)
+{
+	int	i;
+
+	i = 0;
+	while (key_env[i] && key_env[i] != '=')
+		i++;
+	return (i);
 }
 
 int	ft_env(char **env, int export, t_lexing *node)
