@@ -56,8 +56,11 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
+			while (tmp && !stop_check(tmp))
+				tmp = tmp->next;
 		}
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
 	return (head);
 }

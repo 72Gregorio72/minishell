@@ -72,13 +72,17 @@ char	**copy_matrix(char **src)
 
 void	print_list(t_lexing *lst)
 {
+	if (!lst)
+		return ;
 	t_lexing	*tmp;
 
 	tmp = lst;
 	while (tmp)
 	{
-		printf("value: %s\n", tmp->value);
-		printf("type: %s\n", tmp->type);
+		if (tmp->type)
+			printf("type: %s\n", tmp->type);
+		if (tmp->value)
+			printf("value: %s\n", tmp->value);
 		if (tmp->command)
 		{
 			int k = 0;
