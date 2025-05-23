@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/23 09:38:50 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:21:53 by gpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
 	if (!node)
 		return ;
 	collect_piped_cmds(node->left, cmds, i, gen);
-	if (node->data->command
+	if (node->data->command && node->data->command[0]
 		&& (!ft_strncmp(node->data->command[0], ">", 1)
 			|| !ft_strncmp(node->data->command[0], "<", 1))
 		&& node->data->command[1] && !node->data->command[2])

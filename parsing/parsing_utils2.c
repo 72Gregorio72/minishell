@@ -25,115 +25,70 @@ int	stop_check(t_lexing *tmp)
 
 int	check_prev_here_doc(t_lexing *tmp, int *i)
 {
+	int		found;
+
+	found = 0;
 	while (tmp && !stop_check(tmp))
 	{
 		if (!ft_strncmp(tmp->type, "here_doc", 9))
+		{
+			found = 1;
 			(*i) += 2;
+		}
 		tmp = tmp->prev;
 	}
-	return (0);
+	return (found);
 }
 
-char	**get_command(t_lexing *node)
+int	count_command_num(t_lexing *tmp)
+{
+	int	i;
+
+	i = 0;
+	while (tmp && tmp->prev && !stop_check(tmp) && !stop_check(tmp->prev))
+		tmp = tmp->prev;
+	while (tmp && !stop_check(tmp))
+	{
+		if (ft_strncmp(tmp->type, "open_parenthesis", 17)
+				&& ft_strncmp(tmp->type, "close_parenthesis", 18))
+			i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+void	fill_command(t_lexing *tmp, int i, char ***command)
+{
+	while (tmp && tmp->prev && !stop_check(tmp) && !stop_check(tmp->prev))
+		tmp = tmp->prev;
+	while (tmp && !stop_check(tmp))
+	{
+		if (ft_strncmp(tmp->type, "open_parenthesis", 17)
+				&& ft_strncmp(tmp->type, "close_parenthesis", 18)
+				&& !stop_check(tmp))
+		{
+			(*command)[i] = ft_strdup(tmp->value);
+			i++;
+		}
+		tmp = tmp->next;
+	}
+	(*command)[i] = NULL;
+}
+
+char **get_command(t_lexing *node)
 {
 	char		**command;
 	t_lexing	*tmp;
 	int			i;
-	int			found;
-	int			here_doced;
 
 	i = 0;
 	tmp = node;
-	found = 0;
-	if (ft_strncmp(tmp->type, "command", 8)
-		&& ft_strncmp(tmp->type, "open_parenthesis", 17)
-		&& !check_redirect(tmp))
-		return (NULL);
-	found = check_prev(tmp, &i);
-	here_doced = check_prev_here_doc(tmp, &i);
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->type, "argument", 9)
-			|| !ft_strncmp(tmp->type, "option", 7)
-			|| !ft_strncmp(tmp->type, "command", 8)
-			|| !ft_strncmp(tmp->type, "output_append", 14)
-			|| !ft_strncmp(tmp->type, "redirect_input", 15)
-			|| !ft_strncmp(tmp->type, "redirect_output", 16)
-			|| !ft_strncmp(tmp->type, "outfile", 8)
-			|| !ft_strncmp(tmp->type, "infile", 7)
-			|| (!ft_strncmp(tmp->type, "here_doc_delimiter", 19) && !here_doced)
-			|| (!ft_strncmp(tmp->type, "here_doc", 9) && !here_doced))
-			i++;
-		tmp = tmp->next;
-	}
+	i = count_command_num(tmp);
 	command = (char **)malloc(sizeof(char *) * (i + 1));
 	if (!command)
 		return (NULL);
-	tmp = node;
-	found = check_prev(tmp, &i);
-	here_doced = check_prev_here_doc(tmp, &i);
 	i = 0;
-	if (found || here_doced)
-	{
-		while (tmp && tmp->prev && !stop_check(tmp))
-			tmp = tmp->prev;
-		while (tmp && ft_strncmp(tmp->type, "command", 8))
-		{
-			if (check_redirect(tmp) && tmp->next)
-			{
-				command[i] = ft_strdup(tmp->value);
-				i++;
-				command[i] = ft_strdup(tmp->next->value);
-				i++;
-			}
-			tmp = tmp->next;
-		}
-	}
-	tmp = node;
-	while (tmp)
-	{
-		if (!here_doced && (!ft_strncmp(tmp->type, "here_doc_delimiter", 19)
-				|| !ft_strncmp(tmp->type, "here_doc", 9)))
-			here_doced = 1;
-		if (!ft_strncmp(tmp->type, "argument", 9)
-			|| !ft_strncmp(tmp->type, "option", 7)
-			|| !ft_strncmp(tmp->type, "command", 8)
-			|| !ft_strncmp(tmp->type, "output_append", 14)
-			|| !ft_strncmp(tmp->type, "redirect_input", 15)
-			|| !ft_strncmp(tmp->type, "redirect_output", 16)
-			|| !ft_strncmp(tmp->type, "outfile", 8)
-			|| !ft_strncmp(tmp->type, "infile", 7))
-		{
-			command[i] = ft_strdup(tmp->value);
-			i++;
-		}
-		else if (!check_after(tmp))
-			break ;
-		tmp = tmp->next;
-	}
-	tmp = node;
-	while (tmp && !stop_check(tmp))
-	{
-		if (!tmp->next)
-			break ;
-		tmp = tmp->next;
-	}
-	if (here_doced)
-	{
-		while (tmp && tmp->prev)
-		{
-			if (!ft_strncmp(tmp->type, "here_doc_delimiter", 19))
-			{
-				command[i] = ft_strdup(tmp->prev->value);
-				i++;
-				command[i] = ft_strdup(tmp->value);
-				i++;
-				break ;
-			}
-			tmp = tmp->prev;
-		}
-	}
-	command[i] = NULL;
+	fill_command(tmp, i, &command);
 	return (command);
 }
 
