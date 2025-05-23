@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:49:05 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/22 17:23:27 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:27:44 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@ void	util(int i, const char *var, char ***env)
 	(*env)[i + 1] = NULL;
 }
 
+/*int	compare_vars(char *key_env, char *var)
+{
+	int	i;
+
+	while (key_env[i])
+}*/
+
 void	add_in_env(char ***env, const char *var, int append)
 {
 	int		i;
@@ -79,6 +86,9 @@ void	add_in_export_env(char ***env, const char *var, int flag, int append)
 	{
 		e_pos = find_char_pos((*env)[i], "=", 0);
 		var_pos = find_char_pos((char *)var, "=", 0);
+		printf("env[i]: %s\n", (*env)[i]);
+		printf("e_pos: %d\n", e_pos);
+		printf("var_pos: %d\n", var_pos);
 		if (ft_strncmp((*env)[i], var, var_pos) == 0
 			|| ft_strncmp((*env)[i], var, e_pos) == 0)
 		{
@@ -91,6 +101,7 @@ void	add_in_export_env(char ***env, const char *var, int flag, int append)
 			}
 			return ;
 		}
+		printf("--------------------\n");
 	}
 	util(i, var, env);
 }
