@@ -45,7 +45,6 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 	head = NULL;
 	while (tmp)
 	{
-		printf("tmp->value: %s\n", tmp->value);
 		if (check_lexed(tmp) && check_output(tmp))
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
