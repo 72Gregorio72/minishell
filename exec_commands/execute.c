@@ -6,11 +6,32 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/26 10:54:03 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 11:25:29 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	util_exit_exec(t_gen *gen)
+{
+	ft_treeclear(gen->root);
+	free_matrix(gen->my_env);
+	free_matrix(gen->export_env);
+	ft_lstclear(gen->lexed_data, 0);
+	ft_lstclear(gen->cleaned_data, 1);
+	free_matrix(gen->av);
+	close(gen->fd_stdin);
+}
+
+void	print_cmd_not_found(t_lexing *node, t_gen *gen)
+{
+	ft_putstr_fd(RED"Command ", 2);
+	ft_putstr_fd(YELLOW"\"", 2);
+	ft_putstr_fd(node->value, 2);
+	ft_putstr_fd("\"", 2);
+	ft_putstr_fd(RED" not found\n"RESET, 2);
+	gen->exit_status = 127;
+}
 
 void	exec_single_command(t_gen *gen, t_lexing *node)
 {
@@ -35,15 +56,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 				gen->exit_status = 127;
 		}
 		if (node->piped)
-		{
-			ft_treeclear(gen->root);
-			free_matrix(gen->my_env);
-			free_matrix(gen->export_env);
-			ft_lstclear(gen->lexed_data, 0);
-			ft_lstclear(gen->cleaned_data, 1);
-			free_matrix(gen->av);
-			close(gen->fd_stdin);
-		}
+			util_exit_exec(gen);
 		return ;
 	}
 	env = copy_matrix(gen->my_env);
@@ -56,24 +69,11 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	}
 	if (access(cmd_path, F_OK | X_OK) == -1)
 	{
-		ft_putstr_fd(RED"Command ", 2);
-		ft_putstr_fd(YELLOW"\"", 2);
-		ft_putstr_fd(node->value, 2);
-		ft_putstr_fd("\"", 2);
-		ft_putstr_fd(RED" not found\n"RESET, 2);
-		gen->exit_status = 127;
+		print_cmd_not_found(node, gen);
 		free(cmd_path);
 		free_matrix(env);
 		if (node->piped)
-		{
-			ft_treeclear(gen->root);
-			free_matrix(gen->my_env);
-			free_matrix(gen->export_env);
-			ft_lstclear(gen->lexed_data, 0);
-			ft_lstclear(gen->cleaned_data, 1);
-			free_matrix(gen->av);
-			close(gen->fd_stdin);
-		}
+			util_exit_exec(gen);
 		return ;
 	}
 	pid = fork();
@@ -99,20 +99,9 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 				close(node->outfile);
 		}
 		execve(cmd_path, node->command, env);
-		ft_putstr_fd(RED"Command ", 2);
-		ft_putstr_fd(YELLOW"\"", 2);
-		ft_putstr_fd(node->value, 2);
-		ft_putstr_fd("\"", 2);
-		ft_putstr_fd(RED" not found\n"RESET, 2);
-		gen->exit_status = 127;
+		print_cmd_not_found(node, gen);
 		free_matrix(env);
-		ft_treeclear(gen->root);
-		free_matrix(gen->my_env);
-		free_matrix(gen->export_env);
-		ft_lstclear(gen->lexed_data, 0);
-		ft_lstclear(gen->cleaned_data, 1);
-		free_matrix(gen->av);
-		close(gen->fd_stdin);
+		util_exit_exec(gen);
 		free(cmd_path);
 		exit(gen->exit_status);
 	}
@@ -124,29 +113,23 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 	}
 	free_matrix(env);
 	if (node->piped)
-	{
-		ft_treeclear(gen->root);
-		free_matrix(gen->my_env);
-		free_matrix(gen->export_env);
-		ft_lstclear(gen->lexed_data, 0);
-		ft_lstclear(gen->cleaned_data, 1);
-		close(gen->fd_stdin);
-		free_matrix(gen->av);
-	}
+		util_exit_exec(gen);
 	free(cmd_path);
 }
 
 void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 {
 	t_lexing	*cmds[256];
-	int			num_cmds = 0;
+	int			num_cmds;
 	int			i, pipe_fd[2];
-	int			prev_pipe = -1;
+	int			prev_pipe;
 	pid_t		pid;
 	int 		flag;
 	t_lexing	*last_cmd;
 	pid_t		last_pid;
 
+	num_cmds = 0;
+	prev_pipe = -1;
 	collect_piped_cmds(subroot, cmds, &num_cmds, gen);
 	last_cmd = cmds[num_cmds - 1];
 	for (i = 0; i < num_cmds; i++)
@@ -191,15 +174,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 				flag = 1;
 			}
 			if (!flag)
-			{
-				ft_treeclear(gen->root);
-				free_matrix(gen->my_env);
-				free_matrix(gen->export_env);
-				ft_lstclear(gen->lexed_data, 0);
-				ft_lstclear(gen->cleaned_data, 1);
-				free_matrix(gen->av);
-				close(gen->fd_stdin);
-			}
+				util_exit_exec(gen);
 			exit(gen->exit_status);
 		}
 		if (i > 0)
