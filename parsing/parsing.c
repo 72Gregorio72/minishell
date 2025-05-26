@@ -45,6 +45,7 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 	head = NULL;
 	while (tmp)
 	{
+		printf("tmp->value: %s\n", tmp->value);
 		if (check_lexed(tmp) && check_output(tmp))
 		{
 			new_node = ft_lstnew_cleaned(ft_strdup(tmp->value),
@@ -56,7 +57,7 @@ t_lexing	*filter_lexed_data(t_lexing *lexed_data)
 			if (!new_node)
 				return (NULL);
 			ft_lstadd_back(&head, new_node);
-			while (tmp && !stop_check(tmp))
+			while (tmp && tmp->next && !stop_check(tmp) && !stop_check(tmp->next))
 				tmp = tmp->next;
 		}
 		if (tmp)
@@ -108,6 +109,7 @@ int	parsing(t_gen *gen)
 	if (!loop_expand(gen) || !loop_expand_wilds(gen))
 		return (0);
 	gen->cleaned_data = clean_data(gen);
+	print_list(gen->cleaned_data);
 	here_doccer(gen->lexed_data, gen->cleaned_data, gen);
 	tmp = gen->cleaned_data;
 	tmp2 = gen->lexed_data;
