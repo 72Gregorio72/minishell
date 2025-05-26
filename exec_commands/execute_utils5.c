@@ -6,97 +6,63 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:01:45 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:25:59 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:29:50 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #include "minishell.h"
+#include "minishell.h"
 
-int	execute_piped_loop(t_gen *gen, t_lexing **cmds,
-	int num_cmds, pid_t *last_pid)
+void	util_exit_exec(t_gen *gen)
 {
-	t_data		*data;
+	ft_treeclear(gen->root);
+	free_matrix(gen->my_env);
+	free_matrix(gen->export_env);
+	ft_lstclear(gen->lexed_data, 0);
+	ft_lstclear(gen->cleaned_data, 1);
+	free_matrix(gen->av);
+	close(gen->fd_stdin);
+}
 
-	data = malloc(sizeof(t_data));
-	if (!data)
-		return (0);
-	data->i = 0;
-	data->prev_pipe = -1;
-	data->num_cmd = num_cmds;
-	gen->last_cmd = cmds[data->num_cmd - 1];
-	while (data->i < data->num_cmd)
+void	print_cmd_not_found(t_lexing *node, t_gen *gen)
+{
+	ft_putstr_fd(RED"Command ", 2);
+	ft_putstr_fd(YELLOW"\"", 2);
+	ft_putstr_fd(node->value, 2);
+	ft_putstr_fd("\"", 2);
+	ft_putstr_fd(RED" not found\n"RESET, 2);
+	gen->exit_status = 127;
+}
+
+static void	util_son_piped(t_piped *piped)
+{
+	close(piped->pipe_fd[0]);
+	dup2(piped->pipe_fd[1], STDOUT_FILENO);
+	close(piped->pipe_fd[1]);
+}
+
+void	son_piped(t_gen *gen, t_piped *piped)
+{
+	int	flag;
+
+	flag = 0;
+	if (find_red(piped->cmds[piped->i], gen) != 0)
 	{
-		if (setup_and_fork_child(gen, cmds, data, last_pid))
+		if (piped->i > 0)
 		{
-			ft_putstr_fd("pipe or fork error\n", 2);
-			gen->exit_status = 1;
-			return (0);
+			dup2(piped->prev_pipe, STDIN_FILENO);
+			close(piped->prev_pipe);
 		}
-		(data->i)++;
+		else if (piped->cmds[piped->i]->infile != STDIN_FILENO)
+		{
+			dup2(piped->cmds[piped->i]->infile, STDIN_FILENO);
+			close(piped->cmds[piped->i]->infile);
+		}
+		if (piped->i < piped->num_cmds - 1)
+			util_son_piped(piped);
+		exec_single_command(gen, piped->cmds[piped->i]);
+		flag = 1;
 	}
-	free(data);
-	return (1);
+	if (!flag)
+		util_exit_exec(gen);
+	exit(gen->exit_status);
 }
-
-void	exec_piped_commands(t_gen *gen, t_tree *subroot)
-{
-	t_lexing	*cmds[256];
-	int			num_cmds;
-	pid_t		last_pid;
-
-	if (!prepare_piped_execution(gen, subroot, cmds, &num_cmds))
-		return ;
-	if (!execute_piped_loop(gen, cmds, num_cmds, &last_pid))
-		return ;
-	wait_for_piped_children(gen, num_cmds, last_pid);
-}
-
-void	exec_tree(t_gen *gen, t_tree *root)
-{
-	if (!root)
-		return ;
-	if (ft_strncmp(root->data->type, "pipe", 4) == 0)
-	{
-		exec_piped_commands(gen, root);
-	}
-	else if (ft_strncmp(root->data->type, "command", 8) == 0)
-	{
-		exec_single_command(gen, root->data);
-	}
-	else if (ft_strncmp(root->data->type, "or_operator", 12) == 0)
-	{
-		exec_tree(gen, root->left);
-		if (gen->exit_status != 0)
-			exec_tree(gen, root->right);
-	}
-	else if (ft_strncmp(root->data->type, "and_operator", 13) == 0)
-	{
-		exec_tree(gen, root->left);
-		if (gen->exit_status == 0)
-			exec_tree(gen, root->right);
-	}
-}
-
-void	mark_all_commands_piped(t_tree *node)
-{
-	if (!node)
-		return ;
-	if (!ft_strncmp(node->data->type, "command", 7))
-		node->data->piped = 1;
-	mark_all_commands_piped(node->left);
-	mark_all_commands_piped(node->right);
-}
-
-void	flag_piped(t_tree *node)
-{
-	if (!node)
-		return ;
-	if (!ft_strncmp(node->data->type, "pipe", 4))
-	{
-		if (node->left && !ft_strncmp(node->left->data->type, "command", 7))
-			node->left->data->piped = 1;
-		mark_all_commands_piped(node->right);
-	}
-	flag_piped(node->left);
-	flag_piped(node->right);
-} */

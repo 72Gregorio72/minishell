@@ -6,190 +6,86 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/26 11:25:29 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:29:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	util_exit_exec(t_gen *gen)
+void	wait_process(t_gen *gen, int num_cmds, pid_t last_pid)
 {
-	ft_treeclear(gen->root);
-	free_matrix(gen->my_env);
-	free_matrix(gen->export_env);
-	ft_lstclear(gen->lexed_data, 0);
-	ft_lstclear(gen->cleaned_data, 1);
-	free_matrix(gen->av);
-	close(gen->fd_stdin);
-}
-
-void	print_cmd_not_found(t_lexing *node, t_gen *gen)
-{
-	ft_putstr_fd(RED"Command ", 2);
-	ft_putstr_fd(YELLOW"\"", 2);
-	ft_putstr_fd(node->value, 2);
-	ft_putstr_fd("\"", 2);
-	ft_putstr_fd(RED" not found\n"RESET, 2);
-	gen->exit_status = 127;
-}
-
-void	exec_single_command(t_gen *gen, t_lexing *node)
-{
-	pid_t	pid;
+	int		i;
 	int		status;
-	char	*cmd_path;
-	char	**env;
+	pid_t	pid;
 
-	if (node && !node->piped)
+	i = 0;
+	while (i < num_cmds)
 	{
-		if (!find_red(node, gen))
-			return ;
+		pid = wait(&status);
+		if (pid == last_pid && WIFEXITED(status))
+			gen->exit_status = WEXITSTATUS(status);
+		i++;
 	}
-	if (node && node->command
-		&& node->command[0] && is_builtin(node->command[0]))
-	{
-		if (exec_builtin(gen, node))
-			gen->exit_status = 0;
-		else
-		{
-			if (gen->exit_status != 1)
-				gen->exit_status = 127;
-		}
-		if (node->piped)
-			util_exit_exec(gen);
-		return ;
-	}
-	env = copy_matrix(gen->my_env);
-	if (!node || !node->value)
-		return ;
-	cmd_path = get_path(node->value, env);
-	if (!cmd_path)
-	{
-		cmd_path = ft_strdup(node->value);
-	}
-	if (access(cmd_path, F_OK | X_OK) == -1)
-	{
-		print_cmd_not_found(node, gen);
-		free(cmd_path);
-		free_matrix(env);
-		if (node->piped)
-			util_exit_exec(gen);
-		return ;
-	}
-	pid = fork();
+}
+
+int    check_error(t_piped *piped, t_gen *gen)
+{
+    if (piped->i < piped->num_cmds - 1 && pipe(piped->pipe_fd) == -1)
+    {
+        ft_putstr_fd("pipe error\n", 2);
+        gen->exit_status = 1;
+        return (1);
+    }
+    return (0);
+}
+
+int	check_fork(pid_t pid, t_gen *gen)
+{
 	if (pid == -1)
 	{
 		ft_putstr_fd("fork error\n", 2);
 		gen->exit_status = 1;
-		free(cmd_path);
-		return ;
+		return (1);
 	}
-	if (pid == 0)
+	return (0);
+}
+
+void	close_pipes(t_piped *piped)
+{
+	if (piped->i > 0)
+		close(piped->prev_pipe);
+	if (piped->i < piped->num_cmds - 1)
 	{
-		if (node->infile != STDIN_FILENO)
-		{
-			dup2(node->infile, STDIN_FILENO);
-			if (node->infile != -1)
-				close(node->infile);
-		}
-		if (node->outfile != STDOUT_FILENO)
-		{
-			dup2(node->outfile, STDOUT_FILENO);
-			if (node->outfile != -1)
-				close(node->outfile);
-		}
-		execve(cmd_path, node->command, env);
-		print_cmd_not_found(node, gen);
-		free_matrix(env);
-		util_exit_exec(gen);
-		free(cmd_path);
-		exit(gen->exit_status);
+		close(piped->pipe_fd[1]);
+		piped->prev_pipe = piped->pipe_fd[0];
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			gen->exit_status = WEXITSTATUS(status);
-	}
-	free_matrix(env);
-	if (node->piped)
-		util_exit_exec(gen);
-	free(cmd_path);
 }
 
 void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 {
-	t_lexing	*cmds[256];
-	int			num_cmds;
-	int			i, pipe_fd[2];
-	int			prev_pipe;
+	t_piped		piped;
 	pid_t		pid;
-	int 		flag;
 	t_lexing	*last_cmd;
 	pid_t		last_pid;
 
-	num_cmds = 0;
-	prev_pipe = -1;
-	collect_piped_cmds(subroot, cmds, &num_cmds, gen);
-	last_cmd = cmds[num_cmds - 1];
-	for (i = 0; i < num_cmds; i++)
+	piped.num_cmds = 0;
+	piped.prev_pipe = -1;
+	collect_piped_cmds(subroot, piped.cmds, &piped.num_cmds, gen);
+	last_cmd = piped.cmds[piped.num_cmds - 1];
+	piped.i = -1;
+	while (++piped.i < piped.num_cmds)
 	{
-		if (i < num_cmds - 1 && pipe(pipe_fd) == -1)
-		{
-			ft_putstr_fd("pipe error\n", 2);
-			gen->exit_status = 1;
-			return ;
-		}
+		if (check_error(&piped, gen))
+   			return ;
 		pid = fork();
-		if (!ft_strncmp(cmds[i]->value, last_cmd->value, ft_strlen(last_cmd->value)))
-			last_pid = pid;
-		if (pid == -1)
-		{
-			ft_putstr_fd("fork error\n", 2);
-			gen->exit_status = 1;
+		if (check_fork(pid, gen))
 			return ;
-		}
+		if (!ft_strncmp(piped.cmds[piped.i]->value,
+				last_cmd->value, ft_strlen(last_cmd->value)))
+			last_pid = pid;
 		if (pid == 0)
-		{
-			flag = 0;
-			if (find_red(cmds[i], gen) != 0)
-			{
-				if (i > 0)
-				{
-					dup2(prev_pipe, STDIN_FILENO);
-					close(prev_pipe);
-				}
-				else if (cmds[i]->infile != STDIN_FILENO)
-				{
-					dup2(cmds[i]->infile, STDIN_FILENO);
-					close(cmds[i]->infile);
-				}
-				if (i < num_cmds - 1)
-				{
-					close(pipe_fd[0]);
-					dup2(pipe_fd[1], STDOUT_FILENO);
-					close(pipe_fd[1]);
-				}
-				exec_single_command(gen, cmds[i]);
-				flag = 1;
-			}
-			if (!flag)
-				util_exit_exec(gen);
-			exit(gen->exit_status);
-		}
-		if (i > 0)
-			close(prev_pipe);
-		if (i < num_cmds - 1)
-		{
-			close(pipe_fd[1]);
-			prev_pipe = pipe_fd[0];
-		}
+			son_piped(gen, &piped);
+		close_pipes(&piped);
 	}
-	for (i = 0; i < num_cmds; i++)
-	{
-		int status;
-		pid_t pid = wait(&status);
-		if (pid == last_pid && WIFEXITED(status))
-			gen->exit_status = WEXITSTATUS(status);
-	}
+	wait_process(gen, piped.num_cmds, last_pid);
 }

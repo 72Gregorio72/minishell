@@ -6,109 +6,110 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:59:16 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/16 12:26:06 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:15:17 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* void	handle_child_io(t_lexing *cmd, t_data *data,
-			int pipe_fd[2])
+static void	child_process_single_command(t_lexing *node, char **env,
+			char *cmd_path, t_gen *gen)
 {
-	if (data->i > 0)
+	if (node->infile != STDIN_FILENO)
 	{
-		dup2(data->prev_pipe, STDIN_FILENO);
-		close(data->prev_pipe);
+		dup2(node->infile, STDIN_FILENO);
+		if (node->infile != -1)
+			close(node->infile);
 	}
-	else if (cmd->infile != STDIN_FILENO)
+	if (node->outfile != STDOUT_FILENO)
 	{
-		dup2(cmd->infile, STDIN_FILENO);
-		close(cmd->infile);
+		dup2(node->outfile, STDOUT_FILENO);
+		if (node->outfile != -1)
+			close(node->outfile);
 	}
-	if (data->i < data->num_cmd - 1)
-	{
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[1]);
-	}
-}
-
-void	child_exec(t_gen *gen, t_lexing *cmd, t_data *data, int pipe_fd[2])
-{
-	int	flag;
-
-	flag = 0;
-	if (find_red(cmd, gen))
-	{
-		handle_child_io(cmd, data, pipe_fd);
-		free(data);
-		exec_single_command(gen, cmd);
-		flag = 1;
-	}
-	if (!flag)
-	{
-		close(gen->fd_stdin);
-		ft_treeclear(gen->root);
-		free_matrix(gen->my_env);
-		free_matrix(gen->export_env);
-		ft_lstclear(gen->lexed_data, 0);
-		ft_lstclear(gen->cleaned_data, 1);
-		free_matrix(gen->av);
-		free(data);
-	}
+	execve(cmd_path, node->command, env);
+	print_cmd_not_found(node, gen);
+	free_matrix(env);
+	util_exit_exec(gen);
+	free(cmd_path);
 	exit(gen->exit_status);
 }
 
-int	setup_and_fork_child(t_gen *gen, t_lexing **cmds,
-	t_data *data, pid_t *last_pid)
+static int	reds_builtin_single_command(t_lexing *node, t_gen *gen)
 {
-	pid_t	pid;
-	int		pipe_fd[2];
-
-	if (data->i < data->num_cmd - 1 && pipe(pipe_fd) == -1)
-		return (1);
-	pid = fork();
-	if (!ft_strncmp(cmds[data->i]->value, gen->last_cmd->value,
-			ft_strlen(gen->last_cmd->value)))
-		*last_pid = pid;
-	if (pid == -1)
-		return (1);
-	if (pid == 0)
-		child_exec(gen, cmds[data->i], data, pipe_fd);
-	if (data->i > 0)
-		close(data->prev_pipe);
-	if (data->i < data->num_cmd - 1)
+	if (node && !node->piped)
 	{
-		close(pipe_fd[1]);
-		data->prev_pipe = pipe_fd[0];
+		if (!find_red(node, gen))
+			return (0);
 	}
-	return (0);
+	if (node && node->command
+		&& node->command[0] && is_builtin(node->command[0]))
+	{
+		if (exec_builtin(gen, node))
+			gen->exit_status = 0;
+		else
+		{
+			if (gen->exit_status != 1)
+				gen->exit_status = 127;
+		}
+		if (node->piped)
+			util_exit_exec(gen);
+		return (0);
+	}
+	return (1);
 }
 
-void	wait_for_piped_children(t_gen *gen, int num_cmds, pid_t last_pid)
+static void	fork_single_cmd(t_gen *gen, char **env, char *cmd_path,
+			t_lexing *node)
 {
-	int		i;
 	int		status;
 	pid_t	pid;
 
-	i = 0;
-	while (i < num_cmds)
+	pid = fork();
+	if (pid == -1)
 	{
-		pid = wait(&status);
-		if (pid == last_pid && WIFEXITED(status))
-			gen->exit_status = WEXITSTATUS(status);
-		i++;
+		ft_putstr_fd("fork error\n", 2);
+		gen->exit_status = 1;
+		free(cmd_path);
+		return ;
 	}
+	if (pid == 0)
+		child_process_single_command(node, env, cmd_path, gen);
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			gen->exit_status = WEXITSTATUS(status);
+	}
+	free_matrix(env);
+	if (node->piped)
+		util_exit_exec(gen);
+	free(cmd_path);
 }
 
-int	prepare_piped_execution(t_gen *gen, t_tree *subroot,
-	t_lexing **cmds, int *num_cmds)
+void	exec_single_command(t_gen *gen, t_lexing *node)
 {
-	*num_cmds = 0;
-	collect_piped_cmds(subroot, cmds, num_cmds);
-	if (!check_and_execute_subtree(gen, subroot->left))
-		return (0);
-	if (!check_and_execute_subtree(gen, subroot->right))
-		return (0);
-	return (1);
-} */
+	char	*cmd_path;
+	char	**env;
+
+	if (!reds_builtin_single_command(node, gen))
+		return ;
+	env = copy_matrix(gen->my_env);
+	if (!node || !node->value)
+		return ;
+	cmd_path = get_path(node->value, env);
+	if (!cmd_path)
+	{
+		cmd_path = ft_strdup(node->value);
+	}
+	if (access(cmd_path, F_OK | X_OK) == -1)
+	{
+		print_cmd_not_found(node, gen);
+		free(cmd_path);
+		free_matrix(env);
+		if (node->piped)
+			util_exit_exec(gen);
+		return ;
+	}
+	fork_single_cmd(gen, env, cmd_path, node);
+}

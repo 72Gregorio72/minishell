@@ -207,6 +207,15 @@ typedef struct s_data
 	int		prev_pipe;
 }	t_data;
 
+typedef struct piped
+{
+	t_lexing	*cmds[256];
+	int			prev_pipe;
+	int			i;
+	int			num_cmds;
+	int			pipe_fd[2];
+}	t_piped;
+
 // exec
 void		exec_command(t_gen *gen);
 void		exec_single_command(t_gen *gen, t_lexing *node);
@@ -222,6 +231,9 @@ void		flag_piped(t_tree *node);
 void		init_piped(t_tree *node);
 void		exec_command(t_gen *gen);
 void		exec_piped_commands(t_gen *gen, t_tree *subroot);
+void		util_exit_exec(t_gen *gen);
+void		print_cmd_not_found(t_lexing *node, t_gen *gen);
+void		son_piped(t_gen *gen, t_piped *piped);
 
 // qui doc
 void		here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen);

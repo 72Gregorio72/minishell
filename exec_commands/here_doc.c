@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 16:06:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/23 16:06:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:24:12 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,21 @@ void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *her
 		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
 }
 
+static int	check_here_doc_in_command(t_lexing *node_clean)
+{
+	int	i;
+
+	i = 0;
+	while (node_clean->command[i])
+	{
+		if (!ft_strncmp(node_clean->command[i], "<<", 2)
+			&& ft_strlen(node_clean->command[i]) == 2)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 {
 	t_lexing	*current;
@@ -59,7 +74,13 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 	here_doc_num = 0;
 	while (current)
 	{
-		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
+		while (tmp)
+		{
+			if (check_here_doc_in_command(tmp))
+				break ;
+			tmp = tmp->next;
+		}
+		if (current->type && tmp && !ft_strncmp(current->type, "here_doc", 9))
 			check_open(current, &tmp, gen, &here_doc_num);
 		current = current->next;
 	}
