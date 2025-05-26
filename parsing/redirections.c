@@ -114,7 +114,7 @@ int	find_red(t_lexing *node, t_gen *gen)
 		i++;
 	}
 	if (val != -1)
-		remove_redirections(node);
+		remove_redirections(node, val, gen);
 	if (!calc_mat_len(node, &i))
 		return (free(last_in), 0);
 	return (free(last_in), 1);

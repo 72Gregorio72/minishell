@@ -131,7 +131,7 @@ void		position(t_lexing *prev, t_lexing *tmp_list,
 				t_gen *gen, t_lexing *to_expand);
 int			loop_expand_wilds(t_gen *gen);
 void		util_expand(t_lexing **to_free_head, t_lexing *to_expand);
-void		remove_redirections(t_lexing *node);
+void		remove_redirections(t_lexing *node, int val, t_gen *gen);
 
 // utils
 void		free_matrix(char **av);

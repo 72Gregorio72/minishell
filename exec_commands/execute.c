@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/23 16:23:38 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 10:54:03 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_lstclear(gen->lexed_data, 0);
 			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
+			close(gen->fd_stdin);
 		}
 		return ;
 	}
@@ -71,6 +72,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_lstclear(gen->lexed_data, 0);
 			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
+			close(gen->fd_stdin);
 		}
 		return ;
 	}
@@ -110,6 +112,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		ft_lstclear(gen->lexed_data, 0);
 		ft_lstclear(gen->cleaned_data, 1);
 		free_matrix(gen->av);
+		close(gen->fd_stdin);
 		free(cmd_path);
 		exit(gen->exit_status);
 	}
@@ -127,6 +130,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		free_matrix(gen->export_env);
 		ft_lstclear(gen->lexed_data, 0);
 		ft_lstclear(gen->cleaned_data, 1);
+		close(gen->fd_stdin);
 		free_matrix(gen->av);
 	}
 	free(cmd_path);
@@ -194,6 +198,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 				ft_lstclear(gen->lexed_data, 0);
 				ft_lstclear(gen->cleaned_data, 1);
 				free_matrix(gen->av);
+				close(gen->fd_stdin);
 			}
 			exit(gen->exit_status);
 		}

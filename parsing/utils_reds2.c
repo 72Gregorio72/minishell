@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:53:24 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/23 15:55:55 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 10:46:09 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int  check_red_node_command(t_lexing *node, int i)
     return (0);
 }
 
-void	remove_redirections(t_lexing *node)
+void	remove_redirections(t_lexing *node, int val, t_gen *gen)
 {
 	int		i;
 	int		j;
@@ -31,6 +31,8 @@ void	remove_redirections(t_lexing *node)
 
 	i = 0;
 	j = 0;
+	if (val != 2)
+		gen->exit_status = 0;
 	mat_length = calc_mat_len(node, &i);
 	tmp = malloc(sizeof(char *) * (mat_length + 1));
 	if (!tmp)
