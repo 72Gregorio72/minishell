@@ -3,40 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/21 16:21:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/26 10:54:03 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_builtin(char *command)
-{
-	if (ft_strncmp(command, "cd", ft_strlen("cd")) == 0
-		&& ft_strlen(command) == ft_strlen("cd"))
-		return (1);
-	else if (ft_strncmp(command, "echo", ft_strlen("echo")) == 0
-		&& ft_strlen(command) == ft_strlen("echo"))
-		return (1);
-	else if (ft_strncmp(command, "env", ft_strlen("env")) == 0
-		&& ft_strlen(command) == ft_strlen("env"))
-		return (1);
-	else if (ft_strncmp(command, "exit", ft_strlen("exit")) == 0
-		&& ft_strlen(command) == ft_strlen("exit"))
-		return (1);
-	else if (ft_strncmp(command, "export", ft_strlen("export")) == 0
-		&& ft_strlen(command) == ft_strlen("export"))
-		return (1);
-	else if (ft_strncmp(command, "unset", ft_strlen("unset")) == 0
-		&& ft_strlen(command) == ft_strlen("unset"))
-		return (1);
-	else if (ft_strncmp(command, "pwd", ft_strlen("pwd")) == 0
-		&& ft_strlen(command) == ft_strlen("pwd"))
-		return (1);
-	return (0);
-}
 
 void	exec_single_command(t_gen *gen, t_lexing *node)
 {
@@ -68,6 +42,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_lstclear(gen->lexed_data, 0);
 			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
+			close(gen->fd_stdin);
 		}
 		return ;
 	}
@@ -97,6 +72,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 			ft_lstclear(gen->lexed_data, 0);
 			ft_lstclear(gen->cleaned_data, 1);
 			free_matrix(gen->av);
+			close(gen->fd_stdin);
 		}
 		return ;
 	}
@@ -136,6 +112,7 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		ft_lstclear(gen->lexed_data, 0);
 		ft_lstclear(gen->cleaned_data, 1);
 		free_matrix(gen->av);
+		close(gen->fd_stdin);
 		free(cmd_path);
 		exit(gen->exit_status);
 	}
@@ -153,154 +130,10 @@ void	exec_single_command(t_gen *gen, t_lexing *node)
 		free_matrix(gen->export_env);
 		ft_lstclear(gen->lexed_data, 0);
 		ft_lstclear(gen->cleaned_data, 1);
+		close(gen->fd_stdin);
 		free_matrix(gen->av);
 	}
 	free(cmd_path);
-}
-
-int check_no_comm_after(t_lexing *start)
-{
-	t_lexing	*tmp;
-
-	tmp = start;
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->type, "command", 8))
-			return (0);
-		tmp = tmp->next;
-	}
-	return (1);
-}
-
-int	find_cmd_num(t_lexing *node)
-{
-	int			cmd_num;
-	t_lexing	*tmp;
-
-	cmd_num = 0;
-	tmp = node;
-	while (tmp)
-	{
-		if (check_redirect(tmp) && check_no_comm_after(tmp))
-		{
-			cmd_num++;
-			while (tmp && !stop_check(tmp))
-				tmp = tmp->next;
-		}
-		if (tmp && (!ft_strncmp(tmp->type, "command", 8) || check_redirect(tmp)))
-			cmd_num++;
-		if (tmp && tmp->next && tmp->next->next
-			&& !ft_strncmp(tmp->type, "pipe", 4)
-			&& (!ft_strncmp(tmp->next->next->type, "outfile", 8)
-				|| !ft_strncmp(tmp->next->next->type, "infile", 7))
-			&& ((tmp->next->next->next
-					&& !ft_strncmp(tmp->next->next->next->type, "pipe", 4))
-				|| !tmp->next->next->next))
-			cmd_num++;
-		if (tmp)
-			tmp = tmp->next;
-	}
-	return (cmd_num);
-}
-
-void	collect_piped_cmds(t_tree *node, t_lexing **cmds, int *i, t_gen *gen)
-{
-	if (!node)
-		return ;
-	collect_piped_cmds(node->left, cmds, i, gen);
-	if (node->data->command && node->data->command[0]
-		&& (!ft_strncmp(node->data->command[0], ">", 1)
-			|| !ft_strncmp(node->data->command[0], "<", 1))
-		&& node->data->command[1] && !node->data->command[2])
-	{
-		find_red(node->data, gen);
-		return ;
-	}
-	if (node->data && !ft_strncmp(node->data->type, "command", 7))
-		cmds[(*i)++] = node->data;
-	collect_piped_cmds(node->right, cmds, i, gen);
-}
-
-int	check_here_doc_command(char **command)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (command[i])
-	{
-		if (!ft_strncmp(command[i], "<<", 2))
-		{
-			if (!command[i + 1])
-				return (-1);
-
-			free(command[i]);
-			free(command[i + 1]);
-			j = i;
-			while (command[j + 2])
-			{
-				command[j] = command[j + 2];
-				j++;
-			}
-			command[j] = NULL;
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-int	check_other_doc(t_lexing *node)
-{
-	t_lexing	*tmp;
-
-	tmp = node;
-	while (tmp && !stop_check(tmp))
-	{
-		if (!ft_strncmp(tmp->type, "here_doc", 9))
-			return (1);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
-void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *here_doc_num)
-{
-	if (current->next && check_other_doc(current->next))
-		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
-	else if (current && current->next && (*cleaned_data))
-	{
-		handle_here_doc(current->next->value, (*cleaned_data),
-			here_doc_num, gen);
-		if ((*cleaned_data) && (*cleaned_data)->next)
-		{
-			(*cleaned_data) = (*cleaned_data)->next;
-			while ((*cleaned_data)
-				&& ft_strncmp((*cleaned_data)->type, "command", 8))
-			{
-				(*cleaned_data) = (*cleaned_data)->next;
-			}
-		}
-	}
-	else if (!(*cleaned_data))
-		handle_here_doc(current->next->value, NULL, here_doc_num, gen);
-}
-
-void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
-{
-	t_lexing	*current;
-	t_lexing	*tmp;
-	int			here_doc_num;
-
-	current = node;
-	tmp = cleaned_data;
-	here_doc_num = 0;
-	while (current)
-	{
-		if (current->type && !ft_strncmp(current->type, "here_doc", 9))
-			check_open(current, &tmp, gen, &here_doc_num);
-		current = current->next;
-	}
 }
 
 void	exec_piped_commands(t_gen *gen, t_tree *subroot)
@@ -365,6 +198,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 				ft_lstclear(gen->lexed_data, 0);
 				ft_lstclear(gen->cleaned_data, 1);
 				free_matrix(gen->av);
+				close(gen->fd_stdin);
 			}
 			exit(gen->exit_status);
 		}
@@ -383,71 +217,4 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 		if (pid == last_pid && WIFEXITED(status))
 			gen->exit_status = WEXITSTATUS(status);
 	}
-}
-
-void	exec_tree(t_gen *gen, t_tree *root)
-{
-	if (!root)
-		return ;
-	if (ft_strncmp(root->data->type, "pipe", 4) == 0)
-	{
-		exec_piped_commands(gen, root);
-	}
-	else if (ft_strncmp(root->data->type, "command", 8) == 0)
-	{
-		exec_single_command(gen, root->data);
-	}
-	else if (ft_strncmp(root->data->type, "or_operator", 12) == 0)
-	{
-		exec_tree(gen, root->left);
-		if (gen->exit_status != 0)
-			exec_tree(gen, root->right);
-	}
-	else if (ft_strncmp(root->data->type, "and_operator", 13) == 0)
-	{
-		exec_tree(gen, root->left);
-		if (gen->exit_status == 0)
-			exec_tree(gen, root->right);
-	}
-}
-//((echo 1 && echo 2) && (echo 3 || echo 4)) || (echo 5 && echo 6)
-
-void	flag_piped(t_tree *node)
-{
-	t_tree	*tmp;
-
-	if (!node)
-		return ;
-	tmp = node;
-	if (ft_strncmp(tmp->data->type, "pipe", 4) == 0)
-	{
-		tmp->data->piped = 1;
-		if (tmp->right)
-			tmp->right->data->piped = 1;
-		if (tmp->left)
-			tmp->left->data->piped = 1;
-	}
-	flag_piped(node->left);
-	flag_piped(node->right);
-}
-
-void	init_piped(t_tree *node)
-{
-	t_tree	*tmp;
-
-	if (!node)
-		return ;
-	tmp = node;
-	tmp->data->piped = 0;
-	init_piped(node->left);
-	init_piped(node->right);
-}
-
-void	exec_command(t_gen *gen)
-{
-	init_piped(gen->root);
-	flag_piped(gen->root);
-	exec_tree(gen, gen->root);
-	ft_treeclear(gen->root);
-	gen->root = NULL;
 }

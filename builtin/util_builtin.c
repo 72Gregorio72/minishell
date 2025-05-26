@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:04:54 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/14 12:56:13 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/23 10:46:55 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,27 @@ int	find_equal(char *var, char **export_env)
 	return (0);
 }
 
-void	convert_plus_equal_to_equal(char *str)
+void	convert_plus_equal_to_equal(char *var)
 {
-	char	*pos;
+	int	i;
 
-	pos = ft_strnstr(str, "+=", ft_strlen(str));
-	if (pos != NULL)
-		ft_memmove(pos, pos + 1, ft_strlen(pos));
+	if (!var)
+		return ;
+	i = 0;
+	while (var[i] && var[i + 1])
+	{
+		if (var[i] == '+' && var[i + 1] == '=')
+		{
+			while (var[i + 1])
+			{
+				var[i] = var[i + 1];
+				i++;
+			}
+			var[i] = '\0';
+			return ;
+		}
+		i++;
+	}
 }
 
 void	do_export(t_gen *gen, int equal_pos, int append, const char *var)

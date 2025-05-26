@@ -24,6 +24,7 @@ SRCS		=	main.c \
 				parsing/redirections.c \
 				parsing/wildcards.c \
 				parsing/utils_reds.c \
+				parsing/utils_reds2.c \
 				parsing/expand.c \
 				parsing/realloc_wilds.c \
 				binary_tree/tree_functions.c \
@@ -38,7 +39,7 @@ SRCS		=	main.c \
 				builtin/util_builtin.c \
 				exec_commands/execute.c \
 				exec_commands/execute_utils.c \
-				exec_commands/execute_utils2.c \
+				exec_commands/here_doc.c \
 				exec_commands/execute_utils3.c \
 				exec_commands/execute_utils4.c \
 				exec_commands/execute_utils5.c \
