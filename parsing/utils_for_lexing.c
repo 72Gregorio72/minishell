@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:23:20 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 15:14:14 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 16:26:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,7 @@ int	check_operators(t_gen *gen, t_lexing *lexed)
 		return (error_exit(gen, "minishell: syntax error near '||'", 2), 0);
 	else if (!ft_strncmp("pipe", last->type, 12))
 		return (error_exit(gen, "minishell: syntax error near '|'", 2), 0);
+	if (!check_consecutive_operators(lexed, gen))
+		return (0);
 	return (1);
 }

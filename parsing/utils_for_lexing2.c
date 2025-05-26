@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 12:28:58 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/09 14:41:08 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/26 16:25:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,28 @@ int	check_after(t_lexing *node)
 		tmp = tmp->next;
 	}
 	return (0);
+}
+
+int	check_consecutive_operators(t_lexing *lst, t_gen *gen)
+{
+	t_lexing	*tmp;
+
+	tmp = lst;
+	while (tmp)
+	{
+		if (tmp->next)
+		{
+			if (!ft_strncmp(tmp->type, "and_operator", 13)
+				&& !ft_strncmp(tmp->next->type, "and_operator", 13))
+				return (error_exit(gen, "minishell: sysntax error", 2), 0);
+			if (!ft_strncmp(tmp->type, "or_operator", 12)
+				&& !ft_strncmp(tmp->next->type, "or_operator", 12))
+				return (error_exit(gen, "minishell: sysntax error", 2), 0);
+			if (!ft_strncmp(tmp->type, "pipe", 4)
+				&& !ft_strncmp(tmp->next->type, "pipe", 4))
+				return (error_exit(gen, "minishell: sysntax error", 2), 0);
+		}
+		tmp = tmp->next;
+	}
+	return (1);
 }

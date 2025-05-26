@@ -199,6 +199,7 @@ int			check_reds_in_parenth(t_lexing *node);
 int			check_pipes_in_parenth(t_lexing *node);
 t_lexing	*check_continue(t_lexing *lexed, int flag);
 int 		check_no_comm_after(t_lexing *start);
+int			check_consecutive_operators(t_lexing *lst, t_gen *gen);
 
 typedef struct s_data
 {
