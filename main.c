@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:21:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/23 15:58:45 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:28:39 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,7 @@ int	main(int ac, char **av, char **env)
 		free_matrix(gen.my_env);
 		exit(1);
 	}
-	change_shlvl(&gen.my_env);
-	change_shlvl(&gen.export_env);
+	call_functions(&gen);
 	gen.cleaned_data = NULL;
 	sort_export(&gen);
 	gen.exit_status = 0;

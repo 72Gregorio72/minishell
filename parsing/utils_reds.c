@@ -31,9 +31,16 @@ int	util_infile(char *filename, t_gen *gen, t_lexing *node, char *last_in)
 	if (!access(filename, F_OK))
 	{
 		if (!ft_strcmp(filename, last_in))
+		{
+			if (node->infile != STDIN_FILENO)
+				close(node->infile);
 			node->infile = open(filename, O_RDONLY);
+		}
 		else
+		{
 			fd = open(filename, O_RDONLY);
+			close(fd);
+		}
 		if (node && (node->infile < 0 || fd < 0))
 			return (error_exit(gen, "minishell: open error", 1), 2);
 	}

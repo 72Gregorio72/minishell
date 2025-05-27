@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 16:06:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/27 09:16:47 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:25:52 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,5 @@ void	here_doccer(t_lexing *node, t_lexing *cleaned_data, t_gen *gen)
 			check_open(current, &tmp, gen, &here_doc_num);
 		current = current->next;
 	}
+	gen->here_doc_num = here_doc_num;
 }

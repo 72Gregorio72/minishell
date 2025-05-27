@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/27 09:23:51 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:28:52 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	**copy_matrix(char **src)
 	return (dest);
 }
 
-void	print_list(t_lexing *lst)
+/* void	print_list(t_lexing *lst)
 {
 	t_lexing	*tmp;
 	int			k;
@@ -96,7 +96,7 @@ void	print_list(t_lexing *lst)
 		printf("--------------------\n");
 		tmp = tmp->next;
 	}
-}
+} */
 
 void	change_shlvl(char ***env)
 {
@@ -125,4 +125,11 @@ void	change_shlvl(char ***env)
 			break ;
 		}
 	}
+}
+
+void	call_functions(t_gen *gen)
+{
+	gen->here_doc_num = 0;
+	change_shlvl(&gen->my_env);
+	change_shlvl(&gen->export_env);
 }

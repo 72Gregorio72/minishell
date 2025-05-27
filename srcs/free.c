@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:56:15 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/16 11:09:11 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:37:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@ void	free_matrix(char **mat)
 
 void	safe_free(t_gen *gen)
 {
+	int		i;
+	char	*filename;
+	char	*tmp;
+
+	i = 0;
+	while (i < gen->here_doc_num)
+	{
+		tmp = ft_itoa(i);
+		filename = ft_strjoin(".here_doc_tmp", tmp);
+		unlink(filename);
+		free(filename);
+		free(tmp);
+		i++;
+	}
 	close(gen->fd_stdin);
 	free_matrix(gen->av);
 	ft_lstclear(gen->lexed_data, 0);

@@ -59,6 +59,7 @@ typedef struct s_gen
 	t_lexing			*cleaned_data;
 	int					*fds;
 	t_lexing			*last_cmd;
+	int					here_doc_num;
 	struct sigaction	sa;
 }				t_gen;
 
@@ -155,6 +156,7 @@ t_lexing	*find_prev_node(t_lexing *end, t_lexing *start);
 int			stop_check(t_lexing *tmp);
 int			env_var_len(char *key_env);
 void		util_filter_lexed_data(t_lexing **new_node, t_lexing **tmp);
+void		call_functions(t_gen *gen);
 
 // ctrl
 void		ctrl_c(int new_line);

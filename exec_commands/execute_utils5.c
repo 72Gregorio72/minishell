@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:01:45 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/27 09:29:21 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:37:02 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,20 @@
 
 void	util_exit_exec(t_gen *gen)
 {
+	int		i;
+	char	*filename;
+	char	*tmp;
+
+	i = 0;
+	while (i < gen->here_doc_num)
+	{
+		tmp = ft_itoa(i);
+		filename = ft_strjoin(".here_doc_tmp", tmp);
+		unlink(filename);
+		free(filename);
+		free(tmp);
+		i++;
+	}
 	ft_treeclear(gen->root);
 	free_matrix(gen->my_env);
 	free_matrix(gen->export_env);
@@ -61,6 +75,13 @@ void	son_piped(t_gen *gen, t_piped *piped)
 			util_son_piped(piped);
 		exec_single_command(gen, piped->cmds[piped->i]);
 		flag = 1;
+	}
+	else
+	{
+		if (piped->pipe_fd[0] != -1)
+			close(piped->pipe_fd[0]);
+		if (piped->pipe_fd[1] != -1)
+			close(piped->pipe_fd[1]);
 	}
 	if (!flag)
 		util_exit_exec(gen);
