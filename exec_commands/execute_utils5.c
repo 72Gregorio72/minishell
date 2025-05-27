@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:01:45 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/27 11:37:02 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 11:43:16 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ static void	util_son_piped(t_piped *piped)
 	close(piped->pipe_fd[1]);
 }
 
+static void	util_close_son_hanma(t_piped *piped)
+{
+	if (piped->pipe_fd[0] != -1)
+		close(piped->pipe_fd[0]);
+	if (piped->pipe_fd[1] != -1)
+		close(piped->pipe_fd[1]);
+}
+
 void	son_piped(t_gen *gen, t_piped *piped)
 {
 	int	flag;
@@ -77,12 +85,7 @@ void	son_piped(t_gen *gen, t_piped *piped)
 		flag = 1;
 	}
 	else
-	{
-		if (piped->pipe_fd[0] != -1)
-			close(piped->pipe_fd[0]);
-		if (piped->pipe_fd[1] != -1)
-			close(piped->pipe_fd[1]);
-	}
+		util_close_son_hanma(piped);
 	if (!flag)
 		util_exit_exec(gen);
 	exit(gen->exit_status);
