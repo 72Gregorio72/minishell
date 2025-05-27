@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:59:26 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/27 09:52:58 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 10:09:13 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,15 @@ void	open_files(int ac, char **av, t_data_bonus *data)
 	}
 }
 
-void	parse_commands(t_data_bonus *data)
+static int	util_check(char *line)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->cmd_num)
+	if (!line)
 	{
-		data->cmds[i] = ft_split(data->av[i + 2], ' ');
-		if (!data->cmds[i])
-		{
-			printf(RED "Error: Memory allocation failed"RESET"\n");
-			exit(1);
-		}
-		i++;
+		if (g_sig_received != CTRL_C)
+			write(1, "minishell: warning: here-doc delimited by EOF\n", 47);
+		return (1);
 	}
+	return (0);
 }
 
 void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
@@ -104,12 +98,8 @@ void	write_to_temp_file(int fd, char *limiter, t_gen *gen)
 			break ;
 		write(1, "HEREDOC> ", 10);
 		line = get_next_line(0);
-		if (!line)
-		{
-			if (g_sig_received != CTRL_C)
-				write(1, "minishell: warning: here-doc delimited by EOF\n", 47);
+		if (util_check(line))
 			break ;
-		}
 		line = expand(line, gen);
 		if (!line)
 			return (safe_free(gen), perror("malloc"), exit(gen->exit_status));

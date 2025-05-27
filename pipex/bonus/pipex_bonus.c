@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 09:44:58 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/06 12:10:01 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 10:07:47 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,21 @@ int	ft_pipex(int ac, char **av, char **envp)
 	if (offset)
 		unlink(".here_doc_tmp");
 	return (0);
+}
+
+void	parse_commands(t_data_bonus *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->cmd_num)
+	{
+		data->cmds[i] = ft_split(data->av[i + 2], ' ');
+		if (!data->cmds[i])
+		{
+			printf(RED "Error: Memory allocation failed"RESET"\n");
+			exit(1);
+		}
+		i++;
+	}
 }
