@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:34:44 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/26 12:29:46 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:21:06 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@ void	wait_process(t_gen *gen, int num_cmds, pid_t last_pid)
 	}
 }
 
-int    check_error(t_piped *piped, t_gen *gen)
+int	check_error(t_piped *piped, t_gen *gen)
 {
-    if (piped->i < piped->num_cmds - 1 && pipe(piped->pipe_fd) == -1)
-    {
-        ft_putstr_fd("pipe error\n", 2);
-        gen->exit_status = 1;
-        return (1);
-    }
-    return (0);
+	if (piped->i < piped->num_cmds - 1 && pipe(piped->pipe_fd) == -1)
+	{
+		ft_putstr_fd("pipe error\n", 2);
+		gen->exit_status = 1;
+		return (1);
+	}
+	return (0);
 }
 
 int	check_fork(pid_t pid, t_gen *gen)
@@ -76,7 +76,7 @@ void	exec_piped_commands(t_gen *gen, t_tree *subroot)
 	while (++piped.i < piped.num_cmds)
 	{
 		if (check_error(&piped, gen))
-   			return ;
+			return ;
 		pid = fork();
 		if (check_fork(pid, gen))
 			return ;

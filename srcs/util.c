@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:10:57 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 16:19:53 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:23:51 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,11 @@ char	**copy_matrix(char **src)
 
 void	print_list(t_lexing *lst)
 {
+	t_lexing	*tmp;
+	int			k;
+
 	if (!lst)
 		return ;
-	t_lexing	*tmp;
-
 	tmp = lst;
 	while (tmp)
 	{
@@ -85,7 +86,7 @@ void	print_list(t_lexing *lst)
 			printf("value: %s\n", tmp->value);
 		if (tmp->command)
 		{
-			int k = 0;
+			k = 0;
 			while (tmp->command[k])
 			{
 				printf("command[%d]: %s\n", k, tmp->command[k]);

@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 16:06:05 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/26 12:24:12 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:16:47 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	check_other_doc(t_lexing *node)
 	return (0);
 }
 
-void	check_open(t_lexing *current, t_lexing **cleaned_data, t_gen *gen, int *here_doc_num)
+void	check_open(t_lexing *current, t_lexing **cleaned_data,
+			t_gen *gen, int *here_doc_num)
 {
 	if (current->next && check_other_doc(current->next))
 		handle_here_doc(current->next->value, NULL, here_doc_num, gen);

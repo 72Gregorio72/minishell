@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:59:52 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/26 10:22:32 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:22:00 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	is_builtin(char *command)
 	return (0);
 }
 
-int check_no_comm_after(t_lexing *start)
+int	check_no_comm_after(t_lexing *start)
 {
 	t_lexing	*tmp;
 
@@ -109,7 +109,6 @@ int	check_here_doc_command(char **command)
 		{
 			if (!command[i + 1])
 				return (-1);
-
 			free(command[i]);
 			free(command[i + 1]);
 			j = i;

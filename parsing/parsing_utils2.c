@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:29:37 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/23 15:47:48 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:22:47 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	count_command_num(t_lexing *tmp)
 	while (tmp && !stop_check(tmp))
 	{
 		if (ft_strncmp(tmp->type, "open_parenthesis", 17)
-				&& ft_strncmp(tmp->type, "close_parenthesis", 18))
+			&& ft_strncmp(tmp->type, "close_parenthesis", 18))
 			i++;
 		tmp = tmp->next;
 	}
@@ -53,8 +53,8 @@ void	fill_command(t_lexing *tmp, int i, char ***command)
 	while (tmp && !stop_check(tmp))
 	{
 		if (ft_strncmp(tmp->type, "open_parenthesis", 17)
-				&& ft_strncmp(tmp->type, "close_parenthesis", 18)
-				&& !stop_check(tmp))
+			&& ft_strncmp(tmp->type, "close_parenthesis", 18)
+			&& !stop_check(tmp))
 		{
 			(*command)[i] = ft_strdup(tmp->value);
 			i++;
@@ -64,7 +64,7 @@ void	fill_command(t_lexing *tmp, int i, char ***command)
 	(*command)[i] = NULL;
 }
 
-char **get_command(t_lexing *node)
+char	**get_command(t_lexing *node)
 {
 	char		**command;
 	t_lexing	*tmp;

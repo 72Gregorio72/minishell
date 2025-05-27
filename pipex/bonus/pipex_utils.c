@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gpicchio <gpicchio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:33:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/21 12:54:25 by gpicchio         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:54:20 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*expand(char *str, t_gen *gen)
 
 	i = -1;
 	len = 0;
-	str = ft_strjoin(str, "\n");
 	while (str[++i])
 	{
 		if (str[i] == '$')
@@ -64,17 +63,17 @@ void	open_redirections(t_lexing *node, t_gen *gen)
 
 void	handler_here(int sig)
 {
-	if (sig == SIGQUIT)
-		write(0, "\b\b  \b\b", 6);
-	else if (sig == SIGINT)
+	if (sig == SIGINT)
 	{
 		rl_done = 1;
+		g_sig_received = CTRL_C;
+		write(1, "\n", 1);
 		close(0);
 	}
 }
 
 void	util_signal(void)
 {
-	signal(SIGQUIT, handler_here);
 	signal(SIGINT, handler_here);
+	signal(SIGQUIT, SIG_IGN);
 }

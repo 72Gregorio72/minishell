@@ -6,20 +6,20 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:53:24 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/26 10:46:09 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:23:15 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int  check_red_node_command(t_lexing *node, int i)
+static int	check_red_node_command(t_lexing *node, int i)
 {
-    if (ft_strncmp(node->command[i], "<<", 2)
-			&& ft_strncmp(node->command[i], "<", 1)
-			&& ft_strncmp(node->command[i], ">>", 2)
-			&& ft_strncmp(node->command[i], ">", 1))
-        return (1);
-    return (0);
+	if (ft_strncmp(node->command[i], "<<", 2)
+		&& ft_strncmp(node->command[i], "<", 1)
+		&& ft_strncmp(node->command[i], ">>", 2)
+		&& ft_strncmp(node->command[i], ">", 1))
+		return (1);
+	return (0);
 }
 
 void	remove_redirections(t_lexing *node, int val, t_gen *gen)
