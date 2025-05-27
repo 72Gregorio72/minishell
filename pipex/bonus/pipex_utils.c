@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:33:28 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/27 09:54:20 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 12:34:49 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,15 @@ void	handler_here(int sig)
 		rl_done = 1;
 		g_sig_received = CTRL_C;
 		write(1, "\n", 1);
-		close(0);
+	}
+	else if (sig == SIGQUIT || sig == SIGTSTP)
+	{
+		write(STDERR_FILENO, "\b\b  \b\b", 6);
 	}
 }
 
 void	util_signal(void)
 {
 	signal(SIGINT, handler_here);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, handler_here);
 }

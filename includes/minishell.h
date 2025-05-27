@@ -49,7 +49,6 @@ typedef struct s_tree
 
 typedef struct s_gen
 {
-	int					fd_stdin;
 	char				**my_env;
 	char				**export_env;
 	char				**av;
@@ -202,6 +201,7 @@ int			check_pipes_in_parenth(t_lexing *node);
 t_lexing	*check_continue(t_lexing *lexed, int flag);
 int			check_no_comm_after(t_lexing *start);
 int			check_consecutive_operators(t_lexing *lst, t_gen *gen);
+void		unlink_here_doc(t_gen *gen);
 
 typedef struct s_data
 {

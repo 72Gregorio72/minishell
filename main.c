@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 10:21:10 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/27 11:28:39 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 12:42:38 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 	(void)ac;
 	while (1)
 	{
-		gen->fd_stdin = dup(0);
+		unlink_here_doc(gen);
 		if (isatty(STDIN_FILENO) && sigaction(SIGINT, &sa, NULL) == -1)
 			return (perror("Sigaction error"));
 		if (isatty(STDIN_FILENO))
@@ -67,8 +67,6 @@ void	loop(int ac, t_gen *gen, struct sigaction sa)
 			return (safe_free(gen), exit(gen->exit_status));
 		gen->lexed_data = lexer(gen->av, gen);
 		init(gen);
-		dup2(gen->fd_stdin, STDIN_FILENO);
-		close(gen->fd_stdin);
 		util_free(gen, line);
 	}
 }

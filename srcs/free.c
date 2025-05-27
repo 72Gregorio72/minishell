@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:56:15 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/27 11:37:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 12:21:35 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	safe_free(t_gen *gen)
 		free(tmp);
 		i++;
 	}
-	close(gen->fd_stdin);
 	free_matrix(gen->av);
 	ft_lstclear(gen->lexed_data, 0);
 	ft_lstclear(gen->cleaned_data, 1);

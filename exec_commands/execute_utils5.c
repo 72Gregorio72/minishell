@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:01:45 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/27 11:43:16 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 12:57:39 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	util_exit_exec(t_gen *gen)
 	ft_lstclear(gen->lexed_data, 0);
 	ft_lstclear(gen->cleaned_data, 1);
 	free_matrix(gen->av);
-	close(gen->fd_stdin);
 }
 
 void	print_cmd_not_found(t_lexing *node, t_gen *gen)

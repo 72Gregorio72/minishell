@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 14:59:16 by gpicchio          #+#    #+#             */
-/*   Updated: 2025/05/27 10:20:31 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 12:41:46 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ static void	fork_single_cmd(t_gen *gen, char **env, char *cmd_path,
 	free_matrix(env);
 	if (node->piped)
 		util_exit_exec(gen);
+	else
+		unlink_here_doc(gen);
 	free(cmd_path);
 }
 

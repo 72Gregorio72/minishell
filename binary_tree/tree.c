@@ -26,7 +26,7 @@ t_lexing	*find_max_strength(t_lexing *lexed, t_lexing *max, t_lexing *last)
 	return (max);
 }
 
-void	print_binary_tree(t_tree *node, int depth)
+/* void	print_binary_tree(t_tree *node, int depth)
 {
 	int	i;
 
@@ -53,7 +53,7 @@ void	print_binary_tree(t_tree *node, int depth)
 	else
 		printf("🌲 %s\n", node->data->value);
 	print_binary_tree(node->left, depth + 1);
-}
+} */
 
 t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *parent)
 {
@@ -75,6 +75,24 @@ t_tree	*fill_tree(t_lexing *lexed, t_lexing *end, t_tree *parent)
 	node->left = left;
 	node->right = right;
 	return (node);
+}
+
+void	unlink_here_doc(t_gen *gen)
+{
+	int		i;
+	char	*filename;
+	char	*tmp;
+
+	i = 0;
+	while (i < gen->here_doc_num)
+	{
+		tmp = ft_itoa(i);
+		filename = ft_strjoin(".here_doc_tmp", tmp);
+		unlink(filename);
+		free(filename);
+		free(tmp);
+		i++;
+	}
 }
 
 // las || (echo ciao && (cat in | wc))

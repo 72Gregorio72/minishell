@@ -6,7 +6,7 @@
 /*   By: vcastald <vcastald@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 09:24:48 by vcastald          #+#    #+#             */
-/*   Updated: 2025/05/27 09:44:35 by vcastald         ###   ########.fr       */
+/*   Updated: 2025/05/27 12:22:17 by vcastald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	ctrl_c(int new_line)
 
 void	ctrl_d(t_gen *gen)
 {
-	close(gen->fd_stdin);
 	printf("exit\n");
 	free_matrix(gen->my_env);
 	free_matrix(gen->export_env);

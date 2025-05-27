@@ -65,6 +65,8 @@ INCLUDES = -Iincludes
 
 all: $(NAME)
 
+bonus: fclean $(NAME)
+
 $(NAME): $(OBJS)
 	@echo Compiling libft...
 	@[ -f ./libft/libft.a ] || $(MAKE) -C ./libft --quiet
